@@ -1,0 +1,470 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{755BFD77-0952-4637-AF40-00DE8E58E2B6}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>RapidTradeWebService</RootNamespace>
+    <AssemblyName>RapidTradeWebService</AssemblyName>
+    <TargetFrameworkVersion>v3.0</TargetFrameworkVersion>
+    <OptionExplicit>On</OptionExplicit>
+    <OptionCompare>Binary</OptionCompare>
+    <OptionStrict>On</OptionStrict>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>RapidTradeWebService.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\</OutputPath>
+    <DocumentationFile>RapidTradeWebService.xml</DocumentationFile>
+    <NoWarn>
+    </NoWarn>
+    <WarningsAsErrors>41999,42016,42017,42018,42019,42020,42021,42022,42032,42036</WarningsAsErrors>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="log4netExtensions, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Libraries\log4netExtensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Collections.Specialized" />
+    <Import Include="System.Configuration" />
+    <Import Include="System.Text" />
+    <Import Include="System.Text.RegularExpressions" />
+    <Import Include="System.Web" />
+    <Import Include="System.Web.Caching" />
+    <Import Include="System.Web.SessionState" />
+    <Import Include="System.Web.Security" />
+    <Import Include="System.Web.Profile" />
+    <Import Include="System.Web.UI" />
+    <Import Include="System.Web.UI.WebControls" />
+    <Import Include="System.Web.UI.WebControls.WebParts" />
+    <Import Include="System.Web.UI.HtmlControls" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Accounts.asmx" />
+    <Content Include="ContactNotes.asmx" />
+    <Content Include="Contacts.asmx" />
+    <Content Include="Events.asmx" />
+    <Content Include="EventTypes.asmx" />
+    <Content Include="FormFields.asmx" />
+    <Content Include="Forms.asmx" />
+    <Content Include="FormTypes.asmx" />
+    <Content Include="Kpi2.asmx" />
+    <Content Include="KpiGroups.asmx" />
+    <Content Include="KPIs.asmx" />
+    <Content Include="KpiTypes.asmx" />
+    <Content Include="KpiTypes2.asmx" />
+    <Content Include="KpiVersions.asmx" />
+    <Content Include="Options.asmx" />
+    <Content Include="Orders.asmx" />
+    <Content Include="PriceLists.asmx" />
+    <Content Include="Prices.asmx" />
+    <Content Include="ProductCategories.asmx" />
+    <Content Include="Products.asmx" />
+    <Content Include="ProductStats.asmx" />
+    <Content Include="RolesToID.asmx" />
+    <Content Include="Tables.asmx" />
+    <Content Include="Target.asmx" />
+    <Content Include="TargetTypes.asmx" />
+    <Content Include="UserAccounts.asmx" />
+    <Content Include="Users.asmx" />
+    <Content Include="ReportParameters.asmx" />
+    <Content Include="Reports.asmx" />
+    <Content Include="ReportSql.asmx" />
+    <Content Include="Roles.asmx" />
+    <Content Include="Suppliers.asmx" />
+    <Content Include="UserToID.asmx" />
+    <Content Include="Web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Accounts.asmx.vb">
+      <DependentUpon>Accounts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Activities.asmx.vb">
+      <DependentUpon>Activities.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ActivityTypes.asmx.vb">
+      <DependentUpon>ActivityTypes.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Catalogues.asmx.vb">
+      <DependentUpon>Catalogues.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Common\ExceptionManager.vb" />
+    <Compile Include="Common\General.vb" />
+    <Compile Include="Common\SerializationManager.vb" />
+    <Compile Include="Common\TableNames.vb" />
+    <Compile Include="Companies.asmx.vb">
+      <DependentUpon>Companies.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ContactNotes.asmx.vb">
+      <DependentUpon>ContactNotes.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Contacts.asmx.vb">
+      <DependentUpon>Contacts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Address.asmx.vb">
+      <DependentUpon>Address.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Entity\AddressInfo.vb" />
+    <Compile Include="Entity\UserCompanyInfo.vb" />
+    <Compile Include="Response\AddressResponse.vb" />
+    <Compile Include="Response\UserCompanyResponse.vb" />
+    <Compile Include="UserCompanies.asmx.vb">
+      <DependentUpon>UserCompanies.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="DataAccess\DBHelper.vb" />
+    <Compile Include="Email.asmx.vb">
+      <DependentUpon>Email.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Entity\AccountInfo.vb" />
+    <Compile Include="Entity\ActivityInfo.vb" />
+    <Compile Include="Entity\ActivityTypeInfo.vb" />
+    <Compile Include="Entity\CatalogueInfo.vb" />
+    <Compile Include="Entity\CompanyInfo.vb" />
+    <Compile Include="Entity\ContactInfo.vb" />
+    <Compile Include="Entity\ContactNotesInfo.vb" />
+    <Compile Include="Entity\DisplayActivtyInfo.vb" />
+    <Compile Include="Entity\DisplayEventInfo.vb" />
+    <Compile Include="Entity\EmailInfo.vb" />
+    <Compile Include="Entity\EventInfo.vb" />
+    <Compile Include="Entity\EventTypeInfo.vb" />
+    <Compile Include="Entity\FormFieldInfo.vb" />
+    <Compile Include="Entity\FormInfo.vb" />
+    <Compile Include="Entity\FormTypeInfo.vb" />
+    <Compile Include="Entity\Kpi2Info.vb" />
+    <Compile Include="Entity\KpiGroupInfo.vb" />
+    <Compile Include="Entity\KpiInfo.vb" />
+    <Compile Include="Entity\KpiType2Info.vb" />
+    <Compile Include="Entity\KpiTypeInfo.vb" />
+    <Compile Include="Entity\OptionInfo.vb" />
+    <Compile Include="Entity\OrderInfo.vb" />
+    <Compile Include="Entity\OrderItemInfo.vb" />
+    <Compile Include="Entity\ParameterInfo.vb" />
+    <Compile Include="Entity\PriceInfo.vb" />
+    <Compile Include="Entity\PriceListInfo.vb" />
+    <Compile Include="Entity\ProductCategoryInfo.vb" />
+    <Compile Include="Entity\ProductImageInfo.vb" />
+    <Compile Include="Entity\ProductInfo.vb" />
+    <Compile Include="Entity\ProductStatInfo.vb" />
+    <Compile Include="Entity\ReportInfo.vb" />
+    <Compile Include="Entity\ReportSqlInfo.vb" />
+    <Compile Include="Entity\RoleToIDInfo.vb" />
+    <Compile Include="Entity\SupplierCatalogueInfo.vb" />
+    <Compile Include="Entity\SupplierInfo.vb" />
+    <Compile Include="Entity\TableUpdateInfo.vb" />
+    <Compile Include="Entity\TargetInfo.vb" />
+    <Compile Include="Entity\TargetTypeInfo.vb" />
+    <Compile Include="Entity\UserAccountInfo.vb" />
+    <Compile Include="Entity\UserToIDInfo.vb" />
+    <Compile Include="Events.asmx.vb">
+      <DependentUpon>Events.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="EventTypes.asmx.vb">
+      <DependentUpon>EventTypes.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormFields.asmx.vb">
+      <DependentUpon>FormFields.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms.asmx.vb">
+      <DependentUpon>Forms.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="FormTypes.asmx.vb">
+      <DependentUpon>FormTypes.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="getimage.aspx.designer.vb">
+      <DependentUpon>getimage.aspx</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Compile>
+    <Compile Include="getimage.aspx.vb">
+      <DependentUpon>getimage.aspx</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Global.asax.vb">
+      <DependentUpon>Global.asax</DependentUpon>
+    </Compile>
+    <Compile Include="Kpi2.asmx.vb">
+      <DependentUpon>Kpi2.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="KpiGroups.asmx.vb">
+      <DependentUpon>KpiGroups.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="KPIs.asmx.vb">
+      <DependentUpon>KPIs.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="KpiTypes.asmx.vb">
+      <DependentUpon>KpiTypes.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="KpiTypes2.asmx.vb">
+      <DependentUpon>KpiTypes2.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Options.asmx.vb">
+      <DependentUpon>Options.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Orders.asmx.vb">
+      <DependentUpon>Orders.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="PriceLists.asmx.vb">
+      <DependentUpon>PriceLists.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Prices.asmx.vb">
+      <DependentUpon>Prices.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProductCategories.asmx.vb">
+      <DependentUpon>ProductCategories.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProductImages.asmx.vb">
+      <DependentUpon>ProductImages.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Products.asmx.vb">
+      <DependentUpon>Products.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ProductStats.asmx.vb">
+      <DependentUpon>ProductStats.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ReportParameters.asmx.vb">
+      <DependentUpon>ReportParameters.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Reports.asmx.vb">
+      <DependentUpon>Reports.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="ReportSql.asmx.vb">
+      <DependentUpon>ReportSql.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Response\AccountsResponse.vb" />
+    <Compile Include="Entity\KpiVersionInfo.vb" />
+    <Compile Include="Entity\UserInfo.vb" />
+    <Compile Include="Entity\RoleInfo.vb" />
+    <Compile Include="KpiVersions.asmx.vb">
+      <DependentUpon>KpiVersions.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="Response\ActivityResponse.vb" />
+    <Compile Include="Response\ActivityTypeResponse.vb" />
+    <Compile Include="Response\CataloguesResponse.vb" />
+    <Compile Include="Response\CompaniesResponse.vb" />
+    <Compile Include="Response\ContactNotesResponse.vb" />
+    <Compile Include="Response\ContactsResponse.vb" />
+    <Compile Include="Response\FormFieldsResponse.vb" />
+    <Compile Include="Response\FormsResponse.vb" />
+    <Compile Include="Response\FormTypesResponse.vb" />
+    <Compile Include="Response\Kpi2Response.vb" />
+    <Compile Include="Response\KpiType2Response.vb" />
+    <Compile Include="Response\OptionResponse.vb" />
+    <Compile Include="Response\OrderResponse.vb" />
+    <Compile Include="Response\PriceListResponse.vb" />
+    <Compile Include="Response\PriceResponse.vb" />
+    <Compile Include="Response\ProductCategoryResponse.vb" />
+    <Compile Include="Response\ProductImagesResponse.vb" />
+    <Compile Include="Response\ProductResponse.vb" />
+    <Compile Include="Response\RoleToIDResponse.vb" />
+    <Compile Include="Response\TableVersionResponse.vb" />
+    <Compile Include="Response\TargetResponse.vb" />
+    <Compile Include="Response\TargetTypeResponse.vb" />
+    <Compile Include="Response\UserAccountResponse.vb" />
+    <Compile Include="Response\UserStaffResponse.vb" />
+    <Compile Include="Response\UserToIDResponse.vb" />
+    <Compile Include="RolesToID.asmx.vb">
+      <DependentUpon>RolesToID.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="SupplierCatalogues.asmx.vb">
+      <DependentUpon>SupplierCatalogues.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Tables.asmx.vb">
+      <DependentUpon>Tables.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Target.asmx.vb">
+      <DependentUpon>Target.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="TargetTypes.asmx.vb">
+      <DependentUpon>TargetTypes.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserAccounts.asmx.vb">
+      <DependentUpon>UserAccounts.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Users.asmx.vb">
+      <DependentUpon>Users.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Response\BaseResponse.vb" />
+    <Compile Include="Response\KpiGroupsResponse.vb" />
+    <Compile Include="Response\ParametersResponse.vb" />
+    <Compile Include="Response\ProductStatsResponse.vb" />
+    <Compile Include="Response\ReportSqlResponse.vb" />
+    <Compile Include="Response\ReportsResponse.vb" />
+    <Compile Include="Response\EventsResponse.vb" />
+    <Compile Include="Response\EventTypesResponse.vb" />
+    <Compile Include="Response\KpisResponse.vb" />
+    <Compile Include="Response\KpiTypesResponse.vb" />
+    <Compile Include="Response\KpiVersionsResponse.vb" />
+    <Compile Include="Response\UsersResponse.vb" />
+    <Compile Include="Response\RolesResponse.vb" />
+    <Compile Include="Response\SuppliersResponse.vb" />
+    <Compile Include="Roles.asmx.vb">
+      <DependentUpon>Roles.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Suppliers.asmx.vb">
+      <DependentUpon>Suppliers.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="UserToID.asmx.vb">
+      <DependentUpon>UserToID.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Activities.asmx" />
+    <Content Include="ActivityTypes.asmx" />
+    <Content Include="Catalogues.asmx" />
+    <Content Include="Companies.asmx" />
+    <Content Include="Address.asmx" />
+    <Content Include="UserCompanies.asmx" />
+    <Content Include="Email.asmx" />
+    <Content Include="getimage.aspx">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Global.asax" />
+    <Content Include="Libraries\log4net.dll" />
+    <Content Include="Libraries\log4netExtensions.dll" />
+    <Content Include="Log4Net.config">
+    </Content>
+    <Content Include="ProductImages.asmx" />
+    <Content Include="SupplierCatalogues.asmx" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Data\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>False</UseIIS>
+          <AutoAssignPort>False</AutoAssignPort>
+          <DevelopmentServerPort>2415</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>
+          </IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
