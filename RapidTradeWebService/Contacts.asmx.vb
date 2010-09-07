@@ -25,6 +25,7 @@ Public Class Contacts
     Public Function Modify(ByVal objContactInfo As ContactInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_contacts_modify")
@@ -52,6 +53,7 @@ Public Class Contacts
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objContactInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -101,6 +103,7 @@ Public Class Contacts
     Public Function ReadSingle(ByVal strSupplierId As String, ByVal strAccountId As String, ByVal iCounter As Integer) As ContactReadSingleResponse
         Dim objResponse As New ContactReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_contacts_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@AccountID", strAccountId)
@@ -113,6 +116,7 @@ Public Class Contacts
                 objResponse.Contact = objContacts(0)
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strAccountId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -129,6 +133,7 @@ Public Class Contacts
     Public Function ReadList(ByVal strSupplierId As String, ByVal strUserId As String) As ContactReadListResponse
         Dim objResponse As New ContactReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objContactInfo As ContactInfo()
             Dim cmdCommand As New SqlCommand("usp_contacts_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -139,6 +144,7 @@ Public Class Contacts
                 objResponse.Contacts = objContactInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -155,6 +161,7 @@ Public Class Contacts
     Public Function Sync2(ByVal strSupplierId As String, ByVal strUserId As String, ByVal intVersion As Integer) As ContactReadListResponse
         Dim objResponse As New ContactReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objContactInfo As ContactInfo()
             Dim cmdCommand As New SqlCommand("usp_contacts_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -168,6 +175,7 @@ Public Class Contacts
                 objResponse.Contacts = New ContactInfo() {}
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -185,7 +193,8 @@ Public Class Contacts
         Dim objResponse As New ContactSync3Response
         Dim objTempResponse As New ContactReadListResponse
         Try
-            If _Log.IsDebugEnabled Then _Log.Debug("SupplierID: " & strSupplierId & " // UserID: " & strUserId)
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strUserId & " // Version: " & intVersion)
             If _Log.IsDebugEnabled And lstContacts IsNot Nothing Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstContacts))
 
             objTempResponse = Sync2(strSupplierId, strUserId, intVersion)
@@ -209,6 +218,7 @@ Public Class Contacts
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -219,7 +229,6 @@ Public Class Contacts
             End While
         End Try
         If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
-        If _Log.IsDebugEnabled Then _Log.Debug("exited")
         Return objResponse
     End Function
 

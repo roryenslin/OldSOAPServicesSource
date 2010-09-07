@@ -24,10 +24,12 @@ Public Class Prices
 
     <WebMethod()> _
         Public Function Modify(ByVal lstPriceInfo As List(Of PriceInfo)) As BaseResponse
+
         Dim objResponse As New BaseResponse
         Dim conConnection As SqlConnection = Nothing
         Dim trnTransaction As SqlTransaction = Nothing
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             conConnection = objDBHelper.GetConnection
@@ -77,6 +79,7 @@ Public Class Prices
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As PriceReadListResponse
         Dim objResponse As New PriceReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objPriceInfo As PriceInfo()
             Dim cmdCommand As New SqlCommand("usp_price_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -122,8 +125,8 @@ Public Class Prices
         Dim objResponse As New PriceSync3Response
         Dim objTempResponse As New PriceReadListResponse
         Try
-            If _Log.IsDebugEnabled Then _Log.Debug("entered...")
-            If _Log.IsDebugEnabled And lstPrices IsNot Nothing Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstPrices))
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
             objTempResponse = Sync2(strSupplierId, intVersion)
 
             If Not lstPrices Is Nothing Then
@@ -141,6 +144,7 @@ Public Class Prices
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -150,7 +154,6 @@ Public Class Prices
                 intCounter = intCounter + 1
             End While
         End Try
-        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         If _Log.IsDebugEnabled Then _Log.Debug("exited")
 
         Return objResponse

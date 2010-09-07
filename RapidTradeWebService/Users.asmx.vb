@@ -28,6 +28,7 @@ Public Class Users
         Dim trnTransaction As SqlTransaction = Nothing
         Dim conConnection As SqlConnection = Nothing
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim iCounter As Integer = 0
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
@@ -299,6 +300,7 @@ Public Class Users
         Dim trnTransaction As SqlTransaction = Nothing
         Dim conConnection As SqlConnection = Nothing
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim iCounter As Integer = 0
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
@@ -404,6 +406,7 @@ Public Class Users
             objResponse.Status = True
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objUserInfo), ex)
             trnTransaction.Rollback()
             objResponse.Status = False
             Dim intCounter As Integer = 0
@@ -423,6 +426,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function Delete(ByVal objUserInfo As UserInfo) As BaseResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New BaseResponse
         Try
             Dim intResult As Integer
@@ -453,6 +457,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function ReadSingle(ByVal strUserId As String) As UserReadSingleResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New UserReadSingleResponse
         Try
             Dim cmdCommand As New SqlCommand("usp_user_readsingle")
@@ -464,6 +469,7 @@ Public Class Users
                 objResponse.User = objUsers(0)
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -478,6 +484,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function ReadList(ByVal strSupplierId As String) As UserReadListResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New UserReadListResponse
         Try
             Dim objUserInfo As UserInfo()
@@ -489,6 +496,7 @@ Public Class Users
                 objResponse.Users = objUserInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -503,6 +511,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function ReadStaff(ByVal strSupplierId As String, ByVal strUserId As String) As UserStaffResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New UserStaffResponse
         Dim objReader As SqlDataReader = Nothing
         Try
@@ -521,6 +530,7 @@ Public Class Users
                 objResponse.Staff = lstStaff
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -539,6 +549,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function Sync(ByVal strUserId As String, ByVal intVersion As Integer) As UserReadSingleResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New UserReadSingleResponse
         Try
             Dim objUserInfo As UserInfo()
@@ -569,6 +580,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function Sync2(ByVal intVersion As Integer) As UserReadListResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New UserReadListResponse
         Try
             Dim objUserInfo As UserInfo()
@@ -591,6 +603,7 @@ Public Class Users
                 'objResponse.Users = objUserInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception ", ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -605,6 +618,7 @@ Public Class Users
 
     <WebMethod()> _
     Public Function Sync3(ByVal intVersion As Integer, ByVal lstUsers As List(Of UserInfo)) As UserSync3Response
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New UserSync3Response
         Dim objTempResponse As New UserReadListResponse
         Try
@@ -632,6 +646,7 @@ Public Class Users
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for ", ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -648,22 +663,20 @@ Public Class Users
 
     <WebMethod()> _
     Public Function Sync4(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal lstUsers As List(Of UserInfo)) As UserSync3Response
-        If _Log.IsDebugEnabled Then _Log.Debug("Version: " & intVersion)
         Dim objResponse As New UserSync3Response
         Dim objReader As SqlDataReader = Nothing
-
         Dim objTempResponse As New UserReadListResponse
+
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+        If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strUserId & " // Version: " & intVersion)
 
         Try
             Dim cmdCommand As New SqlCommand("usp_user_sync4")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierID)
             cmdCommand.Parameters.AddWithValue("@UserId", strUserId)
             cmdCommand.Parameters.AddWithValue("@Version", intVersion)
-
             objResponse.Users = ReadUsers(objDBHelper.ExecuteReader(cmdCommand))
-
             objResponse.Status = True
-
             If Not lstUsers Is Nothing Then
                 For Each objUser As UserInfo In lstUsers
                     If Not objUser Is Nothing Then
@@ -675,7 +688,6 @@ Public Class Users
                 objResponse.Status = objTempResponse.Status
             End If
 
-
             Dim objTableVersionResponse As TableVersionResponse = New Tables().GetTableVersion(TableNames.Users)
             If objTableVersionResponse.Status Then
                 objResponse.LastVersion = objTableVersionResponse.TableVersion
@@ -684,6 +696,7 @@ Public Class Users
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierID & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -699,9 +712,7 @@ Public Class Users
         End Try
         Return objResponse
 
-
         If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
-        If _Log.IsDebugEnabled Then _Log.Debug("exited")
         Return objResponse
     End Function
 

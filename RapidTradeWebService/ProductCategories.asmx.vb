@@ -15,6 +15,7 @@ Imports RapidTradeWebService.Response
 Public Class ProductCategories
     Inherits System.Web.Services.WebService
 
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(ProductCategories))
     Dim objDBHelper As DBHelper
 
     Public Sub New()
@@ -25,6 +26,7 @@ Public Class ProductCategories
     Public Function Modify(ByVal objProductCategoryInfo As ProductCategoryInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_productcategory_modify")
@@ -46,6 +48,7 @@ Public Class ProductCategories
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objProductCategoryInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -78,6 +81,7 @@ Public Class ProductCategories
                 objResponse.Errors(0) = "No rows deleted in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objProductCategoryInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -94,6 +98,7 @@ Public Class ProductCategories
     Public Function ReadSingle(ByVal strSupplierId As String, ByVal iCategoryId As Integer) As ProductCategoryReadSingleResponse
         Dim objResponse As New ProductCategoryReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_productcategory_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@CategoryID", iCategoryId)
@@ -104,6 +109,7 @@ Public Class ProductCategories
                 objResponse.ProductCategory = objProductCategorys(0)
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -120,6 +126,7 @@ Public Class ProductCategories
     Public Function ReadList(ByVal strSupplierId As String) As ProductCategoryReadListResponse
         Dim objResponse As New ProductCategoryReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objProductCategoryInfo As ProductCategoryInfo()
             Dim cmdCommand As New SqlCommand("usp_productcategory_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -145,6 +152,7 @@ Public Class ProductCategories
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As ProductCategoryReadListResponse
         Dim objResponse As New ProductCategoryReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objProductCategoryInfo As ProductCategoryInfo()
             Dim cmdCommand As New SqlCommand("usp_productcategory_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -155,6 +163,7 @@ Public Class ProductCategories
                 objResponse.ProductCategories = objProductCategoryInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -172,6 +181,9 @@ Public Class ProductCategories
         Dim objResponse As New ProductCategorySync3Response
         Dim objTempResponse As New ProductCategoryReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
+
             objTempResponse = Sync2(strSupplierId, intVersion)
 
             If Not lstProductCategory Is Nothing Then
@@ -193,6 +205,7 @@ Public Class ProductCategories
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing

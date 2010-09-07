@@ -18,13 +18,33 @@ Namespace Entity
         Private _ContactID As String
         Private _Deleted As Boolean
 
+        Private _Latitude As String
+        Public Property Latitude() As String
+            Get
+                Return _Latitude
+            End Get
+            Set(ByVal value As String)
+                _Latitude = value
+            End Set
+        End Property
+
+        Private _Longitude As String
+        Public Property Longitude() As String
+            Get
+                Return _Longitude
+            End Get
+            Set(ByVal value As String)
+                _Longitude = value
+            End Set
+        End Property
+
         Public Sub New()
         End Sub
 
         Public Sub New(ByVal strActivityID As String, ByVal strSuppID As String, ByVal strActivityTypeId As String, _
                        ByVal strFollowOnActivity As String, ByVal strData As String, ByVal dtEndDt As String, _
                        ByVal dtDueDt As String, ByVal strUserId As String, ByVal strAccountId As String, ByVal strContactId As String, _
-                       ByVal strStatus As String)
+                       ByVal strStatus As String, ByVal latitude As String, ByVal longitude As String)
             _ActivityID = strActivityID
             _SupplierID = strSuppID
             _ActivityTypeID = strActivityTypeId
@@ -36,6 +56,8 @@ Namespace Entity
             _AccountID = strAccountId
             _Status = strStatus
             _ContactID = strContactId
+            _Latitude = latitude
+            _Longitude = longitude
         End Sub
 
         Public Property ActivityID() As String

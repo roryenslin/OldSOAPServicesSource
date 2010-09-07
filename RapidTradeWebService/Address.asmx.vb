@@ -38,7 +38,7 @@ Public Class Address
     Public Function Modify(ByVal objAddressInfo As AddressInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("entered...")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_Address_modify")
@@ -86,6 +86,7 @@ Public Class Address
     Public Function ReadList(ByVal strSupplierId As String, ByVal strAccountID As String) As AddressReadListResponse
         Dim objResponse As New AddressReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objAddressInfo As AddressInfo()
             Dim cmdCommand As New SqlCommand("usp_Address_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -96,6 +97,7 @@ Public Class Address
                 objResponse.Addresss = objAddressInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strAccountID, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -113,6 +115,7 @@ Public Class Address
         Dim objResponse As New AddressSync4Response
         Dim objTempResponse As New AddressReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             If _Log.IsInfoEnabled Then _Log.Debug("SupplierID: " & strSupplierId & " // UserID: " & strUserId)
             If _Log.IsDebugEnabled And lstAddresss IsNot Nothing Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstAddresss))
 
@@ -149,6 +152,7 @@ Public Class Address
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -159,7 +163,6 @@ Public Class Address
             End While
         End Try
         If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
-        If _Log.IsInfoEnabled Then _Log.Info("exited")
         Return objResponse
     End Function
 

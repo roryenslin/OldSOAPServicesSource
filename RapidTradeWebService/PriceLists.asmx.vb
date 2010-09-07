@@ -14,6 +14,7 @@ Imports RapidTradeWebService.Response
 <ToolboxItem(False)> _
 Public Class PriceLists
     Inherits System.Web.Services.WebService
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(PriceLists))
 
     Dim objDBHelper As DBHelper
 
@@ -37,6 +38,7 @@ Public Class PriceLists
                     ByVal bIncludeCatalogues As Boolean) As PriceListReadListResponse
         Dim objResponse As New PriceListReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objPriceListInfo As PriceListInfo()
             Dim cmdCommand As New SqlCommand("usp_pricelist_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -54,6 +56,7 @@ Public Class PriceLists
                 objResponse.PriceLists = objPriceListInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strAccountId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -71,6 +74,7 @@ Public Class PriceLists
         Dim intCounter As Integer = 0
 
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             If Not objReader Is Nothing AndAlso objReader.HasRows Then
                 While (objReader.Read())
                     ReDim Preserve objPriceLists(intCounter)

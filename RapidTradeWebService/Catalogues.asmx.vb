@@ -25,7 +25,7 @@ Public Class Catalogues
 
     <WebMethod()> _
     Public Function Modify(ByVal objCatalogueInfo As CatalogueInfo) As BaseResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New BaseResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info(SerializationManager.Serialize(objCatalogueInfo))
@@ -34,6 +34,7 @@ Public Class Catalogues
             Dim cmdCommand As New SqlCommand("usp_catalogues_modify")
             cmdCommand.Parameters.AddWithValue("@CatalogueID", objCatalogueInfo.CatalogueID)
             cmdCommand.Parameters.AddWithValue("@CatalogueName", objCatalogueInfo.CatalogueName)
+            cmdCommand.Parameters.AddWithValue("@Deleted", objCatalogueInfo.Deleted)
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
@@ -61,7 +62,7 @@ Public Class Catalogues
 
     <WebMethod()> _
     Public Function Delete(ByVal objCatalogueInfo As CatalogueInfo) As BaseResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New BaseResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info(SerializationManager.Serialize(objCatalogueInfo))
@@ -96,7 +97,7 @@ Public Class Catalogues
 
     <WebMethod()> _
     Public Function ReadList() As CataloguesReadListResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New CataloguesReadListResponse
         Try
             Dim objCatalogueInfo As CatalogueInfo()

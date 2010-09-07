@@ -36,14 +36,6 @@ Namespace Entity
                 _AccountId = value
             End Set
         End Property
-        Public Property CompanyId() As String
-            Get
-                Return _AccountId
-            End Get
-            Set(ByVal value As String)
-                _AccountId = value
-            End Set
-        End Property
 
         Public Property BranchId() As String
             Get

@@ -24,6 +24,7 @@ Public Class UserCompanies
 
     <WebMethod()> _
     Public Function Modify(ByVal objUserCompanyInfo As UserCompanyInfo) As BaseResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New BaseResponse
         Try
             Dim intResult As Integer
@@ -45,6 +46,7 @@ Public Class UserCompanies
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception ", ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -58,46 +60,25 @@ Public Class UserCompanies
     End Function
 
     <WebMethod()> _
-    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal strCompanyID As String, ByVal strBranch As String) As String()
-        Dim resultarray As New Generic.List(Of String)
-        Dim result As UserCompanySync4Response = Sync4(strSupplierID, strUserId, intVersion, Nothing)
-        If result.Status Then
-            resultarray.Add("Sync4------> True ")
-            If result.UserCompanies IsNot Nothing Then
-                resultarray.Add("Count: " & result.UserCompanies.Length)
-            End If
-
-            resultarray.Add("lastversion:" & result.LastVersion)
-        Else
-            resultarray.Add("Sync4------> False ")
-            For Each serror In result.Errors
-                resultarray.Add(serror)
-            Next
-        End If
-
+    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal strCompanyID As String, ByVal strBranch As String) As UserCompanySync4Response
+        Dim rslt As New List(Of Object)
         Dim ob As New UserCompanyInfo
         ob.SupplierID = strSupplierID
         ob.UserId = strUserId
         ob.BranchId = strBranch
         ob.CompanyId = strCompanyID
-        Dim br As BaseResponse = Modify(ob)
-        If br.Status Then
-            resultarray.Add("Modify------> True ")
-        Else
-            resultarray.Add("Modify------> False ")
-            For Each serror In br.Errors
-                resultarray.Add(serror)
-            Next
-        End If
+        Dim lstUserCompanys As New List(Of UserCompanyInfo)
+        lstUserCompanys.Add(ob)
+        Dim result As UserCompanySync4Response = Sync4(strSupplierID, strUserId, intVersion, lstUserCompanys)
 
-        Return resultarray.ToArray
+        Return result
     End Function
 
     <WebMethod()> _
     Public Function Sync4(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal lstUserCompanys As List(Of UserCompanyInfo)) As UserCompanySync4Response
         Dim objResponse As New UserCompanySync4Response
         Try
-            If _Log.IsDebugEnabled Then _Log.Debug("Version: " & intVersion & " User Id: " & strUserId)
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->" & strUserId)
 
             'Sync4 Implementation
             Dim objUserCompanyInfo As UserCompanyInfo()
@@ -118,8 +99,12 @@ Public Class UserCompanies
                         ProcessResponse(Modify(objUserCompany), objTempResponse)
                     End If
                 Next
-                objResponse.Errors = objTempResponse.Errors
-                objResponse.Status = objTempResponse.Status
+                If objTempResponse.Errors IsNot Nothing Then
+                    If objTempResponse.Errors.Length > 0 Then
+                        objResponse.Errors = objTempResponse.Errors
+                        objResponse.Status = objTempResponse.Status
+                    End If
+                End If
             End If
 
             Dim objTableVersionResponse As TableVersionResponse = New Tables().GetTableVersion(TableNames.UserAccounts)
@@ -130,6 +115,7 @@ Public Class UserCompanies
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for UserID: " & strUserId & " // Version: " & intVersion, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -139,7 +125,7 @@ Public Class UserCompanies
                 intCounter = intCounter + 1
             End While
         End Try
-        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
+        '***If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         If _Log.IsDebugEnabled Then _Log.Debug("exited")
         Return objResponse
     End Function

@@ -27,6 +27,7 @@ Public Class Kpi2
     Public Function Modify(ByVal objKpi2Info As Kpi2Info) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_kpi2_modify")
@@ -52,6 +53,7 @@ Public Class Kpi2
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objKpi2Info), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -68,6 +70,7 @@ Public Class Kpi2
     Public Function Delete(ByVal objKpi2Info As Kpi2Info) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_kpi2_delete")
@@ -103,6 +106,7 @@ Public Class Kpi2
                                ByVal strPeriodKey As String, ByVal strKpiTypeId As String) As Kpi2ReadSingleResponse
         Dim objResponse As New Kpi2ReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_kpi2_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@UserID", strUserId)
@@ -116,6 +120,7 @@ Public Class Kpi2
                 objResponse.Kpi2 = objKpi2(0)
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -132,6 +137,7 @@ Public Class Kpi2
     Public Function ReadList(ByVal strSupplierId As String, ByVal strUserId As String) As Kpi2ReadListResponse
         Dim objResponse As New Kpi2ReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objKpi2Info As Kpi2Info()
             Dim cmdCommand As New SqlCommand("usp_kpi2_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -142,6 +148,7 @@ Public Class Kpi2
                 objResponse.Kpi2s = objKpi2Info
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -158,6 +165,7 @@ Public Class Kpi2
     Public Function Sync2(ByVal strSupplierId As String, ByVal strUserId As String, ByVal intVersion As Integer) As Kpi2ReadListResponse
         Dim objResponse As New Kpi2ReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objKpi2FieldInfo As Kpi2Info()
             Dim cmdCommand As New SqlCommand("usp_kpi2_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -169,6 +177,7 @@ Public Class Kpi2
                 objResponse.Kpi2s = objKpi2FieldInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -188,7 +197,8 @@ Public Class Kpi2
         Dim objTempResponse As New Kpi2ReadListResponse
         Try
 
-            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Method Parameters: Supplier ID: {0} User ID: {1} Version: {2}", strSupplierId, strUserId, intVersion))
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strUserId & " // Version: " & intVersion)
 
             objTempResponse = Sync2(strSupplierId, strUserId, intVersion)
 
@@ -226,7 +236,7 @@ Public Class Kpi2
             End If
 
         Catch ex As Exception
-            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Exception: {0} ", ex.ToString()))
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
 
             objResponse.Status = False
             Dim intCounter As Integer = 0

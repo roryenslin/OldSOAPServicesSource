@@ -80,35 +80,23 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Accounts.asmx" />
-    <Content Include="ContactNotes.asmx" />
     <Content Include="Contacts.asmx" />
     <Content Include="Events.asmx" />
     <Content Include="EventTypes.asmx" />
-    <Content Include="FormFields.asmx" />
-    <Content Include="Forms.asmx" />
-    <Content Include="FormTypes.asmx" />
     <Content Include="Kpi2.asmx" />
-    <Content Include="KpiGroups.asmx" />
-    <Content Include="KPIs.asmx" />
-    <Content Include="KpiTypes.asmx" />
     <Content Include="KpiTypes2.asmx" />
-    <Content Include="KpiVersions.asmx" />
     <Content Include="Options.asmx" />
     <Content Include="Orders.asmx" />
     <Content Include="PriceLists.asmx" />
     <Content Include="Prices.asmx" />
     <Content Include="ProductCategories.asmx" />
     <Content Include="Products.asmx" />
-    <Content Include="ProductStats.asmx" />
     <Content Include="RolesToID.asmx" />
     <Content Include="Tables.asmx" />
     <Content Include="Target.asmx" />
     <Content Include="TargetTypes.asmx" />
     <Content Include="UserAccounts.asmx" />
     <Content Include="Users.asmx" />
-    <Content Include="ReportParameters.asmx" />
-    <Content Include="Reports.asmx" />
-    <Content Include="ReportSql.asmx" />
     <Content Include="Roles.asmx" />
     <Content Include="Suppliers.asmx" />
     <Content Include="UserToID.asmx" />
@@ -139,10 +127,6 @@
       <DependentUpon>Companies.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ContactNotes.asmx.vb">
-      <DependentUpon>ContactNotes.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Contacts.asmx.vb">
       <DependentUpon>Contacts.asmx</DependentUpon>
       <SubType>Component</SubType>
@@ -151,9 +135,15 @@
       <DependentUpon>Address.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Entity\ProductLongTextInfo.vb" />
+    <Compile Include="ProductLongText.asmx.vb">
+      <DependentUpon>ProductLongText.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Entity\AddressInfo.vb" />
     <Compile Include="Entity\UserCompanyInfo.vb" />
     <Compile Include="Response\AddressResponse.vb" />
+    <Compile Include="Response\ProductLongTextResponse.vb" />
     <Compile Include="Response\UserCompanyResponse.vb" />
     <Compile Include="UserCompanies.asmx.vb">
       <DependentUpon>UserCompanies.asmx</DependentUpon>
@@ -212,18 +202,6 @@
       <DependentUpon>EventTypes.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="FormFields.asmx.vb">
-      <DependentUpon>FormFields.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Forms.asmx.vb">
-      <DependentUpon>Forms.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="FormTypes.asmx.vb">
-      <DependentUpon>FormTypes.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="getimage.aspx.designer.vb">
       <DependentUpon>getimage.aspx</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
@@ -238,18 +216,6 @@
     </Compile>
     <Compile Include="Kpi2.asmx.vb">
       <DependentUpon>Kpi2.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="KpiGroups.asmx.vb">
-      <DependentUpon>KpiGroups.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="KPIs.asmx.vb">
-      <DependentUpon>KPIs.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="KpiTypes.asmx.vb">
-      <DependentUpon>KpiTypes.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="KpiTypes2.asmx.vb">
@@ -284,30 +250,10 @@
       <DependentUpon>Products.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="ProductStats.asmx.vb">
-      <DependentUpon>ProductStats.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ReportParameters.asmx.vb">
-      <DependentUpon>ReportParameters.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Reports.asmx.vb">
-      <DependentUpon>Reports.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="ReportSql.asmx.vb">
-      <DependentUpon>ReportSql.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="Response\AccountsResponse.vb" />
     <Compile Include="Entity\KpiVersionInfo.vb" />
     <Compile Include="Entity\UserInfo.vb" />
     <Compile Include="Entity\RoleInfo.vb" />
-    <Compile Include="KpiVersions.asmx.vb">
-      <DependentUpon>KpiVersions.asmx</DependentUpon>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -417,6 +363,7 @@
     <Content Include="Catalogues.asmx" />
     <Content Include="Companies.asmx" />
     <Content Include="Address.asmx" />
+    <Content Include="ProductLongText.asmx" />
     <Content Include="UserCompanies.asmx" />
     <Content Include="Email.asmx" />
     <Content Include="getimage.aspx">
