@@ -26,6 +26,7 @@ Public Class Tables
         Dim objResponse As New TableVersionResponse
         Dim objReader As SqlDataReader = Nothing
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_table_getversion")
             cmdCommand.Parameters.AddWithValue("@TableName", strTableName)
 
@@ -42,6 +43,7 @@ Public Class Tables
                 End If
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strTableName, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -63,6 +65,7 @@ Public Class Tables
         Dim objResponse As New TableVersionsResponse
         Dim objReader As SqlDataReader = Nothing
         Dim intVersions() As Integer
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         If _Log.IsDebugEnabled Then _Log.Debug("Tables: " & strTableNames.ToString)
 
         Try
@@ -96,6 +99,7 @@ Public Class Tables
                 objResponse.Errors(0) = String.Format("Input string array is empty.")
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strTableNames.ToString, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -114,23 +118,16 @@ Public Class Tables
     End Function
 
     <WebMethod()> _
-    Public Function Test(ByVal strTableName As String, ByVal version As Integer) As String()
-        Dim tu As New TableUpdateInfo
+    Public Function Test(ByVal strUserID As String, ByVal strTableName As String, ByVal version As Integer) As List(Of TableSyncResponse)
+        Dim tu As New TableSyncInfo
         tu.TableName = strTableName
         tu.LastVersion = version.ToString
-        Dim lst As New List(Of TableUpdateInfo)
+        tu.UserId = strUserID
+        Dim lst As New List(Of TableSyncInfo)
         lst.Add(tu)
-        Dim br As TableUpdateResponse = CheckTableVersions(lst)
+        Dim br As List(Of TableSyncResponse) = CheckTableVersions3(lst)
 
-        Dim rslt As New Generic.List(Of String)
-        rslt.Add(br.Status.ToString)
-        rslt.Add("Count" & br.TableVersions.Length)
-        For Each ob In br.TableVersions
-            rslt.Add("MustUpdate " & ob.MustUpdate)
-            rslt.Add("Lastversion " & ob.LastVersion)
-            rslt.Add("TableName" & ob.TableName)
-        Next
-        Return rslt.ToArray
+        Return br
     End Function
 
     <WebMethod()> _
@@ -204,7 +201,8 @@ Public Class Tables
         Dim dConfig As New Dictionary(Of String, String)
         dConfig = GetTableVersionsConfig()
 
-        If _Log.IsInfoEnabled Then _Log.Info("-------------------------------->" & vbCrLf & RapidTradeWebService.Common.SerializationManager.Serialize(listSyncInfo))
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(listSyncInfo))
 
         Dim objConnection As SqlConnection = Nothing
         Try
@@ -256,6 +254,7 @@ Public Class Tables
                         objResponseItem.Status = False
                         ReDim Preserve objResponseItem.Errors(1)
                         objResponseItem.Errors(0) = String.Format("Either input list is empty or the table name is not configured in table TableVersionsConfig.")
+                        If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
                     End If
 
                     objResponse.Add(objResponseItem)
@@ -272,12 +271,13 @@ Public Class Tables
                 ex = ex.InnerException
                 intCounter += 1
             End While
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse), ex)
         Finally
             If Not objConnection Is Nothing AndAlso Not objConnection.State = ConnectionState.Closed Then
                 objConnection.Close()
             End If
         End Try
-        If _Log.IsDebugEnabled Then _Log.Info("------------Result----------------->" & vbCrLf & RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
+        If _Log.IsDebugEnabled Then _Log.Debug("Result----------------->" & vbCrLf & RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         Return objResponse
     End Function
 

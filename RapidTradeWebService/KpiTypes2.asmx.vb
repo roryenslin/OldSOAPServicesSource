@@ -27,6 +27,7 @@ Public Class KpiTypes2
     Public Function Modify(ByVal objKpiType2Info As KpiType2Info) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_kpitypes2_modify")
@@ -97,6 +98,7 @@ Public Class KpiTypes2
     Public Function ReadSingle(ByVal strSupplierId As String, ByVal strKpiTypeId As String) As KpiType2ReadSingleResponse
         Dim objResponse As New KpiType2ReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_kpitypes2_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@KpiTypeID", strKpiTypeId)
@@ -123,6 +125,7 @@ Public Class KpiTypes2
     Public Function ReadList(ByVal strSupplierId As String) As KpiType2ReadListResponse
         Dim objResponse As New KpiType2ReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objKpiType2Info As KpiType2Info()
             Dim cmdCommand As New SqlCommand("usp_kpitypes2_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -148,6 +151,9 @@ Public Class KpiTypes2
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As KpiType2ReadListResponse
         Dim objResponse As New KpiType2ReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
+
             Dim objKpiType2FieldInfo As KpiType2Info()
             Dim cmdCommand As New SqlCommand("usp_kpitypes2_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -177,31 +183,21 @@ Public Class KpiTypes2
         Dim objResponse As New KpiType2Sync3Response
         Dim objTempResponse As New KpiType2ReadListResponse
         Try
-            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Method Parameters: Supplier ID: {0} Version: {1}", strSupplierId, intVersion))
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
 
             objTempResponse = Sync2(strSupplierId, intVersion)
 
-            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Response from Sync2: {0} ", SerializationManager.Serialize(objTempResponse)))
-
             If Not lstKpiTypes2 Is Nothing Then
-
-                If _Log.IsDebugEnabled Then _Log.Debug("Starting Sync3 Updates...")
                 Dim objModifyResponse As BaseResponse
-
                 For Each objKpiType2 As KpiType2Info In lstKpiTypes2
                     If Not objKpiType2 Is Nothing Then
-
                         If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Input to Modify: {0} ", SerializationManager.Serialize(objKpiType2)))
-
                         objModifyResponse = Modify(objKpiType2)
                         ProcessResponse(objModifyResponse, objTempResponse)
                         If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Response from Modify: {0} ", SerializationManager.Serialize(objModifyResponse)))
-
                     End If
                 Next
-
-                If _Log.IsDebugEnabled Then _Log.Debug("Sync3 Updates completed...")
-
             Else
                 If _Log.IsDebugEnabled Then _Log.Debug("No data to update. input list is emtpy...")
             End If
@@ -217,9 +213,7 @@ Public Class KpiTypes2
             End If
 
         Catch ex As Exception
-
-            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Exception: {0} ", ex.ToString()))
-
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -229,9 +223,7 @@ Public Class KpiTypes2
                 intCounter = intCounter + 1
             End While
         End Try
-
-        If _Log.IsDebugEnabled Then _Log.Debug("Exiting KpiTypes2.Sync3 Method")
-
+        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         Return objResponse
     End Function
 

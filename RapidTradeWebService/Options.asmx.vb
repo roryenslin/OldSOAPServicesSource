@@ -26,6 +26,7 @@ Public Class Options
     Public Function Modify(ByVal objOptionInfo As OptionInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_option_modify")
@@ -46,6 +47,7 @@ Public Class Options
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objOptionInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -62,6 +64,7 @@ Public Class Options
     Public Function Delete(ByVal objOptionInfo As OptionInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_option_delete")
@@ -95,6 +98,7 @@ Public Class Options
     Public Function ReadSingle(ByVal strSupplierId As String, ByVal strName As String, ByVal strGroup As String) As OptionReadSingleResponse
         Dim objResponse As New OptionReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_option_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@Name", strName)
@@ -106,6 +110,7 @@ Public Class Options
                 objResponse.OptionData = objOptions(0)
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -122,6 +127,7 @@ Public Class Options
     Public Function ReadList(ByVal strSupplierId As String) As OptionReadListResponse
         Dim objResponse As New OptionReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objOptionInfo As OptionInfo()
             Dim cmdCommand As New SqlCommand("usp_option_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -131,6 +137,7 @@ Public Class Options
                 objResponse.Options = objOptionInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -147,6 +154,8 @@ Public Class Options
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As OptionReadListResponse
         Dim objResponse As New OptionReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
             Dim objOptionInfo As OptionInfo()
             Dim cmdCommand As New SqlCommand("usp_option_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -157,6 +166,7 @@ Public Class Options
                 objResponse.Options = objOptionInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -174,8 +184,8 @@ Public Class Options
         Dim objResponse As New OptionSync3Response
         Dim objTempResponse As New OptionReadListResponse
         Try
-            If _Log.IsDebugEnabled Then _Log.Debug("SupplierID: " & strSupplierId & " // Version: " & intVersion)
-            If _Log.IsDebugEnabled And lstOption IsNot Nothing Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstOption))
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
 
             objTempResponse = Sync2(strSupplierId, intVersion)
 
@@ -198,6 +208,7 @@ Public Class Options
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -208,7 +219,6 @@ Public Class Options
             End While
         End Try
         If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
-        If _Log.IsDebugEnabled Then _Log.Debug("exited")
         Return objResponse
     End Function
 

@@ -14,7 +14,7 @@ Imports RapidTradeWebService.Response
 <ToolboxItem(False)> _
 Public Class Target
     Inherits System.Web.Services.WebService
-
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Target))
     Dim objDBHelper As DBHelper
 
     Public Sub New()
@@ -25,6 +25,7 @@ Public Class Target
     Public Function Modify(ByVal objTargetInfo As TargetInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_target_modify")
@@ -49,6 +50,7 @@ Public Class Target
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objTargetInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -99,6 +101,7 @@ Public Class Target
     Public Function ReadList(ByVal strSupplierId As String) As TargetReadListResponse
         Dim objResponse As New TargetReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objTargetInfo As TargetInfo()
             Dim cmdCommand As New SqlCommand("usp_target_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -108,6 +111,7 @@ Public Class Target
                 objResponse.Targets = objTargetInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -124,6 +128,7 @@ Public Class Target
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As TargetReadListResponse
         Dim objResponse As New TargetReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objTargetInfo As TargetInfo()
             Dim cmdCommand As New SqlCommand("usp_target_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -134,6 +139,7 @@ Public Class Target
                 objResponse.Targets = objTargetInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -151,6 +157,7 @@ Public Class Target
         Dim objResponse As New TargetSync3Response
         Dim objTempResponse As New TargetReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             objTempResponse = Sync2(strSupplierId, intVersion)
 
             If Not lstTargets Is Nothing Then
@@ -172,6 +179,7 @@ Public Class Target
             End If
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing

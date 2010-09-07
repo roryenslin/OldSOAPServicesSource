@@ -52,98 +52,10 @@ Public Class Activities
     End Function
 
     <WebMethod()> _
-    Public Function Add(ByVal objActivityInfo As ActivityInfo) As BaseResponse
-        Dim objResponse As New BaseResponse
-        Try
-            Dim intResult As Integer
-            Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_event_add")
-            cmdCommand.Parameters.AddWithValue("@EventID", objActivityInfo.ActivityID)
-            cmdCommand.Parameters.AddWithValue("@SupplierID", objActivityInfo.SupplierID)
-            cmdCommand.Parameters.AddWithValue("@EventTypeID", objActivityInfo.ActivityTypeID)
-            cmdCommand.Parameters.AddWithValue("@FollowOnEvent", objActivityInfo.FollowOnActivity)
-            cmdCommand.Parameters.AddWithValue("@Data", objActivityInfo.Data)
-            cmdCommand.Parameters.AddWithValue("@EndDate", ConvertDate(objActivityInfo.EndDate))
-            cmdCommand.Parameters.AddWithValue("@DueDate", ConvertDate(objActivityInfo.DueDate))
-            cmdCommand.Parameters.AddWithValue("@UserID", objActivityInfo.UserID)
-            cmdCommand.Parameters.AddWithValue("@AccountID", objActivityInfo.AccountID)
-            cmdCommand.Parameters.AddWithValue("@Status", objActivityInfo.Status)
-            cmdCommand.Parameters.AddWithValue("@UserID", objActivityInfo.UserID)
-            cmdCommand.Parameters.AddWithValue("@AccountID", objActivityInfo.AccountID)
-            cmdCommand.Parameters.AddWithValue("@Status", objActivityInfo.Status)
-            cmdCommand.Parameters.AddWithValue("@ContactID", objActivityInfo.ContactID)
-
-            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
-            oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand)
-            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-            objResponse.Status = intResult = 0
-            If Not objResponse.Status Then
-                ReDim Preserve objResponse.Errors(0)
-                objResponse.Errors(0) = "No rows inserted in database. Error returned" + intResult.ToString()
-            End If
-        Catch ex As Exception
-            objResponse.Status = False
-            Dim intCounter As Integer = 0
-            While Not ex Is Nothing
-                ReDim Preserve objResponse.Errors(intCounter)
-                objResponse.Errors(intCounter) = ex.Message
-                ex = ex.InnerException
-                intCounter = intCounter + 1
-            End While
-        End Try
-        Return objResponse
-    End Function
-
-    <WebMethod()> _
-    Public Function Change(ByVal objActivityInfo As ActivityInfo) As BaseResponse
-        Dim objResponse As New BaseResponse
-        Try
-            Dim intResult As Integer
-            Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_event_change")
-            cmdCommand.Parameters.AddWithValue("@EventID", objActivityInfo.ActivityID)
-            cmdCommand.Parameters.AddWithValue("@SupplierID", objActivityInfo.SupplierID)
-            cmdCommand.Parameters.AddWithValue("@EventTypeID", objActivityInfo.ActivityTypeID)
-            cmdCommand.Parameters.AddWithValue("@FollowOnEvent", objActivityInfo.FollowOnActivity)
-            cmdCommand.Parameters.AddWithValue("@Data", objActivityInfo.Data)
-
-            cmdCommand.Parameters.AddWithValue("@EndDate", ConvertDate(objActivityInfo.EndDate))
-            cmdCommand.Parameters.AddWithValue("@DueDate", ConvertDate(objActivityInfo.DueDate))
-            cmdCommand.Parameters.AddWithValue("@UserID", objActivityInfo.UserID)
-            cmdCommand.Parameters.AddWithValue("@AccountID", objActivityInfo.AccountID)
-            cmdCommand.Parameters.AddWithValue("@Status", objActivityInfo.Status)
-            cmdCommand.Parameters.AddWithValue("@UserID", objActivityInfo.UserID)
-            cmdCommand.Parameters.AddWithValue("@AccountID", objActivityInfo.AccountID)
-            cmdCommand.Parameters.AddWithValue("@Status", objActivityInfo.Status)
-            cmdCommand.Parameters.AddWithValue("@ContactID", objActivityInfo.ContactID)
-
-            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
-            oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand)
-            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-            objResponse.Status = intResult = 0
-            If Not objResponse.Status Then
-                ReDim Preserve objResponse.Errors(0)
-                objResponse.Errors(0) = "No rows updated in database. Error returned" + intResult.ToString()
-            End If
-        Catch ex As Exception
-            objResponse.Status = False
-            Dim intCounter As Integer = 0
-            While Not ex Is Nothing
-                ReDim Preserve objResponse.Errors(intCounter)
-                objResponse.Errors(intCounter) = ex.Message
-                ex = ex.InnerException
-                intCounter = intCounter + 1
-            End While
-        End Try
-        Return objResponse
-    End Function
-
-    <WebMethod()> _
     Public Function Modify(ByVal objActivityInfo As ActivityInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_event_modify")
@@ -158,6 +70,9 @@ Public Class Activities
             cmdCommand.Parameters.AddWithValue("@AccountID", objActivityInfo.AccountID)
             cmdCommand.Parameters.AddWithValue("@Status", objActivityInfo.Status)
             cmdCommand.Parameters.AddWithValue("@ContactID", objActivityInfo.ContactID)
+            cmdCommand.Parameters.AddWithValue("@Latitude", objActivityInfo.Latitude)
+            cmdCommand.Parameters.AddWithValue("@Longitude", objActivityInfo.Longitude)
+            cmdCommand.Parameters.AddWithValue("@Deleted", objActivityInfo.Deleted)
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
@@ -169,6 +84,7 @@ Public Class Activities
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objActivityInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -185,6 +101,7 @@ Public Class Activities
     Public Function Delete(ByVal objActivityInfo As ActivityInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_event_delete")
@@ -218,6 +135,7 @@ Public Class Activities
     Public Function ReadSingle(ByVal strActivityID As String, ByVal strSupplierId As String, ByVal strActivityTypeId As String) As ActivityReadSingleResponse
         Dim objResponse As New ActivityReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_event_readsingle")
             cmdCommand.Parameters.AddWithValue("@EventID", strActivityID)
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -246,6 +164,7 @@ Public Class Activities
     Public Function ReadList(ByVal strSupplierId As String, ByVal strUserId As String) As ActivityReadListResponse
         Dim objResponse As New ActivityReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objActivityInfo As ActivityInfo()
             Dim cmdCommand As New SqlCommand("usp_event_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -256,6 +175,7 @@ Public Class Activities
                 objResponse.Activitys = objActivityInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -273,6 +193,7 @@ Public Class Activities
                 ByVal strAccountId As String, ByVal strFromDate As String, ByVal strToDate As String) As ActivityReadListResponse
         Dim objResponse As New ActivityReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objActivityInfo As ActivityInfo()
             Dim cmdCommand As New SqlCommand("usp_event_readlistforaccountdate")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -286,6 +207,7 @@ Public Class Activities
                 objResponse.Activitys = objActivityInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -303,6 +225,7 @@ Public Class Activities
                 ByVal strAccountId As String, ByVal strFromDate As String, ByVal strToDate As String) As ActivityDatesResponse
         Dim objResponse As New ActivityDatesResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objActivityInfo As ActivityInfo()
             Dim cmdCommand As New SqlCommand("usp_event_readlistforaccountdate")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -321,6 +244,7 @@ Public Class Activities
                 Next
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -340,6 +264,7 @@ Public Class Activities
         Dim aDate As DateTime = Nothing
         Dim displayActivity As DisplayActivityInfo = Nothing
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_event_readday")
             cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)
             cmdCommand.Parameters.AddWithValue("@UserId", userId)
@@ -360,6 +285,8 @@ Public Class Activities
                     result.Add(displayActivity)
                 End While
             End If
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & supplierId & userId, ex)
         Finally
             If reader IsNot Nothing Then reader.Close()
         End Try
@@ -397,7 +324,7 @@ Public Class Activities
 
     <WebMethod()> _
     Public Function Sync3(ByVal strSupplierId As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal lstActivitys As List(Of ActivityInfo)) As ActivitySync3Response
-        If _Log.IsDebugEnabled Then _Log.Debug("Entered Activitys.Sync3 Method...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
 
         Dim objResponse As New ActivitySync3Response
         Dim objTempResponse As New ActivityReadListResponse
@@ -435,7 +362,7 @@ Public Class Activities
             End If
 
         Catch ex As Exception
-            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Exception: {0} ", ex.ToString()))
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -446,7 +373,6 @@ Public Class Activities
             End While
         End Try
         If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
-        If _Log.IsDebugEnabled Then _Log.Debug("exited")
         Return objResponse
     End Function
 
@@ -455,6 +381,7 @@ Public Class Activities
         Dim intCounter As Integer = 0
 
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             If Not objReader Is Nothing AndAlso objReader.HasRows Then
                 Dim aDate As DateTime = DateTime.MinValue
                 While (objReader.Read())
@@ -480,6 +407,8 @@ Public Class Activities
                         .Status = CheckString(objReader("Status"))
                         .ContactID = CheckString(objReader("ContactID"))
                         .Deleted = CheckDeletedField(objReader)
+                        .Latitude = CheckString(objReader("Latitude"))
+                        .Longitude = CheckString(objReader("Longitude"))
 
                     End With
                     intCounter = intCounter + 1
@@ -491,4 +420,10 @@ Public Class Activities
         Return objActivitys
     End Function
 
+    <WebMethod()> _
+  Public Function Test(ByVal strSupplierId As String, ByVal strUserId As String, ByVal intVersion As Integer) As ActivitySync3Response
+        Dim br As ActivitySync3Response = Sync3(strSupplierId, strUserId, intVersion, Nothing)
+        Dim rs As New Generic.List(Of String)
+        Return br
+    End Function
 End Class

@@ -16,6 +16,7 @@ Public Class UserToID
     Inherits System.Web.Services.WebService
 
     Dim objDBHelper As DBHelper
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(UserToID))
 
     Public Sub New()
         objDBHelper = New DBHelper
@@ -25,6 +26,8 @@ Public Class UserToID
     Public Function Modify(ByVal objUserToIDInfo As UserToIDInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objUserToIDInfo))
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_usertoid_modify")
@@ -32,6 +35,13 @@ Public Class UserToID
             cmdCommand.Parameters.AddWithValue("@UserID", objUserToIDInfo.UserID)
             cmdCommand.Parameters.AddWithValue("@TypeID", objUserToIDInfo.TypeID)
             cmdCommand.Parameters.AddWithValue("@ID", objUserToIDInfo.ID)
+            cmdCommand.Parameters.AddWithValue("@Deleted", objUserToIDInfo.Deleted)
+            '** this is log deletes as not sure when its deleting
+            If _Log.IsInfoEnabled Then
+                If objUserToIDInfo.Deleted Then
+                    _Log.Info("Deleted:" & objUserToIDInfo.UserID & objUserToIDInfo.TypeID & objUserToIDInfo.TypeID)
+                End If
+            End If
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
@@ -43,6 +53,7 @@ Public Class UserToID
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objUserToIDInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -59,6 +70,9 @@ Public Class UserToID
     Public Function Delete(ByVal objUserToIDInfo As UserToIDInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objUserToIDInfo))
+
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_usertoid_delete")
@@ -76,6 +90,7 @@ Public Class UserToID
                 objResponse.Errors(0) = "No rows deleted in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objUserToIDInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -91,6 +106,7 @@ Public Class UserToID
     <WebMethod()> _
     Public Function ReadList(ByVal strSupplierId As String, ByVal strUserId As String) As UserToIDReadListResponse
         Dim objResponse As New UserToIDReadListResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Try
             Dim objUserToIDInfo As UserToIDInfo()
             Dim cmdCommand As New SqlCommand("usp_usertoid_readlist")
@@ -102,6 +118,7 @@ Public Class UserToID
                 objResponse.UserToIDs = objUserToIDInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -118,6 +135,7 @@ Public Class UserToID
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As UserToIDReadListResponse
         Dim objResponse As New UserToIDReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objUserToIDInfo As UserToIDInfo()
             Dim cmdCommand As New SqlCommand("usp_usertoid_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -136,8 +154,18 @@ Public Class UserToID
                 ex = ex.InnerException
                 intCounter = intCounter + 1
             End While
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse), ex)
         End Try
         Return objResponse
+    End Function
+    <WebMethod()> _
+    Public Function TEST(ByVal strSupplierId As String, ByVal intVersion As Integer, ByVal userID As String, ByVal strID As String, ByVal typeid As Integer, ByVal deleted As Boolean) As UserToIDSync3Response
+        Dim lst As New List(Of UserToIDInfo)
+        Dim info As New UserToIDInfo(strSupplierId, userID, typeid, strID)
+        info.Deleted = deleted
+        lst.Add(info)
+        Dim br As UserToIDSync3Response = Sync3(strSupplierId, intVersion, lst)
+        Return br
     End Function
 
     <WebMethod()> _
@@ -145,37 +173,18 @@ Public Class UserToID
         Dim objResponse As New UserToIDSync3Response
         Dim objTempResponse As New UserToIDReadListResponse
         Try
-            'TRACE
-            Dim strFile As String = System.IO.Path.Combine(System.IO.Path.GetTempPath(), "UserToIDLog.txt")
-            System.IO.File.AppendAllText(strFile, "Before Sync 2")
-            System.IO.File.AppendAllText(strFile, Environment.NewLine)
-            'TRACE
-
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             objTempResponse = Sync2(strSupplierId, intVersion)
-
-            'TRACE
-            System.IO.File.AppendAllText(strFile, "After Sync 2")
-            System.IO.File.AppendAllText(strFile, Environment.NewLine)
-            'TRACE
-
             If Not lstUserToIDs Is Nothing Then
-                'TRACE
-                System.IO.File.AppendAllText(strFile, "Input Elements : " + lstUserToIDs.Count.ToString())
-                System.IO.File.AppendAllText(strFile, Environment.NewLine)
-                'TRACE
+                If _Log.IsDebugEnabled Then _Log.Debug("Input Elements : " + lstUserToIDs.Count.ToString())
 
+                '*** now update all records
                 For Each objUserToID As UserToIDInfo In lstUserToIDs
                     Dim obase As New BaseResponse
                     If Not objUserToID Is Nothing Then
-                        'TRACE
-                        System.IO.File.AppendAllText(strFile, String.Format("Request : []User ID: {0} [Supplier ID]: {1} [ID]: {2} [TypeID] : {3}", objUserToID.UserID, objUserToID.SupplierID, objUserToID.ID, objUserToID.TypeID))
+                        If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Request : []User ID: {0} [Supplier ID]: {1} [ID]: {2} [TypeID] : {3}", objUserToID.UserID, objUserToID.SupplierID, objUserToID.ID, objUserToID.TypeID))
                         obase = Modify(objUserToID)
-
                         ProcessResponse(obase, objTempResponse)
-                        System.IO.File.AppendAllText(strFile, "Response : " + Common.SerializationManager.Serialize(obase))
-                        System.IO.File.AppendAllText(strFile, Environment.NewLine)
-                        'TRACE
-                        'Modify(objUserToID)
                     End If
                 Next
             End If
@@ -199,7 +208,10 @@ Public Class UserToID
                 ex = ex.InnerException
                 intCounter = intCounter + 1
             End While
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse), ex)
         End Try
+
+        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         Return objResponse
     End Function
 

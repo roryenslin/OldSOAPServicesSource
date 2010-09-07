@@ -26,6 +26,9 @@ Namespace Entity
         Private _EventGroup As String
         Private _AllowNote As Boolean
         Private _Deleted As Boolean
+        Private _AllowGPS As Boolean
+        Private _AllowPicture As Boolean
+        Private _AllowContact As Boolean
 
 
         Public Sub New()
@@ -36,7 +39,7 @@ Namespace Entity
             ByVal strFollowonActivityTypeID As String, ByVal strKpiGroupID As String, ByVal strTargetTypeID As String, _
             ByVal strLabel As String, ByVal bDueDtAllow As Boolean, ByVal bDueTimeAllow As Boolean, ByVal strDefault As String, _
             ByVal intSize As Integer, ByVal strForGrp As String, ByVal strID As String, ByVal strKpiType As String, ByVal strKpiVersion As String, _
-            ByVal strLongDesc As String, ByVal bKpiAddData As Boolean, ByVal strEventGrp As String, ByVal bSend As Boolean, ByVal bAllowNote As Boolean)
+            ByVal strLongDesc As String, ByVal bKpiAddData As Boolean, ByVal strEventGrp As String, ByVal bSend As Boolean, ByVal bAllowNote As Boolean, ByVal bAllowGPS As Boolean, ByVal bAllowPicture As Boolean, ByVal bAllowContact As Boolean)
 
             _ActivityTypeID = strActivityType
             _SupplierId = strSupplierId
@@ -58,6 +61,9 @@ Namespace Entity
             _KPIAddData = bKpiAddData
             _EventGroup = strEventGrp
             _AllowNote = bAllowNote
+            _AllowGPS = bAllowGPS
+            _AllowPicture = bAllowPicture
+            _AllowContact = bAllowContact
         End Sub
 
         Public Property ActivityTypeID() As String
@@ -245,5 +251,36 @@ Namespace Entity
                 _AllowNote = value
             End Set
         End Property
+
+        Public Property AllowGPS() As Boolean
+            Get
+                Return _AllowGPS
+            End Get
+            Set(ByVal value As Boolean)
+                _AllowGPS = value
+            End Set
+        End Property
+
+        Public Property AllowContact() As Boolean
+            Get
+                Return _AllowContact
+            End Get
+            Set(ByVal value As Boolean)
+                _AllowContact = value
+            End Set
+        End Property
+
+
+        Public Property AllowPicture() As Boolean
+            Get
+                Return _AllowPicture
+            End Get
+            Set(ByVal value As Boolean)
+                _AllowPicture = value
+            End Set
+        End Property
+
+
+
     End Class
 End Namespace

@@ -59,5 +59,22 @@ Namespace Response
         End Property
 
     End Class
+
+    <Serializable()> _
+    Public Class ActivityTypeSync4Response
+        Inherits ActivityTypeReadListResponse
+
+        Private _LastVersion As Integer
+
+        Public Property LastVersion() As Integer
+            Get
+                Return _LastVersion
+            End Get
+            Set(ByVal value As Integer)
+                _LastVersion = value
+            End Set
+        End Property
+
+    End Class
 End Namespace
 

@@ -13,7 +13,7 @@ Imports RapidTradeWebService.Response
 <ToolboxItem(False)> _
 Public Class Suppliers
     Inherits System.Web.Services.WebService
-
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Suppliers))
     Dim objDBHelper As DBHelper
 
     Public Sub New()
@@ -21,85 +21,10 @@ Public Class Suppliers
     End Sub
 
     <WebMethod()> _
-    Public Function Add(ByVal objSupplierInfo As SupplierInfo) As BaseResponse
-        Dim objResponse As New BaseResponse
-        Try
-            Dim intResult As Integer
-            Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_supplier_add")
-            cmdCommand.Parameters.AddWithValue("@SupplierID", objSupplierInfo.SupplierID)
-            cmdCommand.Parameters.AddWithValue("@Name", objSupplierInfo.Name)
-            cmdCommand.Parameters.AddWithValue("@DefaultVAT", objSupplierInfo.DefaultVAT)
-            cmdCommand.Parameters.AddWithValue("@DefaultPriceList", objSupplierInfo.DefaultPriceList)
-            cmdCommand.Parameters.AddWithValue("@AddressID", objSupplierInfo.AddressID)
-            cmdCommand.Parameters.AddWithValue("@CurrencyText", objSupplierInfo.CurrencyText)
-            cmdCommand.Parameters.AddWithValue("@DontShowLogo", objSupplierInfo.DontShowLogo)
-            cmdCommand.Parameters.AddWithValue("@UseCatalogues", objSupplierInfo.UseCatalogues)
-
-            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
-            oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand)
-            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-            objResponse.Status = intResult = 0
-            If Not objResponse.Status Then
-                ReDim Preserve objResponse.Errors(0)
-                objResponse.Errors(0) = "No rows inserted in database. Error returned" + intResult.ToString()
-            End If
-        Catch ex As Exception
-            objResponse.Status = False
-            Dim intCounter As Integer = 0
-            While Not ex Is Nothing
-                ReDim Preserve objResponse.Errors(intCounter)
-                objResponse.Errors(intCounter) = ex.Message
-                ex = ex.InnerException
-                intCounter = intCounter + 1
-            End While
-        End Try
-        Return objResponse
-    End Function
-
-    <WebMethod()> _
-    Public Function Change(ByVal objSupplierInfo As SupplierInfo) As BaseResponse
-        Dim objResponse As New BaseResponse
-        Try
-            Dim intResult As Integer
-            Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_supplier_change")
-            cmdCommand.Parameters.AddWithValue("@SupplierID", objSupplierInfo.SupplierID)
-            cmdCommand.Parameters.AddWithValue("@Name", objSupplierInfo.Name)
-            cmdCommand.Parameters.AddWithValue("@DefaultVAT", objSupplierInfo.DefaultVAT)
-            cmdCommand.Parameters.AddWithValue("@DefaultPriceList", objSupplierInfo.DefaultPriceList)
-            cmdCommand.Parameters.AddWithValue("@AddressID", objSupplierInfo.AddressID)
-            cmdCommand.Parameters.AddWithValue("@CurrencyText", objSupplierInfo.CurrencyText)
-            cmdCommand.Parameters.AddWithValue("@DontShowLogo", objSupplierInfo.DontShowLogo)
-            cmdCommand.Parameters.AddWithValue("@UseCatalogues", objSupplierInfo.UseCatalogues)
-
-            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
-            oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand)
-            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-            objResponse.Status = intResult = 0
-            If Not objResponse.Status Then
-                ReDim Preserve objResponse.Errors(0)
-                objResponse.Errors(0) = "No rows updated in database. Error returned" + intResult.ToString()
-            End If
-        Catch ex As Exception
-            objResponse.Status = False
-            Dim intCounter As Integer = 0
-            While Not ex Is Nothing
-                ReDim Preserve objResponse.Errors(intCounter)
-                objResponse.Errors(intCounter) = ex.Message
-                ex = ex.InnerException
-                intCounter = intCounter + 1
-            End While
-        End Try
-        Return objResponse
-    End Function
-
-    <WebMethod()> _
     Public Function Modify(ByVal objSupplierInfo As SupplierInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_supplier_modify")
@@ -122,6 +47,7 @@ Public Class Suppliers
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objSupplierInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -138,6 +64,7 @@ Public Class Suppliers
     Public Function Delete(ByVal objSupplierInfo As SupplierInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_supplier_delete")
@@ -153,6 +80,7 @@ Public Class Suppliers
                 objResponse.Errors(0) = "No rows deleted in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objSupplierInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -169,6 +97,7 @@ Public Class Suppliers
     Public Function ReadSingle(ByVal strSupplierId As String) As SupplierReadSingleResponse
         Dim objResponse As New SupplierReadSingleResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_supplier_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
 
@@ -179,6 +108,7 @@ Public Class Suppliers
                 objResponse.Supplier = objSuppliers
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing

@@ -342,7 +342,7 @@ Public Class Accounts
                 intCounter = intCounter + 1
             End While
         End Try
-        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
+        'If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         If _Log.IsDebugEnabled Then _Log.Debug("exited")
         Return objResponse
     End Function

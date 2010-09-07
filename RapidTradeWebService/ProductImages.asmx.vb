@@ -14,6 +14,7 @@ Imports RapidTradeWebService.Response
 <ToolboxItem(False)> _
 Public Class ProductImages
     Inherits System.Web.Services.WebService
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(ProductImages))
 
     Dim objDBHelper As DBHelper
 
@@ -26,6 +27,7 @@ Public Class ProductImages
         Dim objResponse As New BaseResponse
         Dim conConnection As SqlConnection = Nothing
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             conConnection = objDBHelper.GetConnection
@@ -46,6 +48,7 @@ Public Class ProductImages
             objResponse.Status = True
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objProductImageInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -66,6 +69,7 @@ Public Class ProductImages
         Public Function ReadList(ByVal strSupplierId As String, ByVal strProductId As String) As ProductImagesReadListResponse
         Dim objResponse As New ProductImagesReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objProductImagesInfo As ProductImageInfo()
             Dim cmdCommand As New SqlCommand("usp_ProductImages_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -77,6 +81,7 @@ Public Class ProductImages
                 objResponse.ProductImages = objProductImagesInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -94,6 +99,7 @@ Public Class ProductImages
         Dim intCounter As Integer = 0
 
         Try
+
             If Not objReader Is Nothing AndAlso objReader.HasRows Then
                 While (objReader.Read())
                     ReDim Preserve objProductImages(intCounter)

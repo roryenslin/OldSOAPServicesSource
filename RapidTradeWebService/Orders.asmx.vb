@@ -14,6 +14,7 @@ Imports RapidTradeWebService.Response
 <ToolboxItem(False)> _
 Public Class Orders
     Inherits System.Web.Services.WebService
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Orders))
 
     Dim objDBHelper As DBHelper
 
@@ -25,6 +26,7 @@ Public Class Orders
     Public Function Modify(ByVal objOrderInfo As OrderInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_order_modify")
@@ -92,6 +94,7 @@ Public Class Orders
                 objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -108,6 +111,7 @@ Public Class Orders
     Public Function ReadList(ByVal strSupplierId As String, ByVal strUserId As String) As OrderReadListResponse
         Dim objResponse As New OrderReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objOrderInfo As OrderInfo()
             Dim cmdCommand As New SqlCommand("usp_order_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -119,6 +123,7 @@ Public Class Orders
                 objResponse.Orders = objOrderInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId & strUserId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -135,6 +140,7 @@ Public Class Orders
     Public Function ReadUnPosted(ByVal strSupplierId As String) As OrderReadListResponse
         Dim objResponse As New OrderReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objOrderInfo As OrderInfo()
             Dim cmdCommand As New SqlCommand("usp_order_readunposted")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -145,6 +151,7 @@ Public Class Orders
                 objResponse.Orders = objOrderInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -167,6 +174,7 @@ Public Class Orders
         Dim objTempOrderItem As OrderItemInfo = Nothing
 
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             If Not objReader Is Nothing AndAlso objReader.HasRows Then
                 While (objReader.Read())
                     ReDim Preserve objOrders(intCounter)
@@ -238,6 +246,7 @@ Public Class Orders
                     End While
                 End If
             End If
+       
         Finally
             objReader.Close()
         End Try

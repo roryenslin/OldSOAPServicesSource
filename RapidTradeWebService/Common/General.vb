@@ -20,7 +20,12 @@ Module General
         If Not obj Is Nothing Then
             strResult = obj.ToString()
         End If
-        Return strResult
+        If String.IsNullOrEmpty(strResult) Then
+            Return Nothing
+        Else
+            Return strResult
+        End If
+
     End Function
 
     Public Function CheckBoolean(ByVal obj As Object) As Boolean

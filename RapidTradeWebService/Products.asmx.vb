@@ -15,7 +15,7 @@ Imports RapidTradeWebService.Response
 Public Class Products
     Inherits System.Web.Services.WebService
 
-    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(UserAccounts))
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Products))
     Dim objDBHelper As DBHelper
 
     Public Sub New()
@@ -27,14 +27,16 @@ Public Class Products
         Dim objResponse As New BaseResponse
         Dim conConnection As SqlConnection = Nothing
         Dim trnTransaction As SqlTransaction = Nothing
+        Dim objProductInfo As New ProductInfo
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             conConnection = objDBHelper.GetConnection
             conConnection.Open()
             trnTransaction = conConnection.BeginTransaction
-            
-            For Each objProductInfo As ProductInfo In lstProductInfo
+
+            For Each objProductInfo In lstProductInfo
                 Dim cmdCommand As New SqlCommand("usp_product_modify", conConnection)
                 cmdCommand.Transaction = trnTransaction
 
@@ -66,6 +68,7 @@ Public Class Products
                 cmdCommand.Parameters.AddWithValue("@UserField10", objProductInfo.UserField10)
                 cmdCommand.Parameters.AddWithValue("@ImageUrlLarge", objProductInfo.ImageUrlLarge)
                 cmdCommand.Parameters.AddWithValue("@ImageUrlSmall", objProductInfo.ImageUrlSmall)
+                cmdCommand.Parameters.AddWithValue("@Deleted", objProductInfo.Deleted)
 
                 oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
                 oReturnParam.Direction = ParameterDirection.ReturnValue
@@ -78,6 +81,7 @@ Public Class Products
             objResponse.Status = True
 
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objProductInfo), ex)
             trnTransaction.Rollback()
             objResponse.Status = False
             Dim intCounter As Integer = 0
@@ -131,6 +135,7 @@ Public Class Products
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As ProductReadListResponse
         Dim objResponse As New ProductReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objProductInfo As ProductInfo()
             Dim cmdCommand As New SqlCommand("usp_product_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
@@ -141,6 +146,7 @@ Public Class Products
                 objResponse.Products = objProductInfo
             End If
         Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -154,20 +160,10 @@ Public Class Products
     End Function
 
     <WebMethod()> _
-Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer) As String()
+    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer) As ProductSync3Response
         Dim resultarray As New Generic.List(Of String)
         Dim br As ProductSync3Response = Sync3(strSupplierID, intVersion, Nothing)
-        If br.Status Then
-            resultarray.Add("Sync4------> True ")
-            resultarray.Add("count: " & br.Products.Length)
-            resultarray.Add("LastVersion: " & br.LastVersion)
-        Else
-            resultarray.Add("Sync4------> False ")
-            For Each serror In br.Errors
-                resultarray.Add(serror)
-            Next
-        End If
-        Return resultarray.ToArray
+        Return br
     End Function
 
     <WebMethod()> _
@@ -175,6 +171,8 @@ Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, B
         Dim objResponse As New ProductSync3Response
         Dim objTempResponse As New ProductReadListResponse
         Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
             objTempResponse = Sync2(strSupplierId, intVersion)
 
             If Not lstProducts Is Nothing Then
@@ -190,10 +188,8 @@ Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, B
             Else
                 ProcessResponse(objTableVersionResponse, objResponse)
             End If
-
-            If _Log.IsDebugEnabled Then _Log.Info(strSupplierId & ":" & objResponse.Products.Length & ":" & objResponse.Status & ":" & objResponse.LastVersion)
         Catch ex As Exception
-            If _Log.IsErrorEnabled Then _Log.Info(ex.Message)
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -244,6 +240,7 @@ Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, B
                         .UserField10 = CheckString(objReader("UserField10"))
                         .ImageUrlLarge = CheckString(objReader("ImageUrlLarge"))
                         .ImageUrlSmall = CheckString(objReader("ImageUrlSmall"))
+                        .Deleted = CheckBoolean(objReader("Deleted"))
                         .Deleted = CheckDeletedField(objReader)
 
                     End With

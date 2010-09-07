@@ -26,10 +26,10 @@ Public Class Companies
 
     <WebMethod()> _
     Public Function Modify(ByVal objCompanyInfo As CompanyInfo) As BaseResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New BaseResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info(objCompanyInfo.ToString())
+            If _Log.IsDebugEnabled Then _Log.Debug(objCompanyInfo.ToString())
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_account_modify")
@@ -42,6 +42,7 @@ Public Class Companies
             cmdCommand.Parameters.AddWithValue("@AccountGroup", objCompanyInfo.CompanyGroup)
             cmdCommand.Parameters.AddWithValue("@AccountType", objCompanyInfo.CompanyType)
             cmdCommand.Parameters.AddWithValue("@SharedCompany", objCompanyInfo.SharedCompany)
+            cmdCommand.Parameters.AddWithValue("@Deleted", objCompanyInfo.Deleted)
             If Not objCompanyInfo.UserFields Is Nothing AndAlso objCompanyInfo.UserFields.Length > 0 Then
                 Dim intCounter As Integer
                 For intCounter = 0 To objCompanyInfo.UserFields.GetUpperBound(0)
@@ -76,7 +77,7 @@ Public Class Companies
 
     <WebMethod()> _
     Public Function Delete(ByVal objCompanyInfo As CompanyInfo) As BaseResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New BaseResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info(objCompanyInfo.ToString())
@@ -113,10 +114,10 @@ Public Class Companies
 
     <WebMethod()> _
     Public Function ReadSingle(ByVal strSupplierId As String, ByVal strCompanyId As String) As CompanyReadSingleResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New CompanyReadSingleResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("SupplierID: " & strSupplierId & " // CompanyID: " & strCompanyId)
+            If _Log.IsDebugEnabled Then _Log.Debug("SupplierID: " & strSupplierId & " // CompanyID: " & strCompanyId)
             Dim cmdCommand As New SqlCommand("usp_account_readsingle")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@AccountID", strCompanyId)
@@ -143,7 +144,7 @@ Public Class Companies
 
     <WebMethod()> _
     Public Function ReadList(ByVal strSupplierId As String, ByVal strUserId As String) As CompanyReadListResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New CompanyReadListResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info("SupplierID: " & strSupplierId)
@@ -173,11 +174,11 @@ Public Class Companies
 
     <WebMethod()> _
     Public Function Sync2(ByVal strUserId As String, ByVal intVersion As Integer) As CompanyReadListResponse
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
         Dim objResponse As New CompanyReadListResponse
         Try
 
-            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strUserId & " // Version: " & intVersion)
+            If _Log.IsDebugEnabled Then _Log.Debug("UserID: " & strUserId & " // Version: " & intVersion)
             Dim objCompanyInfo As CompanyInfo()
             Dim cmdCommand As New SqlCommand("usp_account_sync2")
             cmdCommand.Parameters.AddWithValue("@UserID", strUserId)
@@ -207,11 +208,10 @@ Public Class Companies
 
     <WebMethod()> _
     Public Function Sync3(ByVal strUserId As String, ByVal intVersion As Integer, ByVal lstCompanies As List(Of CompanyInfo)) As Companiesync3Response
-        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->" & strUserId)
         Dim objTempResponse As New CompanyReadListResponse
         Dim objResponse As New Companiesync3Response
         Try
-            If _Log.IsDebugEnabled Then _Log.Debug("UserID: " & strUserId & " // Version: " & intVersion)
             If _Log.IsDebugEnabled And lstCompanies IsNot Nothing Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstCompanies))
 
             objTempResponse = Sync2(strUserId, intVersion)
@@ -245,8 +245,8 @@ Public Class Companies
                 intCounter = intCounter + 1
             End While
         End Try
-        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
-        If _Log.IsDebugEnabled Then _Log.Debug("exited")
+        'If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
+
         Return objResponse
     End Function
 
@@ -286,7 +286,7 @@ Public Class Companies
                         .Deleted = CheckDeletedField(objReader)
 
                     End With
-                    If _Log.IsInfoEnabled Then _Log.Info("read from DB " & objCompanies(intCounter).ToString())
+                    If _Log.IsDebugEnabled Then _Log.Debug("read from DB " & objCompanies(intCounter).ToString())
 
                     intCounter = intCounter + 1
                 End While
