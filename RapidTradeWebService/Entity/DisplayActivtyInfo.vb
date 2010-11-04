@@ -10,7 +10,11 @@ Namespace Entity
         Private _Data As String
         Private _Time As String
         Private _AccountName As String
-
+        Private _Latitude As String
+        Private _Longitude As String
+        Private _EventID As String
+        Private _ContactID As String
+        Private _EndTime As String
 
         Public Sub New()
         End Sub
@@ -62,6 +66,51 @@ Namespace Entity
             End Get
             Set(ByVal value As String)
                 _AccountName = value
+            End Set
+        End Property
+
+        Property Latitude() As String
+            Get
+                Return _Latitude
+            End Get
+            Set(ByVal value As String)
+                _Latitude = value
+            End Set
+        End Property
+
+        Property Longitude() As String
+            Get
+                Return _Longitude
+            End Get
+            Set(ByVal value As String)
+                _Longitude = value
+            End Set
+        End Property
+
+        Property EventID() As String
+            Get
+                Return _EventID
+            End Get
+            Set(ByVal value As String)
+                _EventID = value
+            End Set
+        End Property
+
+        Property ContactID() As String
+            Get
+                Return _ContactID
+            End Get
+            Set(ByVal value As String)
+                _ContactID = value
+            End Set
+        End Property
+
+        Property EndTime() As String
+            Get
+                Return _EndTime
+            End Get
+            Set(ByVal value As String)
+                _EndTime = value
             End Set
         End Property
 

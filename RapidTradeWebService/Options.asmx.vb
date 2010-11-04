@@ -27,6 +27,7 @@ Public Class Options
         Dim objResponse As New BaseResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             Dim cmdCommand As New SqlCommand("usp_option_modify")

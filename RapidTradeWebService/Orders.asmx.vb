@@ -15,6 +15,9 @@ Imports RapidTradeWebService.Response
 Public Class Orders
     Inherits System.Web.Services.WebService
     Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Orders))
+    Private orderToEmail As OrderInfo
+    Private notificationEmail As String
+    Private email As New EmailInfo
 
     Dim objDBHelper As DBHelper
 
@@ -23,13 +26,43 @@ Public Class Orders
     End Sub
 
     <WebMethod()> _
+    Public Function Test(ByVal orderID As String, ByVal supplierID As String, ByVal userid As String, ByVal accountid As String, ByVal comments As String) As BaseResponse
+        Dim order As New OrderInfo
+        order.SupplierID = supplierID
+        order.OrderID = orderID
+        order.UserID = userid
+        order.AccountID = accountid
+        order.CreateDate = Now
+        order.RequiredByDate = Now
+        order.Comments = comments
+        order.Reference = "My reference" & Now.ToString("yyyyMMddhhmmss")
+
+        Dim line As New OrderItemInfo
+        line.OrderID = order.OrderID
+        line.SupplierID = order.SupplierID
+        line.ProductID = "AAA"
+        line.Quantity = 1
+        line.ItemID = 1
+        order.OrderItems = New Generic.List(Of OrderItemInfo)
+        order.OrderItems.Add(line)
+        Return Modify(order)
+    End Function
+
+    <WebMethod()> _
     Public Function Modify(ByVal objOrderInfo As OrderInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            '*** always log an order
+            If _Log.IsWarnEnabled Then _Log.Warn(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo))
+
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_order_modify")
+            Dim cmdCommand As New SqlCommand("usp_orders_modify")
+
+            '***this is temp
+            'objOrderInfo.RequiredByDate = Now
+            'objOrderInfo.CreateDate = Now
 
             cmdCommand.Parameters.AddWithValue("@OrderID", objOrderInfo.OrderID)
             cmdCommand.Parameters.AddWithValue("@SupplierID", objOrderInfo.SupplierID)
@@ -37,7 +70,7 @@ Public Class Orders
             cmdCommand.Parameters.AddWithValue("@AccountID", objOrderInfo.AccountID)
             cmdCommand.Parameters.AddWithValue("@BranchID", objOrderInfo.BranchID)
             cmdCommand.Parameters.AddWithValue("@Status", objOrderInfo.Status)
-            cmdCommand.Parameters.AddWithValue("@OrderNumber", objOrderInfo.OrderNumber)
+            'cmdCommand.Parameters.AddWithValue("@OrderNumber", objOrderInfo.OrderNumber)
             cmdCommand.Parameters.AddWithValue("@CreateDate", objOrderInfo.CreateDate)
             cmdCommand.Parameters.AddWithValue("@RequiredByDate", objOrderInfo.RequiredByDate)
             cmdCommand.Parameters.AddWithValue("@Reference", objOrderInfo.Reference)
@@ -68,12 +101,14 @@ Public Class Orders
             intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
 
             If (Not objOrderInfo.OrderItems Is Nothing AndAlso objOrderInfo.OrderItems.Count > 0) Then
-                Dim cmdCommand1 As New SqlCommand("usp_orderitem_modify")
+                Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify")
                 For Each objOrderItem As OrderItemInfo In objOrderInfo.OrderItems
                     cmdCommand1.Parameters.Clear()
-                    cmdCommand1.Parameters.AddWithValue("@OrderID", objOrderItem.OrderID)
+                    cmdCommand1.Parameters.AddWithValue("@OrderID", objOrderInfo.OrderID)
+                    cmdCommand1.Parameters.AddWithValue("@AccountID", objOrderInfo.AccountID)
+                    cmdCommand1.Parameters.AddWithValue("@SupplierID", objOrderInfo.SupplierID)
+
                     cmdCommand1.Parameters.AddWithValue("@ItemID", objOrderItem.ItemID)
-                    cmdCommand1.Parameters.AddWithValue("@SupplierID", objOrderItem.SupplierID)
                     cmdCommand1.Parameters.AddWithValue("@ProductID", objOrderItem.ProductID)
                     cmdCommand1.Parameters.AddWithValue("@Warehouse", objOrderItem.Warehouse)
                     cmdCommand1.Parameters.AddWithValue("@Unit", objOrderItem.Unit)
@@ -91,8 +126,15 @@ Public Class Orders
             objResponse.Status = intResult = 0
             If Not objResponse.Status Then
                 ReDim Preserve objResponse.Errors(0)
-                objResponse.Errors(0) = "No rows modified in database. Error returned" + intResult.ToString()
+                objResponse.Errors(0) = "Error creating order. Error returned" + intResult.ToString()
+            Else
+                '*** now email the admin user in another thread
+                If mustEmail(objOrderInfo.SupplierID) Then
+                    orderToEmail = objOrderInfo
+                    createEmailOrder()
+                End If
             End If
+
         Catch ex As Exception
             If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo), ex)
             objResponse.Status = False
@@ -105,6 +147,99 @@ Public Class Orders
             End While
         End Try
         Return objResponse
+    End Function
+
+    Private Function mustEmail(ByVal supplierID As String) As Boolean
+        Try
+            Dim options As New Options
+            Dim opt As OptionInfo = options.ReadSingle(supplierID, "OrderNotificationEmail", "security").OptionData
+            notificationEmail = opt.Value
+        Catch ex As Exception
+            If supplierID = "TEST" Then
+                notificationEmail = "shaunenslin@gmail.com" '*** used to test on live
+                Return True
+            Else
+                Return False
+            End If
+        End Try
+        If String.IsNullOrEmpty(notificationEmail) Then
+            If supplierID = "TEST" Then
+                notificationEmail = "shaunenslin@gmail.com" '*** used to test on live
+                Return True
+            Else
+                Return False
+            End If
+        Else
+            Return True
+        End If
+    End Function
+
+    Private Sub createEmailOrder()
+        Try
+            '*** create email
+            If _Log.IsDebugEnabled Then _Log.Debug("Creating email")
+            email.MailFrom = "no-reply@rapidtrade.biz"
+            email.Subject = "Incoming Order for " & orderToEmail.AccountID
+            email.IsHTML = True
+            email.MailContent = createEmailText()
+            email.MailTo = notificationEmail
+
+            '*** send email
+            'Dim thrd As New System.Threading.Thread(AddressOf SendEmail)
+            'thrd.Priority = Threading.ThreadPriority.Highest
+            'thrd.Start()
+            'Threading.Thread.Sleep(5000)
+            SendEmail()
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Error  creating Emailing", ex)
+        End Try
+    End Sub
+
+    Private Sub SendEmail()
+        Try
+            '*** send email
+            If _Log.IsDebugEnabled Then _Log.Debug("Sending email")
+            Dim ctrlemail As New Email
+            Dim br As BaseResponse = ctrlemail.SendMail(email)
+            If _Log.IsDebugEnabled Then _Log.Debug("Email Response:" & br.Status)
+
+            If br.Status = False Then
+                If _Log.IsErrorEnabled Then _Log.Error("Error Emailing:" & IIf(br.Errors.Length > 0, br.Errors(0), "").ToString)
+            End If
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Error sending Emailing", ex)
+        End Try
+
+    End Sub
+
+    Private Function createEmailText() As String
+        '*** get folder
+        Dim folder As String = Context.Request.PhysicalApplicationPath & "bin\"
+        '*** convert object to xml
+        Dim xml As New System.Xml.XmlDocument
+        Dim xmlfilename As String = folder & "Order_" & Now.ToString("yyMMddhhmmss") & ".xml"
+        xml.LoadXml(RapidTradeWebService.Common.SerializationManager.Serialize(orderToEmail))
+        xml.Save(xmlfilename)
+
+        '*** apply stylesheet
+        Dim htmlfilename As String = folder & "Order_" & Now.ToString("yyMMddhhmmss") & ".html"
+        Dim xsltfilename As String = folder & "XSL\CreateOrder.xslt"
+        If Not System.IO.File.Exists(xsltfilename) Then Throw New Exception("XSL file not found:" & xsltfilename)
+        Dim xsl As New System.Xml.Xsl.XslCompiledTransform
+        xsl.Load(xsltfilename)
+        xsl.Transform(xmlfilename, htmlfilename)
+
+        '*** return html for email and delete temp files
+        Dim rslt As String = System.IO.File.ReadAllText(htmlfilename)
+
+        '*** delete old files
+        Try
+            System.IO.File.Delete(htmlfilename)
+            System.IO.File.Delete(xmlfilename)
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Error Deleting temp files", ex)
+        End Try
+        Return rslt
     End Function
 
     <WebMethod()> _
@@ -186,7 +321,7 @@ Public Class Orders
                         .AccountID = CheckString(objReader("AccountID"))
                         .BranchID = CheckString(objReader("BranchID"))
                         .Status = CheckString(objReader("Status"))
-                        .OrderNumber = CheckString(objReader("OrderNumber"))
+                        '.OrderNumber = CheckString(objReader("OrderNumber"))
                         If Not objReader("CreateDate") Is Nothing Then
                             .CreateDate = CheckDate(objReader("CreateDate").ToString())
                         End If
