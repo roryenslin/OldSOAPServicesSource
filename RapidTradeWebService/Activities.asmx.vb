@@ -278,9 +278,18 @@ Public Class Activities
                     displayActivity.Data = CheckString(reader("Data"))
                     displayActivity.Label = CheckString(reader("Label"))
                     displayActivity.ActivityTypeID = CheckString(reader("EventTypeID"))
+                    displayActivity.Longitude = CheckString(reader("Longitude"))
+                    displayActivity.Latitude = CheckString(reader("Latitude"))
+                    displayActivity.EventID = CheckString(reader("EventID"))
+                    displayActivity.ContactID = CheckString(reader("ContactID"))
+
                     If Not reader("DueDate") Is Nothing AndAlso Not IsDBNull(reader("DueDate")) Then
                         aDate = CType(reader("DueDate"), DateTime)
                         displayActivity.Time = aDate.ToString(timeFormat)
+                    End If
+                    If Not reader("EndDate") Is Nothing AndAlso Not IsDBNull(reader("EndDate")) Then
+                        aDate = CType(reader("EndDate"), DateTime)
+                        displayActivity.EndTime = aDate.ToString(timeFormat)
                     End If
                     result.Add(displayActivity)
                 End While
@@ -293,6 +302,39 @@ Public Class Activities
         Return result
     End Function
 
+    <WebMethod()> _
+        Public Function ReadDay2(ByVal supplierId As String, ByVal userId As String, ByVal accountId As String, ByVal [date] As String, ByVal timeFormat As String) As ActivityReadListResponse
+        Dim objResponse As New ActivityReadListResponse
+        Dim reader As SqlDataReader = Nothing
+        Dim aDate As DateTime = Nothing
+        Dim displayActivity As ActivityInfo = Nothing
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            Dim cmdCommand As New SqlCommand("usp_event_readday")
+            cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)
+            cmdCommand.Parameters.AddWithValue("@UserId", userId)
+            cmdCommand.Parameters.AddWithValue("@AccountID", accountId)
+            cmdCommand.Parameters.AddWithValue("@DueDate", ConvertDate([date]))
+            reader = objDBHelper.ExecuteReader(cmdCommand)
+            objResponse.Status = True
+            If reader IsNot Nothing AndAlso reader.HasRows Then
+                objResponse.Activitys = ReadActivitys(reader)
+            End If
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & supplierId & userId, ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        Finally
+            If reader IsNot Nothing Then reader.Close()
+        End Try
+        Return objResponse
+    End Function
 
     <WebMethod()> _
     Public Function Sync2(ByVal strSupplierId As String, ByVal strUserId As String, ByVal intVersion As Integer) As ActivityReadListResponse

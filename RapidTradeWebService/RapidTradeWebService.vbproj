@@ -135,6 +135,13 @@
       <DependentUpon>Address.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Entity\PriceListInfo2.vb" />
+    <Compile Include="Entity\StockInfo.vb" />
+    <Compile Include="Response\StockResponse.vb" />
+    <Compile Include="Stock.asmx.vb">
+      <DependentUpon>Stock.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Entity\ProductLongTextInfo.vb" />
     <Compile Include="ProductLongText.asmx.vb">
       <DependentUpon>ProductLongText.asmx</DependentUpon>
@@ -363,6 +370,7 @@
     <Content Include="Catalogues.asmx" />
     <Content Include="Companies.asmx" />
     <Content Include="Address.asmx" />
+    <Content Include="Stock.asmx" />
     <Content Include="ProductLongText.asmx" />
     <Content Include="UserCompanies.asmx" />
     <Content Include="Email.asmx" />
@@ -376,6 +384,9 @@
     </Content>
     <Content Include="ProductImages.asmx" />
     <Content Include="SupplierCatalogues.asmx" />
+    <Content Include="XSL\CreateOrder.xslt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

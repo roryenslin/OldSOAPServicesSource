@@ -15,10 +15,10 @@ Public Class Email
 
     Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Email))
 
-    Dim objDBHelper As DBHelper
+    'Dim objDBHelper As DBHelper
 
     Public Sub New()
-        objDBHelper = New DBHelper
+        'objDBHelper = New DBHelper
     End Sub
 
     <WebMethod()> _
@@ -26,7 +26,7 @@ Public Class Email
         If _Log.IsDebugEnabled Then _Log.Debug("entered...")
         Dim objResponse As New BaseResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info(SerializationManager.Serialize(objMail))
+            If _Log.IsDebugEnabled Then _Log.Debug(SerializationManager.Serialize(objMail))
 
             Dim strMailServer As String = ConfigurationManager.AppSettings("SMTPServer")
             Dim strSMTPPort As String = ConfigurationManager.AppSettings("SMTPPort")
