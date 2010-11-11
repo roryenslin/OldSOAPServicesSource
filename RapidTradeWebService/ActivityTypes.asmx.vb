@@ -352,6 +352,7 @@ Public Class ActivityTypes
 
     <WebMethod()> _
     Public Function Test(ByVal strSupplierId As String, ByVal strUserId As String, ByVal intVersion As Integer) As ActivityTypeSync4Response
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim br As ActivityTypeSync4Response = Sync4(strSupplierId, strUserId, intVersion, Nothing)
         Dim rs As New Generic.List(Of String)
         Return br

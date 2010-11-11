@@ -104,6 +104,7 @@ Public Class Prices
 
     <WebMethod()> _
     Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal straccountID As String, ByVal strBranch As String) As String()
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim resultarray As New Generic.List(Of String)
         Dim br As PriceSync3Response = Sync3(strSupplierID, intVersion, Nothing)
         If br.Status Then

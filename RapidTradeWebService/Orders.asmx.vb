@@ -27,6 +27,7 @@ Public Class Orders
 
     <WebMethod()> _
     Public Function Test(ByVal orderID As String, ByVal supplierID As String, ByVal userid As String, ByVal accountid As String, ByVal comments As String) As BaseResponse
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim order As New OrderInfo
         order.SupplierID = supplierID
         order.OrderID = orderID
