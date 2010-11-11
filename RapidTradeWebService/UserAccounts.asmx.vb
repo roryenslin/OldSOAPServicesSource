@@ -58,6 +58,7 @@ Public Class UserAccounts
 
     <WebMethod()> _
    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal straccountID As String, ByVal strBranch As String) As String()
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim resultarray As New Generic.List(Of String)
         Dim result As UserAccountSync4Response = Sync4(strSupplierID, strUserId, intVersion, Nothing)
         If result.Status Then

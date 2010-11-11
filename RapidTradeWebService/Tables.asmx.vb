@@ -119,6 +119,7 @@ Public Class Tables
 
     <WebMethod()> _
     Public Function Test(ByVal strUserID As String, ByVal strTableName As String, ByVal version As Integer) As List(Of TableSyncResponse)
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim tu As New TableSyncInfo
         tu.TableName = strTableName
         tu.LastVersion = version.ToString

@@ -160,6 +160,7 @@ Public Class UserToID
     End Function
     <WebMethod()> _
     Public Function TEST(ByVal strSupplierId As String, ByVal intVersion As Integer, ByVal userID As String, ByVal strID As String, ByVal typeid As Integer, ByVal deleted As Boolean) As UserToIDSync3Response
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim lst As New List(Of UserToIDInfo)
         Dim info As New UserToIDInfo(strSupplierId, userID, typeid, strID)
         info.Deleted = deleted

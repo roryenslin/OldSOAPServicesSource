@@ -98,6 +98,7 @@ Public Class SupplierCatalogues
 
     <WebMethod()> _
     Public Function Test(ByVal strCatalogueid As String, ByVal strSupplierID As String, ByVal deleted As Boolean) As List(Of Object)
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim rslt As New List(Of Object)
         Dim br As BaseResponse = Modify(New SupplierCatalogueInfo(strCatalogueid, strSupplierID, deleted))
         rslt.Add(br)

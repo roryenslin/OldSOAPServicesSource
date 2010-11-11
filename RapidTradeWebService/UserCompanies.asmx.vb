@@ -61,6 +61,7 @@ Public Class UserCompanies
 
     <WebMethod()> _
     Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal strCompanyID As String, ByVal strBranch As String) As UserCompanySync4Response
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim rslt As New List(Of Object)
         Dim ob As New UserCompanyInfo
         ob.SupplierID = strSupplierID

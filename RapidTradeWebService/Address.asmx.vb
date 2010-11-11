@@ -23,6 +23,7 @@ Public Class Address
 
     <WebMethod()> _
     Public Function Test(ByVal supplierid As String, ByVal userID As String, ByVal intVersion As Integer, ByVal accountid As String, ByVal addressid As String, ByVal street As String) As AddressSync4Response
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim newaddress As New AddressInfo
         newaddress.SupplierID = supplierid
         newaddress.AccountID = accountid

@@ -20,7 +20,19 @@ Public Class Email
     Public Sub New()
         'objDBHelper = New DBHelper
     End Sub
+    <WebMethod()> _
+    Public Function Test(ByVal frm As String, ByVal toemail As String, ByVal subject As String, ByVal message As String) As BaseResponse
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then
+            Throw New Exception("Tesling only allowed from via http://localhost")
+        End If
 
+        Dim email As New EmailInfo
+        email.MailTo = toemail
+        email.MailFrom = frm
+        email.Subject = subject
+        email.MailContent = message
+        Return SendMail(email)
+    End Function
     <WebMethod()> _
     Public Function SendMail(ByVal objMail As EmailInfo) As BaseResponse
         If _Log.IsDebugEnabled Then _Log.Debug("entered...")
@@ -56,6 +68,13 @@ Public Class Email
                 message.Subject = objMail.Subject
                 message.Body = objMail.MailContent
                 message.IsBodyHtml = objMail.IsHTML
+                '*** now add additional TO addresses
+                Dim toemails() As String = Split(objMail.MailTo, ",")
+                If toemails.Length > 1 Then
+                    For x As Integer = 1 To toemails.Length - 1
+                        message.To.Add(toemails(x))
+                    Next
+                End If
 
                 If (String.Equals(strAuthenitcationReq, "Y", StringComparison.InvariantCultureIgnoreCase)) Then
                     If _Log.IsDebugEnabled Then _Log.Debug("Authentication required is set as true...")
@@ -80,7 +99,7 @@ Public Class Email
                 objResponse.Status = True
 
                 If _Log.IsDebugEnabled Then _Log.Debug("Email Send successfully...")
-                End If
+            End If
 
         Catch ex As Exception
             If _Log.IsErrorEnabled Then _Log.Error("Exception for " & SerializationManager.Serialize(objMail), ex)

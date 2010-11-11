@@ -9,7 +9,7 @@ Imports RapidTradeWebService.DataAccess
 Imports RapidTradeWebService.Common
 Imports RapidTradeWebService.Response
 
-<System.Web.Services.WebService(Namespace:="http://tempuri.org/")> _
+<System.Web.Services.WebService(Namespace:="http://products.rapidtrade.com/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
 <ToolboxItem(False)> _
 Public Class Products
@@ -161,6 +161,9 @@ Public Class Products
 
     <WebMethod()> _
     Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer) As ProductSync3Response
+
+        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
+
         Dim resultarray As New Generic.List(Of String)
         Dim br As ProductSync3Response = Sync3(strSupplierID, intVersion, Nothing)
         Return br
