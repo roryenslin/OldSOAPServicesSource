@@ -80,7 +80,7 @@ Public Class UserCompanies
         Dim objResponse As New UserCompanySync4Response
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->" & strUserId)
-
+            If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstUserCompanys))
             'Sync4 Implementation
             Dim objUserCompanyInfo As UserCompanyInfo()
             Dim cmdCommand As New SqlCommand("usp_userAccounts_sync4")

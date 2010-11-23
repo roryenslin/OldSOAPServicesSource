@@ -8,8 +8,8 @@ Imports RapidTradeWebService.Entity
 Imports RapidTradeWebService.DataAccess
 Imports RapidTradeWebService.Common
 Imports RapidTradeWebService.Response
-
-<System.Web.Services.WebService(Namespace:="http://products.rapidtrade.com/")> _
+'http://products.rapidtrade.com/")> _
+<System.Web.Services.WebService(Namespace:="http://tempuri.org/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
 <ToolboxItem(False)> _
 Public Class Products

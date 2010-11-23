@@ -15,13 +15,14 @@ Module General
         End If
     End Sub
 
-    Public Function CheckString(ByVal obj As Object) As String
+    Public Function CheckString(ByVal obj As Object, Optional ByVal defaultValue As String = Nothing) As String
         Dim strResult As String = String.Empty
         If Not obj Is Nothing Then
             strResult = obj.ToString()
         End If
         If String.IsNullOrEmpty(strResult) Then
-            Return Nothing
+            '*** returning "" as nulls causes issues on blackberry
+            Return CStr(IIf(defaultValue = Nothing, "", defaultValue))
         Else
             Return strResult
         End If
