@@ -135,8 +135,14 @@
       <DependentUpon>Address.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Activities2.asmx.vb">
+      <DependentUpon>Activities2.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Entity\ActivityInfo2.vb" />
     <Compile Include="Entity\PriceListInfo2.vb" />
     <Compile Include="Entity\StockInfo.vb" />
+    <Compile Include="Response\ActivityResponse2.vb" />
     <Compile Include="Response\StockResponse.vb" />
     <Compile Include="Stock.asmx.vb">
       <DependentUpon>Stock.asmx</DependentUpon>
@@ -370,6 +376,7 @@
     <Content Include="Catalogues.asmx" />
     <Content Include="Companies.asmx" />
     <Content Include="Address.asmx" />
+    <Content Include="Activities2.asmx" />
     <Content Include="Stock.asmx" />
     <Content Include="ProductLongText.asmx" />
     <Content Include="UserCompanies.asmx" />

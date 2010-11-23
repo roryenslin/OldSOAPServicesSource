@@ -458,6 +458,7 @@ Public Class Users
     <WebMethod()> _
     Public Function ReadSingle(ByVal strUserId As String) As UserReadSingleResponse
         If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+
         Dim objResponse As New UserReadSingleResponse
         Try
             Dim cmdCommand As New SqlCommand("usp_user_readsingle")
@@ -479,6 +480,7 @@ Public Class Users
                 intCounter = intCounter + 1
             End While
         End Try
+        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
         Return objResponse
     End Function
 
@@ -732,18 +734,19 @@ Public Class Users
                         If IsNumeric(objReader("AddressID")) Then
                             .AddressID = CType(objReader("AddressID"), Integer)
                         End If
-                        .Country = CheckString(objReader("Country"))
+                        .Country = CheckString(objReader("Country"), ".")
                         .Email = CheckString(objReader("Email"))
                         .Name = CheckString(objReader("Name"))
                         .Password = CheckString(objReader("PasswordHash"))
                         .UserID = CheckString(objReader("UserId"))
                         objHash.Add(Trim(.UserID), intCounter)
                         .SupplierID = CheckString(objReader("SupplierID"))
-                        .RepID = CheckString(objReader("RepID"))
+                        .RepID = CheckString(objReader("RepID"), ".")
                         .Manager = CheckString(objReader("Manager"))
                         .IsAdmin = CheckBoolean(objReader("IsAdmin"))
                         .Deleted = CheckDeletedField(objReader)
                     End With
+
                     intCounter = intCounter + 1
                 End While
 
@@ -775,71 +778,71 @@ Public Class Users
                 '    End While
                 'End If
 
-                If objReader.NextResult() Then
-                    While (objReader.Read())
-                        strUserId = Trim(CheckString(objReader("UserId")))
-                        If objHash.ContainsKey(strUserId) Then
-                            objTempUser = objUsers(CInt(objHash(strUserId)))
-                            If objTempUser.Accounts Is Nothing OrElse objTempUser.Accounts.Length = 0 Then
-                                ReDim objTempUser.Accounts(0)
-                            Else
-                                ReDim Preserve objTempUser.Accounts(objTempUser.Accounts.Length)
-                            End If
-                            objTempUser.Accounts(objTempUser.Accounts.GetUpperBound(0)) = New AccountInfo
-                            With objTempUser.Accounts(objTempUser.Accounts.GetUpperBound(0))
-                                .SupplierID = CheckString(objReader("SupplierId"))
-                                .AccountGroup = CheckString(objReader("AccountGroup"))
-                                .AccountID = CheckString(objReader("AccountID"))
-                                .Branch = CheckString(objReader("BranchID"))
-                                .Name = CheckString(objReader("Name"))
-                                .PriceList = CheckString(objReader("Pricelist"))
-                                If IsNumeric(objReader("VAT")) Then
-                                    .VAT = CType(objReader("VAT"), Integer)
-                                End If
-                                ReDim .UserFields(9)
-                                .UserFields(0) = CheckString(objReader("Userfield01"))
-                                .UserFields(1) = CheckString(objReader("Userfield02"))
-                                .UserFields(2) = CheckString(objReader("Userfield03"))
-                                .UserFields(3) = CheckString(objReader("Userfield04"))
-                                .UserFields(4) = CheckString(objReader("Userfield05"))
-                                .UserFields(5) = CheckString(objReader("Userfield06"))
-                                .UserFields(6) = CheckString(objReader("Userfield07"))
-                                .UserFields(7) = CheckString(objReader("Userfield08"))
-                                .UserFields(8) = CheckString(objReader("Userfield09"))
-                                .UserFields(9) = CheckString(objReader("Userfield10"))
-                            End With
-                        End If
-                    End While
-                End If
+                'If objReader.NextResult() Then
+                '    While (objReader.Read())
+                '        strUserId = Trim(CheckString(objReader("UserId")))
+                '        If objHash.ContainsKey(strUserId) Then
+                '            objTempUser = objUsers(CInt(objHash(strUserId)))
+                '            If objTempUser.Accounts Is Nothing OrElse objTempUser.Accounts.Length = 0 Then
+                '                ReDim objTempUser.Accounts(0)
+                '            Else
+                '                ReDim Preserve objTempUser.Accounts(objTempUser.Accounts.Length)
+                '            End If
+                '            objTempUser.Accounts(objTempUser.Accounts.GetUpperBound(0)) = New AccountInfo
+                '            With objTempUser.Accounts(objTempUser.Accounts.GetUpperBound(0))
+                '                .SupplierID = CheckString(objReader("SupplierId"))
+                '                .AccountGroup = CheckString(objReader("AccountGroup"))
+                '                .AccountID = CheckString(objReader("AccountID"))
+                '                .Branch = CheckString(objReader("BranchID"))
+                '                .Name = CheckString(objReader("Name"))
+                '                .PriceList = CheckString(objReader("Pricelist"))
+                '                If IsNumeric(objReader("VAT")) Then
+                '                    .VAT = CType(objReader("VAT"), Integer)
+                '                End If
+                '                ReDim .UserFields(9)
+                '                .UserFields(0) = CheckString(objReader("Userfield01"))
+                '                .UserFields(1) = CheckString(objReader("Userfield02"))
+                '                .UserFields(2) = CheckString(objReader("Userfield03"))
+                '                .UserFields(3) = CheckString(objReader("Userfield04"))
+                '                .UserFields(4) = CheckString(objReader("Userfield05"))
+                '                .UserFields(5) = CheckString(objReader("Userfield06"))
+                '                .UserFields(6) = CheckString(objReader("Userfield07"))
+                '                .UserFields(7) = CheckString(objReader("Userfield08"))
+                '                .UserFields(8) = CheckString(objReader("Userfield09"))
+                '                .UserFields(9) = CheckString(objReader("Userfield10"))
+                '            End With
+                '        End If
+                '    End While
+                'End If
 
-                If objReader.NextResult() Then
-                    While (objReader.Read())
-                        strUserId = Trim(CheckString(objReader("Manager")))
-                        If objHash.ContainsKey(strUserId) Then
-                            objTempUser = objUsers(CInt(objHash(strUserId)))
-                            'If objTempUser.Staff Is Nothing OrElse objTempUser.Staff.Length = 0 Then
-                            '    ReDim objTempUser.Staff(0)
-                            'Else
-                            '    ReDim Preserve objTempUser.Staff(objTempUser.Staff.Length)
-                            'End If
-                            'objTempUser.Staff(objTempUser.Staff.GetUpperBound(0)) = New UserInfo
-                            'With objTempUser.Staff(objTempUser.Staff.GetUpperBound(0))
-                            '    If IsNumeric(objReader("AddressID")) Then
-                            '        .AddressID = CType(objReader("AddressID"), Integer)
-                            '    End If
-                            '    .Country = CheckString(objReader("Country"))
-                            '    .Email = CheckString(objReader("Email"))
-                            '    .Name = CheckString(objReader("Name"))
-                            '    .Password = CheckString(objReader("PasswordHash"))
-                            '    .UserID = CheckString(objReader("UserId"))
-                            '    .SupplierID = CheckString(objReader("SupplierID"))
-                            '    .RepID = CheckString(objReader("RepID"))
-                            '    .Manager = CheckString(objReader("Manager"))
-                            '    .Deleted = CheckDeletedField(objReader)
-                            'End With
-                        End If
-                    End While
-                End If
+                'If objReader.NextResult() Then
+                '    While (objReader.Read())
+                '        strUserId = Trim(CheckString(objReader("Manager")))
+                '        If objHash.ContainsKey(strUserId) Then
+                '            objTempUser = objUsers(CInt(objHash(strUserId)))
+                '            'If objTempUser.Staff Is Nothing OrElse objTempUser.Staff.Length = 0 Then
+                '            '    ReDim objTempUser.Staff(0)
+                '            'Else
+                '            '    ReDim Preserve objTempUser.Staff(objTempUser.Staff.Length)
+                '            'End If
+                '            'objTempUser.Staff(objTempUser.Staff.GetUpperBound(0)) = New UserInfo
+                '            'With objTempUser.Staff(objTempUser.Staff.GetUpperBound(0))
+                '            '    If IsNumeric(objReader("AddressID")) Then
+                '            '        .AddressID = CType(objReader("AddressID"), Integer)
+                '            '    End If
+                '            '    .Country = CheckString(objReader("Country"))
+                '            '    .Email = CheckString(objReader("Email"))
+                '            '    .Name = CheckString(objReader("Name"))
+                '            '    .Password = CheckString(objReader("PasswordHash"))
+                '            '    .UserID = CheckString(objReader("UserId"))
+                '            '    .SupplierID = CheckString(objReader("SupplierID"))
+                '            '    .RepID = CheckString(objReader("RepID"))
+                '            '    .Manager = CheckString(objReader("Manager"))
+                '            '    .Deleted = CheckDeletedField(objReader)
+                '            'End With
+                '        End If
+                '    End While
+                'End If
             End If
         Finally
             objReader.Close()

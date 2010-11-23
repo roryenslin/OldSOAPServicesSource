@@ -15,6 +15,26 @@ Namespace Entity
         Private _EventID As String
         Private _ContactID As String
         Private _EndTime As String
+        Private _Notes As String
+        Private _ContactName As String
+
+        Property Notes() As String
+            Get
+                Return _Notes
+            End Get
+            Set(ByVal value As String)
+                _Notes = value
+            End Set
+        End Property
+
+        Property ContactName() As String
+            Get
+                Return _ContactName
+            End Get
+            Set(ByVal value As String)
+                _ContactName = value
+            End Set
+        End Property
 
         Public Sub New()
         End Sub
