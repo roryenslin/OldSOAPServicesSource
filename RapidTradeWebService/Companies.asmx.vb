@@ -62,6 +62,7 @@ Public Class Companies
             End If
         Catch ex As Exception
             If _Log.IsErrorEnabled Then _Log.Error("Exception for " & objCompanyInfo.ToString(), ex)
+            If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objCompanyInfo))
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
