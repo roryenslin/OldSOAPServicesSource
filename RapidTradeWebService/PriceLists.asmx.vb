@@ -26,6 +26,8 @@ Public Class PriceLists
     Public Function ReadList(ByVal strSupplierId As String, ByVal strAccountId As String, _
                     ByVal strSearchString As String, ByVal strCategory As String, _
                     ByVal iOffset As Integer, ByVal iNoRows As Integer, ByVal bMyRange As Boolean) As PriceListReadListResponse
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+        If _Log.IsDebugEnabled Then _Log.Debug(strSupplierId & "|" & strAccountId & "|" & strSearchString & "|" & strCategory & "|" & iOffset & "|" & iNoRows & "|" & bMyRange & "|")
 
         Return ReadListInclCatalogues(strSupplierId, strAccountId, strSearchString, strCategory, iOffset, iNoRows, bMyRange, True)
 
@@ -39,6 +41,7 @@ Public Class PriceLists
         Dim objResponse As New PriceListReadListResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(strSupplierId & "|" & strAccountId & "|" & strSearchString & "|" & strCategory & "|" & iOffset & "|" & iNoRows & "|" & bMyRange & "|" & bIncludeCatalogues)
             Dim objPriceListInfo As PriceListInfo()
             Dim cmdCommand As New SqlCommand("usp_pricelist_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -77,6 +80,7 @@ Public Class PriceLists
         Dim objResponse As New PriceListReadListResponse2
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(strSupplierId & "|" & strAccountId & "|" & strSearchString & "|" & strCategory & "|" & iOffset & "|" & iNoRows & "|" & bMyRange & "|" & bIncludeCatalogues)
             Dim objPriceListInfo As PriceListInfo2()
             Dim cmdCommand As New SqlCommand("usp_pricelist_readlist")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)

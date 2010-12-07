@@ -9,6 +9,7 @@ Namespace Entity
         Private _ItemID As Integer
         Private _ProductID As String
         Private _Warehouse As String
+        Private _Description As String
         Private _Unit As String
         Private _Quantity As Decimal
         Private _Nett As Decimal
@@ -19,7 +20,7 @@ Namespace Entity
         Public Sub New()
             MyBase.New()
         End Sub
-        Public Sub New(ByVal strSupplierID As String, ByVal strOrderID As String, ByVal intItemId As Integer, ByVal strProductId As String, ByVal strWareHouse As String, _
+        Public Sub New(ByVal strSupplierID As String, ByVal strOrderID As String, ByVal intItemId As Integer, ByVal strProductId As String, ByVal strWareHouse As String, ByVal description As String, _
                        ByVal strUnit As String, ByVal dQuantity As Decimal, ByVal dNett As Decimal, ByVal dGross As Decimal, _
                        ByVal dDiscount As Decimal, ByVal dValueUnit As Decimal, ByVal dValue As Decimal)
             _OrderID = strOrderID
@@ -34,6 +35,7 @@ Namespace Entity
             _Discount = dDiscount
             _ValueUnit = dValueUnit
             _Value = dValue
+            _Description = description
         End Sub
         Public Property SupplierID() As String
             Get
@@ -65,6 +67,14 @@ Namespace Entity
             End Get
             Set(ByVal value As String)
                 _ProductID = value
+            End Set
+        End Property
+        Public Property Description() As String
+            Get
+                Return _Description
+            End Get
+            Set(ByVal value As String)
+                _Description = value
             End Set
         End Property
         Public Property Warehouse() As String

@@ -37,11 +37,14 @@ Public Class Orders
         order.RequiredByDate = Now
         order.Comments = comments
         order.Reference = "My reference" & Now.ToString("yyyyMMddhhmmss")
+        order.ERPStatus = "Sent"
+        order.ERPOrderNumber = "123"
 
         Dim line As New OrderItemInfo
         line.OrderID = order.OrderID
         line.SupplierID = order.SupplierID
         line.ProductID = "AAA"
+        line.Description = "AAA product"
         line.Quantity = 1
         line.ItemID = 1
         order.OrderItems = New Generic.List(Of OrderItemInfo)
@@ -94,7 +97,8 @@ Public Class Orders
             cmdCommand.Parameters.AddWithValue("@DeliveryAddress3", objOrderInfo.DeliveryAddress3)
             cmdCommand.Parameters.AddWithValue("@DeliveryPostCode", objOrderInfo.DeliveryPostCode)
             cmdCommand.Parameters.AddWithValue("@PostedToERP", objOrderInfo.PostedToERP)
-            cmdCommand.Parameters.AddWithValue("@RapidTradeID", objOrderInfo.RapidTradeID)
+            cmdCommand.Parameters.AddWithValue("@ERPOrderNumber", objOrderInfo.ERPOrderNumber)
+            cmdCommand.Parameters.AddWithValue("@ERPStatus", objOrderInfo.ERPStatus)
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
@@ -112,6 +116,7 @@ Public Class Orders
                     cmdCommand1.Parameters.AddWithValue("@ItemID", objOrderItem.ItemID)
                     cmdCommand1.Parameters.AddWithValue("@ProductID", objOrderItem.ProductID)
                     cmdCommand1.Parameters.AddWithValue("@Warehouse", objOrderItem.Warehouse)
+                    cmdCommand1.Parameters.AddWithValue("@Description", objOrderItem.Description)
                     cmdCommand1.Parameters.AddWithValue("@Unit", objOrderItem.Unit)
                     cmdCommand1.Parameters.AddWithValue("@Quantity", objOrderItem.Quantity)
                     cmdCommand1.Parameters.AddWithValue("@Nett", objOrderItem.Nett)
@@ -349,7 +354,8 @@ Public Class Orders
                         .DeliveryAddress3 = CheckString(objReader("DeliveryAddress3"))
                         .DeliveryPostCode = CheckString(objReader("DeliveryPostCode"))
                         .PostedToERP = CheckBoolean(objReader("PostedToERP"))
-                        .RapidTradeID = CheckString(objReader("RapidTradeID"))
+                        .ERPOrderNumber = CheckString(objReader("ERPOrderNumber"))
+                        .ERPStatus = CheckString(objReader("ERPStatus"))
                         objHash.Add(String.Format("{0}", Trim(.OrderID)), intCounter)
                     End With
                     intCounter = intCounter + 1
@@ -376,13 +382,14 @@ Public Class Orders
                                 .Discount = CheckDecimal(objReader("Discount"))
                                 .ValueUnit = CheckDecimal(objReader("ValueUnit"))
                                 .Value = CheckDecimal(objReader("Value"))
+                                .Description = CheckString(objReader("Description"))
                             End With
                             objTempOrder.OrderItems.Add(objTempOrderItem)
                         End If
                     End While
                 End If
             End If
-       
+
         Finally
             objReader.Close()
         End Try
