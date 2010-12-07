@@ -33,7 +33,8 @@ Namespace Entity
         Private _DeliveryAddress3 As String
         Private _DeliveryPostCode As String
         Private _PostedToERP As Boolean
-        Private _RapidTradeID As String
+        Private _ERPOrderNumber As String
+        Private _ERPStatus As String
         Private _OrderItems As List(Of OrderItemInfo)
 
         Public Sub New()
@@ -47,7 +48,7 @@ Namespace Entity
                        ByVal strUserField02 As String, ByVal strUserField03 As String, ByVal strUserField04 As String, ByVal strUserField05 As String, _
                        ByVal strUserField06 As String, ByVal strUserField07 As String, ByVal strUserField08 As String, ByVal strUserField09 As String, _
                        ByVal strUserField10 As String, ByVal strDelAddress1 As String, ByVal strDelAddress2 As String, ByVal strDelAddress3 As String, ByVal strDelPostCode As String, _
-                       ByVal bPostedToERP As Boolean, ByVal strRapidTradeID As String)
+                       ByVal bPostedToERP As Boolean, ByVal strERPOrderNumber As String, ByVal erpStatus As String)
             _OrderID = strOrderID
             _UserID = strUserID
             _AccountID = strAccountID
@@ -75,8 +76,9 @@ Namespace Entity
             _DeliveryAddress2 = strDelAddress2
             _DeliveryAddress3 = strDelAddress3
             _DeliveryPostCode = strDelPostCode
-            _RapidTradeID = strRapidTradeID
+            _ERPOrderNumber = strERPOrderNumber
             _PostedToERP = bPostedToERP
+            _ERPStatus = erpStatus
         End Sub
 
         Public Property SupplierID() As String
@@ -136,19 +138,19 @@ Namespace Entity
                 _OrderNumber = value
             End Set
         End Property
-        Public Property CreateDate() As datetime
+        Public Property CreateDate() As DateTime
             Get
                 Return _CreateDate
             End Get
-            Set(ByVal value As datetime)
+            Set(ByVal value As DateTime)
                 _CreateDate = value
             End Set
         End Property
-        Public Property RequiredByDate() As datetime
+        Public Property RequiredByDate() As DateTime
             Get
                 Return _RequiredByDate
             End Get
-            Set(ByVal value As datetime)
+            Set(ByVal value As DateTime)
                 _RequiredByDate = value
             End Set
         End Property
@@ -192,7 +194,7 @@ Namespace Entity
                 _DeliveryName = value
             End Set
         End Property
-        
+
         Public Property UserField01() As String
             Get
                 Return _UserField01
@@ -321,12 +323,21 @@ Namespace Entity
                 _PostedToERP = value
             End Set
         End Property
-        Public Property RapidTradeID() As String
+        Public Property ERPOrderNumber() As String
             Get
-                Return _RapidTradeID
+                Return _ERPOrderNumber
             End Get
             Set(ByVal value As String)
-                _RapidTradeID = value
+                _ERPOrderNumber = value
+            End Set
+        End Property
+
+        Public Property ERPStatus() As String
+            Get
+                Return _ERPStatus
+            End Get
+            Set(ByVal value As String)
+                _ERPStatus = value
             End Set
         End Property
     End Class
