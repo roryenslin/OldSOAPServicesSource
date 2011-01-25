@@ -22,6 +22,26 @@ Namespace Response
     End Class
 
     <Serializable()> _
+    Public Class UserToIDReadListResponse2
+        Inherits BaseResponse
+
+        Private _UserToID As UserToIDInfo2()
+
+        Public Sub New()
+
+        End Sub
+
+        Public Property UserToIDs() As UserToIDInfo2()
+            Get
+                Return _UserToID
+            End Get
+            Set(ByVal value As UserToIDInfo2())
+                _UserToID = value
+            End Set
+        End Property
+    End Class
+
+    <Serializable()> _
     Public Class UserToIDSync3Response
         Inherits UserToIDReadListResponse
 

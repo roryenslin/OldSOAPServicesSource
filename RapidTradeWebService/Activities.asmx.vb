@@ -264,6 +264,8 @@ Public Class Activities
         Dim aDate As DateTime = Nothing
         Dim displayActivity As DisplayActivityInfo = Nothing
         Try
+
+
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim cmdCommand As New SqlCommand("usp_event_readday")
             cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)

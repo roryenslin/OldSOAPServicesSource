@@ -1,0 +1,154 @@
+06:54:42,935 INFO  Global_asax            Application_Start  - Application started...
+06:54:50,248 FATAL Global_asax            Application_Error  - Unhandled exception!
+System.Web.HttpException: File does not exist.
+   at System.Web.StaticFileHandler.GetFileInfo(String virtualPathWithPathInfo, String physicalPath, HttpResponse response)
+   at System.Web.StaticFileHandler.ProcessRequestInternal(HttpContext context)
+   at System.Web.DefaultHttpHandler.BeginProcessRequest(HttpContext context, AsyncCallback callback, Object state)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+06:54:59,060 FATAL Global_asax            Application_Error  - Unhandled exception!
+System.Web.HttpException: File does not exist.
+   at System.Web.StaticFileHandler.GetFileInfo(String virtualPathWithPathInfo, String physicalPath, HttpResponse response)
+   at System.Web.StaticFileHandler.ProcessRequestInternal(HttpContext context)
+   at System.Web.DefaultHttpHandler.BeginProcessRequest(HttpContext context, AsyncCallback callback, Object state)
+   at System.Web.HttpApplication.CallHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+06:55:20,373 INFO  Orders                 Modify             - Entered----------->
+06:55:21,232 WARN  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>1235666</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST123</AccountID>
+  <CreateDate>2010-12-03T06:55:20.32625+02:00</CreateDate>
+  <RequiredByDate>2010-12-03T06:55:20.32625+02:00</RequiredByDate>
+  <Reference>My reference20101203065520</Reference>
+  <Comments>My comments</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>1235666</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Description>AAA product</Description>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+  <ERPOrderNumber>123</ERPOrderNumber>
+  <ERPStatus>Sent</ERPStatus>
+</OrderInfo>
+06:55:22,185 ERROR Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>1235666</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST123</AccountID>
+  <CreateDate>2010-12-03T06:55:20.32625+02:00</CreateDate>
+  <RequiredByDate>2010-12-03T06:55:20.32625+02:00</RequiredByDate>
+  <Reference>My reference20101203065520</Reference>
+  <Comments>My comments</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>1235666</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Description>AAA product</Description>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+  <ERPOrderNumber>123</ERPOrderNumber>
+  <ERPStatus>Sent</ERPStatus>
+</OrderInfo>
+System.Data.SqlClient.SqlException: Procedure or function usp_orderitems_modify has too many arguments specified.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at RapidTradeWebService.DataAccess.DBHelper.ExecuteNonQuery(SqlCommand cmdCommand) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\DataAccess\DBHelper.vb:line 45
+   at RapidTradeWebService.Orders.Modify(OrderInfo objOrderInfo) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Orders.asmx.vb:line 128
+07:03:51,185 INFO  Orders                 Modify             - Entered----------->
+07:03:51,185 WARN  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>1235666</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST123</AccountID>
+  <CreateDate>2010-12-03T07:03:51.185625+02:00</CreateDate>
+  <RequiredByDate>2010-12-03T07:03:51.185625+02:00</RequiredByDate>
+  <Reference>My reference20101203070351</Reference>
+  <Comments>My comments</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>1235666</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Description>AAA product</Description>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+  <ERPOrderNumber>123</ERPOrderNumber>
+  <ERPStatus>Sent</ERPStatus>
+</OrderInfo>
+07:03:51,404 INFO  Options                ReadSingle         - Entered----------->
+07:04:25,232 INFO  Global_asax            Application_Start  - Application started...
+07:04:38,654 INFO  Orders                 ReadList           - Entered----------->
+07:04:38,716 INFO  Orders                 ReadOrders         - Entered----------->
+07:05:35,888 INFO  Orders                 Modify             - Entered----------->
+07:05:36,498 WARN  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>VVV</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-12-03T07:05:35.873125+02:00</CreateDate>
+  <RequiredByDate>2010-12-03T07:05:35.873125+02:00</RequiredByDate>
+  <Reference>My reference20101203070535</Reference>
+  <Comments>VVV</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>VVV</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Description>AAA product</Description>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+  <ERPOrderNumber>123</ERPOrderNumber>
+  <ERPStatus>Sent</ERPStatus>
+</OrderInfo>
+07:05:36,529 INFO  Options                ReadSingle         - Entered----------->
+07:05:50,904 INFO  Global_asax            Application_Start  - Application started...
+07:06:00,201 INFO  Orders                 ReadList           - Entered----------->
+07:06:00,326 INFO  Orders                 ReadOrders         - Entered----------->

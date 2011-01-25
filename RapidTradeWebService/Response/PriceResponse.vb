@@ -57,4 +57,41 @@ Namespace Response
         End Property
 
     End Class
+
+    <Serializable()> _
+    Public Class PriceResponse
+        Inherits BaseResponse
+
+        Private _Discount As Integer
+        Private _Gross As Double
+        Private _Nett As Double
+
+        Public Property Discount() As Integer
+            Get
+                Return _Discount
+            End Get
+            Set(ByVal value As Integer)
+                _Discount = value
+            End Set
+        End Property
+
+        Public Property Nett() As Double
+            Get
+                Return _Nett
+            End Get
+            Set(ByVal value As Double)
+                _Nett = value
+            End Set
+        End Property
+
+        Public Property Gross() As Double
+            Get
+                Return _Gross
+            End Get
+            Set(ByVal value As Double)
+                _Gross = value
+            End Set
+        End Property
+
+    End Class
 End Namespace

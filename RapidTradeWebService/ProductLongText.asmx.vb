@@ -28,11 +28,12 @@ Public Class ProductLongText
         Try
 
             If Not lstProducts Is Nothing Then
-                For Each objAccount As ProductLongTextInfo In lstProducts
-                    If Not objAccount Is Nothing Then
-                        Modify(objAccount)
-                    End If
-                Next
+                Modify(lstProducts)
+                'For Each objAccount As ProductLongTextInfo In lstProducts
+                'If Not objAccount Is Nothing Then
+                'Modify(lstProducts)
+                'End If
+                'Next
             End If
 
         Catch ex As Exception
@@ -45,32 +46,38 @@ Public Class ProductLongText
     End Function
 
     <WebMethod()> _
-        Public Function Modify(ByVal objProductLongTextInfo As ProductLongTextInfo) As BaseResponse
+        Public Function Modify(ByVal lstProductLongTextInfo As List(Of ProductLongTextInfo)) As BaseResponse
         Dim objResponse As New BaseResponse
+        Dim trnTransaction As SqlTransaction = Nothing
         Dim conConnection As SqlConnection = Nothing
+        Dim gotopoint As Integer
+
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             conConnection = objDBHelper.GetConnection
             conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
 
-            Dim cmdCommand As New SqlCommand("usp_productlongtext_modify", conConnection)
-
-            cmdCommand.Parameters.AddWithValue("@SupplierID", objProductLongTextInfo.SupplierID)
-            cmdCommand.Parameters.AddWithValue("@ProductID", objProductLongTextInfo.ProductID)
-            cmdCommand.Parameters.AddWithValue("@TabID", objProductLongTextInfo.TabID)
-            cmdCommand.Parameters.AddWithValue("@LongText", objProductLongTextInfo.LongText)
-
-            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
-            oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
-            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-
+            For Each objProductLongTextInfo In lstProductLongTextInfo
+                gotopoint += 1
+                Dim cmdCommand As New SqlCommand("usp_productlongtext_modify", conConnection)
+                cmdCommand.Transaction = trnTransaction
+                cmdCommand.Parameters.AddWithValue("@SupplierID", objProductLongTextInfo.SupplierID)
+                cmdCommand.Parameters.AddWithValue("@ProductID", objProductLongTextInfo.ProductID)
+                cmdCommand.Parameters.AddWithValue("@TabID", objProductLongTextInfo.TabID)
+                cmdCommand.Parameters.AddWithValue("@LongText", objProductLongTextInfo.LongText)
+                oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
+                oReturnParam.Direction = ParameterDirection.ReturnValue
+                objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+                intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
+            Next
+            trnTransaction.Commit()
             objResponse.Status = True
 
         Catch ex As Exception
-            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objProductLongTextInfo), ex)
+            If _Log.IsErrorEnabled Then _Log.Error("Error at " & gotopoint, ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -173,10 +180,13 @@ Public Class ProductLongText
 
     <WebMethod()> _
     Public Function TEST(ByVal strSupplierId As String, ByVal strProductId As String, ByVal intTabID As Integer, ByVal longText As String) As List(Of Object)
-        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
+        'If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim longtextinfo As New ProductLongTextInfo(strSupplierId, strProductId, intTabID, longText)
+        Dim lst As New List(Of ProductLongTextInfo)
+        lst.Add(longtextinfo)
+
         Dim rslt As New List(Of Object)
-        Dim br As BaseResponse = Modify(longtextinfo)
+        Dim br As BaseResponse = Modify(lst)
         rslt.Add(br)
         Dim br2 As ProductLongTextReadSingleResponse = ReadSingle(strSupplierId, strProductId, intTabID)
         rslt.Add(br2)
