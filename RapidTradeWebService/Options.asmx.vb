@@ -152,6 +152,46 @@ Public Class Options
     End Function
 
     <WebMethod()> _
+    Public Function FindSupplierViaURL(ByVal url As String) As OptionFindSupplierResponse
+        Dim objResponse As New OptionFindSupplierResponse
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            Dim cmdCommand As New SqlCommand("usp_option_findsupplierviaurl")
+            cmdCommand.Parameters.AddWithValue("@URL", url)
+            Dim supplierid As String = ""
+            Dim objReader As SqlDataReader = objDBHelper.ExecuteReader(cmdCommand)
+            objResponse.Status = False
+            Try
+                If Not objReader Is Nothing AndAlso objReader.HasRows Then
+                    While objReader.Read
+                        supplierid = CheckString(objReader("SupplierID"))
+                    End While
+                    objResponse.Status = True
+                    objResponse.SupplierID = supplierid
+                Else
+                    objResponse.Status = False
+                    ReDim Preserve objResponse.Errors(0)
+                    objResponse.Errors(0) = "No supplier found for this URL"
+                End If
+            Finally
+                objReader.Close()
+            End Try
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & url, ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        Return objResponse
+    End Function
+
+
+    <WebMethod()> _
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As OptionReadListResponse
         Dim objResponse As New OptionReadListResponse
         Try

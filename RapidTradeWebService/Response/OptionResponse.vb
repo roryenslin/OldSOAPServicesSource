@@ -22,6 +22,26 @@ Namespace Response
     End Class
 
     <Serializable()> _
+    Public Class OptionFindSupplierResponse
+        Inherits BaseResponse
+        Public Sub New()
+
+        End Sub
+
+        Private _supplierid As String
+        Public Property SupplierID() As String
+            Get
+                Return _supplierid
+            End Get
+            Set(ByVal value As String)
+                _supplierid = value
+            End Set
+        End Property
+
+    End Class
+
+
+    <Serializable()> _
     Public Class OptionReadListResponse
         Inherits BaseResponse
 

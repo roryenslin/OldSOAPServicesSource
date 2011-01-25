@@ -1,0 +1,18 @@
+07:29:45,004 INFO  Global_asax            Application_Start  - Application started...
+07:32:57,036 INFO  Global_asax            Application_Start  - Application started...
+07:35:03,442 ERROR Email                  SendMail           - Exception for <?xml version="1.0"?>
+<EmailInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MailFrom>support@rapidtrade.biz</MailFrom>
+  <MailContent>test2</MailContent>
+  <MailTo>shaunenslin@gmail.com;shaun@rapidtrade.biz</MailTo>
+  <Subject>test2</Subject>
+  <IsHTML>false</IsHTML>
+</EmailInfo>
+System.FormatException: The specified string is not in the form required for an e-mail address.
+   at System.Net.Mime.MailBnfHelper.ReadMailAddress(String data, Int32& offset, String& displayName)
+   at System.Net.Mail.MailAddress.ParseValue(String address)
+   at System.Net.Mail.MailAddress..ctor(String address, String displayName, Encoding displayNameEncoding)
+   at System.Net.Mail.MailAddress..ctor(String address)
+   at RapidTradeWebService.Email.SendMail(EmailInfo objMail) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Email.asmx.vb:line 67
+07:40:14,176 INFO  Global_asax            Application_Start  - Application started...
+07:41:01,489 INFO  Global_asax            Application_Start  - Application started...

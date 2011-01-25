@@ -132,6 +132,36 @@ Public Class UserToID
     End Function
 
     <WebMethod()> _
+    Public Function ReadListAll(ByVal strSupplierId As String, ByVal ID As String, ByVal TypeID As Integer) As UserToIDReadListResponse2
+        Dim objResponse As New UserToIDReadListResponse2
+        If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+        Try
+            Dim objUserToIDInfo As UserToIDInfo2()
+            Dim cmdCommand As New SqlCommand("usp_usertoid_readlistall")
+            cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
+            cmdCommand.Parameters.AddWithValue("@TypeID", TypeID)
+            cmdCommand.Parameters.AddWithValue("@ID", ID)
+            objUserToIDInfo = ReadUserToIDs2(objDBHelper.ExecuteReader(cmdCommand))
+            objResponse.Status = True
+            If Not objUserToIDInfo Is Nothing AndAlso objUserToIDInfo.GetUpperBound(0) >= 0 Then
+                objResponse.UserToIDs = objUserToIDInfo
+            End If
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        Return objResponse
+    End Function
+
+
+    <WebMethod()> _
     Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As UserToIDReadListResponse
         Dim objResponse As New UserToIDReadListResponse
         Try
@@ -243,4 +273,31 @@ Public Class UserToID
         Return objUserToIDs
     End Function
 
+    Private Function ReadUserToIDs2(ByVal objReader As SqlDataReader) As UserToIDInfo2()
+        Dim objUserToIDs As UserToIDInfo2() = Nothing
+        Dim intCounter As Integer = 0
+
+        Try
+            Dim iTemp As Integer
+            If Not objReader Is Nothing AndAlso objReader.HasRows Then
+                While (objReader.Read())
+                    ReDim Preserve objUserToIDs(intCounter)
+                    objUserToIDs(intCounter) = New UserToIDInfo2
+                    With objUserToIDs(intCounter)
+                        .SupplierID = CheckString(objReader("SupplierID"))
+                        .UserID = CheckString(objReader("UserID"))
+                        Integer.TryParse(objReader("TypeID").ToString(), iTemp)
+                        .TypeID = CType(iTemp, TypeIDEnum)
+                        .ID = CheckString(objReader("ID"))
+                        .Deleted = CheckDeletedField(objReader)
+                        .Name = CheckString(objReader("Name"))
+                    End With
+                    intCounter = intCounter + 1
+                End While
+            End If
+        Finally
+            objReader.Close()
+        End Try
+        Return objUserToIDs
+    End Function
 End Class
