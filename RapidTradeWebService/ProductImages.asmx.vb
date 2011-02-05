@@ -23,32 +23,38 @@ Public Class ProductImages
     End Sub
 
     <WebMethod()> _
-        Public Function Modify(ByVal objProductImageInfo As ProductImageInfo) As BaseResponse
+        Public Function Modify(ByVal lstProductImageInfo As List(Of ProductImageInfo)) As BaseResponse
         Dim objResponse As New BaseResponse
         Dim conConnection As SqlConnection = Nothing
+        Dim trnTransaction As SqlTransaction = Nothing
+
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             conConnection = objDBHelper.GetConnection
             conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
 
-            Dim cmdCommand As New SqlCommand("usp_productimages_modify", conConnection)
+            For Each objProductImageInfo In lstProductImageInfo
 
-            cmdCommand.Parameters.AddWithValue("@SupplierID", objProductImageInfo.SupplierID)
-            cmdCommand.Parameters.AddWithValue("@ProductID", objProductImageInfo.ProductID)
-            cmdCommand.Parameters.AddWithValue("@ImageName", objProductImageInfo.ImageName)
-            cmdCommand.Parameters.AddWithValue("@Deleted", objProductImageInfo.Deleted)
+                Dim cmdCommand As New SqlCommand("usp_productimages_modify", conConnection)
+                cmdCommand.Transaction = trnTransaction
+                cmdCommand.Parameters.AddWithValue("@SupplierID", objProductImageInfo.SupplierID)
+                cmdCommand.Parameters.AddWithValue("@ProductID", objProductImageInfo.ProductID)
+                cmdCommand.Parameters.AddWithValue("@ImageName", objProductImageInfo.ImageName)
+                cmdCommand.Parameters.AddWithValue("@Deleted", objProductImageInfo.Deleted)
 
-            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
-            oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
-            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
+                oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
+                oReturnParam.Direction = ParameterDirection.ReturnValue
+                objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+                intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
+            Next
 
             objResponse.Status = True
-
+            trnTransaction.Commit()
         Catch ex As Exception
-            If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objProductImageInfo), ex)
+            If _Log.IsErrorEnabled Then _Log.Error("Error", ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
