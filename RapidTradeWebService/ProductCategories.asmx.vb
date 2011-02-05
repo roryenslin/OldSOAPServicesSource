@@ -175,6 +175,11 @@ Public Class ProductCategories
         End Try
         Return objResponse
     End Function
+    <WebMethod()> _
+    Public Function TEST(ByVal strSupplierId As String, ByVal intVersion As Integer) As ProductCategorySync3Response
+        _Log.Info("Testing: UserID: " & strSupplierId & " // Version: " & intVersion)
+        Return Sync3(strSupplierId, intVersion, Nothing)
+    End Function
 
     <WebMethod()> _
     Public Function Sync3(ByVal strSupplierId As String, ByVal intVersion As Integer, ByVal lstProductCategory As List(Of ProductCategoryInfo)) As ProductCategorySync3Response

@@ -123,12 +123,12 @@ Public Class Prices
     <WebMethod()> _
     Public Function GetPrice(ByVal supplierID As String, ByVal accountID As String, ByVal productID As String, ByVal quantity As Integer, ByVal gross As Double, ByVal nett As Double) As PriceResponse
         Dim resp = New PriceResponse
-        resp.Discount = 10
+        resp.Discount = 0
         resp.Gross = gross
         resp.Nett = nett
-        resp.Status = True
+        resp.Status = False
         Dim messages(0) As String
-        messages(0) = "No implemented yet"
+        messages(0) = "Not implemented yet"
         resp.Errors = messages
         Return resp
     End Function

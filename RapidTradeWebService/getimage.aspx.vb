@@ -10,31 +10,48 @@ Imports RapidTradeWebService.DataAccess
 
 Public Class getimage
     Inherits System.Web.UI.Page
+    Private imagename As String
+    Private swidth As String
+    Private sheight As String
+    Private subfolder As String
+    Private testing As Boolean = False
 
     Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs)
         ' check imagename query string
-        If String.IsNullOrEmpty(Request.QueryString("imagename")) Then
+        imagename = Request.QueryString("imagename")
+        swidth = Request.QueryString("width")
+        sheight = Request.QueryString("height")
+        subfolder = Request.QueryString("subfolder")
+
+        If testing Then
+            imagename = "AFT0085"
+            swidth = "300"
+            sheight = "300"
+            subfolder = "matus"
+        End If
+
+        If String.IsNullOrEmpty(imagename) Then
             Throw New Exception("imagename is not supplied")
         End If
 
         Dim height As Integer
         Dim width As Integer
 
-        If Not Integer.TryParse(Request.QueryString("width"), width) Then
+        If Not Integer.TryParse(swidth, width) Then
             Throw New Exception("width is not supplied or invalid")
         End If
 
-        If Not Integer.TryParse(Request.QueryString("height"), height) Then
+        If Not Integer.TryParse(sheight, height) Then
             Throw New Exception("height is not supplied or invalid")
         End If
-
+        Dim sourceImage As String
+        sourceImage = imagename
         'Dim sourceImage As String = SearchImageFile(Request.QueryString("imagename"), Request.QueryString("subfolder"))
-        Dim sourceImage As String = SearchImageFileInDB(Request.QueryString("imagename"))
+        sourceImage = SearchImageFile(sourceImage, subfolder)
 
         If (String.IsNullOrEmpty(sourceImage)) Then
-            sourceImage = Request.QueryString("imagename")
+            sourceImage = SearchImageFileInDB(subfolder, imagename)
         End If
-        sourceImage = SearchImageFile(sourceImage, Request.QueryString("subfolder"))
 
         If (sourceImage = String.Empty) Then
             ' image not found, use default noimage.jpg set size bigger than noimage.jpg size so that no resizing will be made
@@ -44,7 +61,14 @@ Public Class getimage
         End If
 
         '' get resize image
-        Dim resizeImage As Image = Me.ResizeImage(sourceImage, width, height)
+        Dim resizeImage As Image
+        Try
+            resizeImage = Me.ResizeImage(Path.Combine(ConfigurationManager.AppSettings("ImageFolder"), sourceImage), width, height)
+        Catch ex As Exception
+            sourceImage = Path.Combine(ConfigurationManager.AppSettings("ImageFolder"), "noimage.jpg")
+            resizeImage = Me.ResizeImage(sourceImage, width, height)
+        End Try
+
 
         ' push resize image to the browser
         Response.ContentType = "image/jpeg"
@@ -76,10 +100,10 @@ Public Class getimage
             Return filename
         End If
 
-        filename = Path.Combine(searchFolder, "noimage.jpg")
-        If File.Exists(filename) Then
-            Return filename
-        End If
+        'filename = Path.Combine(searchFolder, "noimage.jpg")
+        'If File.Exists(filename) Then
+        'Return filename
+        'End If
 
         Return String.Empty
     End Function
@@ -90,19 +114,20 @@ Public Class getimage
     ''' <param name="imageName">ImageName to search</param>
     ''' <returns>Imagename in database</returns>
     ''' <remarks></remarks>
-    Private Function SearchImageFileInDB(ByVal imageName As String) As String
+    Private Function SearchImageFileInDB(ByVal subFolder As String, ByVal imageName As String) As String
         Dim imageNameFromDB As String = String.Empty
 
-        Dim objDBHelper As New DbHelper
+        Dim objDBHelper As New DBHelper
         Dim cmdCommand As New SqlCommand("usp_productimages_search")
-        cmdCommand.Parameters.AddWithValue("@ImageName", imageName)
+        cmdCommand.Parameters.AddWithValue("@ImageName", imageName.ToUpper)
+        cmdCommand.Parameters.AddWithValue("@SupplierID", subFolder.ToUpper)
 
         Dim objResult As Object = objDBHelper.ExecuteScalar(cmdCommand)
         If Not objResult Is Nothing Then
             imageNameFromDB = objResult.ToString()
         End If
-        
-        Return imageNameFromDB
+
+        Return subFolder & "\" & imageNameFromDB
     End Function
 
     ''' <summary>
