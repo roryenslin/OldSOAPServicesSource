@@ -227,6 +227,8 @@ Public Class Activities2
         Dim objResponse2 As New ActivityDatesResponse2
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(strSupplierId & "," & strUserId & "," & strAccountId & "," & strFromDate & "," & strToDate)
+
             Dim objActivityInfo2 As ActivityInfo2()
             Dim cmdCommand As New SqlCommand("usp_event_readlistforaccountdate")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
