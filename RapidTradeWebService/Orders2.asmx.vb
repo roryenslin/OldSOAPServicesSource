@@ -108,6 +108,23 @@ Public Class Orders2
             If (Not objOrderInfo2.OrderItems Is Nothing AndAlso objOrderInfo2.OrderItems.Count > 0) Then
                 Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify")
                 For Each objOrderItem As OrderItemInfo2 In objOrderInfo2.OrderItems
+                    If String.IsNullOrEmpty(objOrderItem.Description) Then
+                        Try
+                            Dim cmdCommand3 As New SqlCommand("usp_product_readsingle")
+                            cmdCommand3.Parameters.AddWithValue("@ProductID", objOrderItem.ProductID)
+                            cmdCommand3.Parameters.AddWithValue("@SupplierID", objOrderInfo2.SupplierID)
+                            Dim objReader As SqlDataReader = objDBHelper.ExecuteReader(cmdCommand3)
+                            If Not objReader Is Nothing AndAlso objReader.HasRows Then
+                                While (objReader.Read())
+                                    objOrderItem.Description = objReader.GetString(0)
+                                End While
+                            End If
+                            cmdCommand3.Connection.Close()
+                        Catch ex As Exception
+                            If _Log.IsErrorEnabled Then _Log.Error("Error finding description" & ex.Message)
+                        End Try
+                    End If
+
                     cmdCommand1.Parameters.Clear()
                     cmdCommand1.Parameters.AddWithValue("@OrderID", objOrderInfo2.OrderID)
                     cmdCommand1.Parameters.AddWithValue("@AccountID", objOrderInfo2.AccountID)
@@ -135,7 +152,7 @@ Public Class Orders2
                 objResponse.Errors(0) = "Error creating order. Error returned" + intResult.ToString()
             Else
                 '*** now email the admin user in another thread
-                If mustEmail(objOrderInfo2.SupplierID) Then
+                If mustEmail(objOrderInfo2.SupplierID, objOrderInfo2.UserID) Then
                     orderToEmail = objOrderInfo2
                     createEmailOrder()
                 End If
@@ -155,23 +172,26 @@ Public Class Orders2
         Return objResponse
     End Function
 
-    Private Function mustEmail(ByVal supplierID As String) As Boolean
+    Private Function mustEmail(ByVal supplierID As String, ByVal userID As String) As Boolean
         Try
             Dim options As New Options
             Dim opt As OptionInfo = options.ReadSingle(supplierID, "OrderNotificationEmail", "security").OptionData
             notificationEmail = opt.Value
         Catch ex As Exception
-            If supplierID = "TEST" Then
-                notificationEmail = "shaunenslin@gmail.com" '*** used to test on live
-                Return True
-            Else
-                Return False
-            End If
+
         End Try
         If String.IsNullOrEmpty(notificationEmail) Then
-            If supplierID = "TEST" Then
-                notificationEmail = "shaunenslin@gmail.com" '*** used to test on live
-                Return True
+            Dim users As New Users
+            Dim resp As UserReadSingleResponse = users.ReadSingle(userID)
+            If resp.Status = True Then
+                If String.IsNullOrEmpty(resp.User.Email) Then
+                    Return False
+                ElseIf resp.User.Email.Contains("@") Then
+                    notificationEmail = resp.User.Email
+                    Return True
+                Else
+                    Return False
+                End If
             Else
                 Return False
             End If
@@ -179,6 +199,7 @@ Public Class Orders2
             Return True
         End If
     End Function
+
 
     Private Sub createEmailOrder()
         Try

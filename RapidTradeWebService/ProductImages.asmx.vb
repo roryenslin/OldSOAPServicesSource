@@ -8,6 +8,8 @@ Imports RapidTradeWebService.Entity
 Imports RapidTradeWebService.DataAccess
 Imports RapidTradeWebService.Common
 Imports RapidTradeWebService.Response
+Imports System.IO
+
 
 <System.Web.Services.WebService(Namespace:="http://tempuri.org/")> _
 <System.Web.Services.WebServiceBinding(ConformsTo:=WsiProfiles.BasicProfile1_1)> _
@@ -69,6 +71,22 @@ Public Class ProductImages
             End If
         End Try
         Return objResponse
+    End Function
+
+    <WebMethod()> _
+    Public Function ReadNewImages(ByVal supplierID As String, ByVal lastDate As String) As String()
+        Dim imageFolder As String = ConfigurationManager.AppSettings("ImageFolder")
+        Dim searchFolder As String = Path.Combine(imageFolder, supplierID)
+        Dim dtlastdate As Date = Activities2.ConvertDate(lastDate)
+        Dim sfiles As New List(Of String)
+
+        For Each sfile As String In System.IO.Directory.GetFiles(searchFolder)
+            Dim tm As Date = System.IO.File.GetLastWriteTime(sfile)
+            If tm >= dtlastdate And sfile.ToUpper.Contains("JPG") Then
+                sfiles.Add(sfile.Substring(sfile.LastIndexOf("\") + 1))
+            End If
+        Next
+        Return sfiles.ToArray
     End Function
 
     <WebMethod()> _

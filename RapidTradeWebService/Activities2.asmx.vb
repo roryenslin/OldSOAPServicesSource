@@ -45,7 +45,9 @@ Public Class Activities2
         Catch ex As Exception
 
         End Try
-        Return Nothing
+        _Log.Error("Error converting date from " & str & ". Will use current time instead")
+
+        Return Now
     End Function
     Public Shared Function ConvertDate(ByVal [date] As DateTime) As String
         Return [date].ToString(DATEFORMAT)
@@ -227,7 +229,7 @@ Public Class Activities2
         Dim objResponse2 As New ActivityDatesResponse2
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
-            If _Log.IsDebugEnabled Then _Log.Debug(strSupplierId & "," & strUserId & "," & strAccountId & "," & strFromDate & "," & strToDate)
+            If _Log.IsInfoEnabled Then _Log.Info(strSupplierId & "," & strUserId & "," & strAccountId & "," & strFromDate & "," & strToDate)
 
             Dim objActivityInfo2 As ActivityInfo2()
             Dim cmdCommand As New SqlCommand("usp_event_readlistforaccountdate")
@@ -268,7 +270,7 @@ Public Class Activities2
         Dim displayActivity As DisplayActivityInfo = Nothing
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
-            If _Log.IsDebugEnabled Then _Log.Debug(supplierId & "," & userId & "," & accountId & "," & [date] & "," & ConvertDate([date]))
+            If _Log.IsInfoEnabled Then _Log.Info(supplierId & "," & userId & "," & accountId & "," & [date] & "," & ConvertDate([date]))
 
             Dim cmdCommand As New SqlCommand("usp_event_readday")
             cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)
@@ -432,6 +434,7 @@ Public Class Activities2
 
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+
             If Not objReader Is Nothing AndAlso objReader.HasRows Then
                 Dim aDate As DateTime = DateTime.MinValue
                 While (objReader.Read())

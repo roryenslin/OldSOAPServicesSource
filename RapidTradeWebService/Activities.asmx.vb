@@ -226,6 +226,8 @@ Public Class Activities
         Dim objResponse As New ActivityDatesResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(strSupplierId & "," & strUserId & "," & strAccountId & "," & strFromDate & "," & strToDate)
+
             Dim objActivityInfo As ActivityInfo()
             Dim cmdCommand As New SqlCommand("usp_event_readlistforaccountdate")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
@@ -267,6 +269,8 @@ Public Class Activities
 
 
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(supplierId & "," & userId & "," & accountId & "," & [date] & "," & [date])
+
             Dim cmdCommand As New SqlCommand("usp_event_readday")
             cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)
             cmdCommand.Parameters.AddWithValue("@UserId", userId)
@@ -312,6 +316,7 @@ Public Class Activities
         Dim displayActivity As ActivityInfo = Nothing
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(supplierId & "/" & userId & "/" & accountId & "/" & [date] & "/" & timeFormat)
             Dim cmdCommand As New SqlCommand("usp_event_readday")
             cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)
             cmdCommand.Parameters.AddWithValue("@UserId", userId)
