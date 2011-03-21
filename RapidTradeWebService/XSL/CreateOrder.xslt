@@ -30,14 +30,18 @@
                     <br>
                       Account:<xsl:value-of select="OrderInfo/AccountID"/>
                     </br>
-                    <!--
-                  <br>
-                  <br><DELIVERYNAME>
-                  <br><DELIVERYADDRESS1>
-                  <br><DELIVERYADDRESS2>
-                  <br><DELIVERYADDRESS3>
-                  <br><DELIVERYPOSTALCODE>
--->
+                    
+                  <br></br>
+                  <br>Name: <xsl:value-of select="OrderInfo/DeliveryName"/>                </br>
+                  <br>Address: </br><br><xsl:value-of select="OrderInfo/DeliveryAddress1"/></br>
+                  <br><xsl:value-of select="OrderInfo/DeliveryAddress2"/></br>
+                    <br>
+                     Email:   <xsl:value-of select="OrderInfo/DeliveryAddress3"/>
+                    </br>
+                    <br>
+                      Telephone: <xsl:value-of select="OrderInfo/DeliveryPostCode"/>
+                    </br>
+                  <br></br>
                   </td>
                   <td>
                     <p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:8pt;margin:0 0 20px 0;">
