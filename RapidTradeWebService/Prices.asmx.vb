@@ -103,10 +103,10 @@ Public Class Prices
     End Function
 
     <WebMethod()> _
-    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal straccountID As String, ByVal strBranch As String) As String()
-        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
+    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal straccountID As String, ByVal strBranch As String, ByVal offset As Integer, ByVal numrows As Integer) As String()
+        'If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim resultarray As New Generic.List(Of String)
-        Dim br As PriceSync3Response = Sync3(strSupplierID, intVersion, Nothing)
+        Dim br As PriceSync3Response = Sync5(strSupplierID, "", intVersion, Nothing, offset, numrows)
         If br.Status Then
             resultarray.Add("Sync4------> True ")
             resultarray.Add("count: " & br.Prices.Length)
@@ -171,7 +171,53 @@ Public Class Prices
 
         Return objResponse
     End Function
+    <WebMethod()> _
+     Public Function Sync5(ByVal strSupplierId As String, ByVal userID As String, ByVal intVersion As Integer, ByVal lstPrices As List(Of PriceInfo), ByVal offset As Integer, ByVal numrows As Integer) As PriceSync3Response
+        Dim objResponse As New PriceSync3Response
+        Dim objTempResponse As New PriceReadListResponse
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
+            objTempResponse = Sync2(strSupplierId, intVersion)
+            Dim size As Integer = 0
+            If offset + numrows < objTempResponse.Prices.Length Then
+                size = numrows - 1
+            Else
+                size = objTempResponse.Prices.Length - offset - 1
+            End If
+            Dim tmp(size) As PriceInfo
+            System.Array.Copy(objTempResponse.Prices, offset, tmp, 0, size + 1)
+            objTempResponse.Prices = tmp
 
+            If Not lstPrices Is Nothing Then
+                ProcessResponse(Modify(lstPrices), objTempResponse)
+            End If
+
+            objResponse.Prices = objTempResponse.Prices
+            objResponse.Errors = objTempResponse.Errors
+            objResponse.Status = objTempResponse.Status
+            Dim objTableVersionResponse As TableVersionResponse = New Tables().GetTableVersion(TableNames.Price)
+            If objTableVersionResponse.Status Then
+                objResponse.LastVersion = objTableVersionResponse.TableVersion
+            Else
+                ProcessResponse(objTableVersionResponse, objResponse)
+            End If
+
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        If _Log.IsDebugEnabled Then _Log.Debug("exited")
+
+        Return objResponse
+    End Function
     Private Function ReadPrices(ByVal objReader As SqlDataReader) As PriceInfo()
         Dim objPrices As PriceInfo() = Nothing
         Dim intCounter As Integer = 0
