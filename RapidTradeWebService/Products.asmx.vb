@@ -160,12 +160,12 @@ Public Class Products
     End Function
 
     <WebMethod()> _
-    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer) As ProductSync3Response
+    Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal offset As Integer, ByVal numrows As Integer) As ProductSync3Response
 
-        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
+        'If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
 
         Dim resultarray As New Generic.List(Of String)
-        Dim br As ProductSync3Response = Sync3(strSupplierID, intVersion, Nothing)
+        Dim br As ProductSync3Response = Sync5(strSupplierID, "", intVersion, Nothing, offset, numrows)
         Return br
     End Function
 
@@ -205,6 +205,49 @@ Public Class Products
         Return objResponse
     End Function
 
+    <WebMethod()> _
+   Public Function Sync5(ByVal strSupplierId As String, ByVal userID As String, ByVal intVersion As Integer, ByVal lstProducts As List(Of ProductInfo), ByVal offset As Integer, ByVal numrows As Integer) As ProductSync3Response
+        Dim objResponse As New ProductSync3Response
+        Dim objTempResponse As New ProductReadListResponse
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
+            objTempResponse = Sync2(strSupplierId, intVersion)
+            Dim size As Integer = 0
+            If offset + numrows < objTempResponse.Products.Length Then
+                size = numrows - 1
+            Else
+                size = objTempResponse.Products.Length - offset - 1
+            End If
+            Dim tmp(size) As ProductInfo
+            System.Array.Copy(objTempResponse.Products, offset, tmp, 0, size + 1)
+            objTempResponse.Products = tmp
+            If Not lstProducts Is Nothing Then
+                ProcessResponse(Modify(lstProducts), objTempResponse)
+            End If
+
+            objResponse.Products = objTempResponse.Products
+            objResponse.Errors = objTempResponse.Errors
+            objResponse.Status = objTempResponse.Status
+            Dim objTableVersionResponse As TableVersionResponse = New Tables().GetTableVersion(TableNames.Product)
+            If objTableVersionResponse.Status Then
+                objResponse.LastVersion = objTableVersionResponse.TableVersion
+            Else
+                ProcessResponse(objTableVersionResponse, objResponse)
+            End If
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        Return objResponse
+    End Function
     Private Function ReadProducts(ByVal objReader As SqlDataReader) As ProductInfo()
         Dim objProducts As ProductInfo() = Nothing
         Dim intCounter As Integer = 0

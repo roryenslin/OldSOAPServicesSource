@@ -28,7 +28,7 @@ Public Class ProductLongText
         Try
 
             If Not lstProducts Is Nothing Then
-                Modify(lstProducts)
+                ModifyAll(lstProducts)
                 'For Each objAccount As ProductLongTextInfo In lstProducts
                 'If Not objAccount Is Nothing Then
                 'Modify(lstProducts)
@@ -46,7 +46,53 @@ Public Class ProductLongText
     End Function
 
     <WebMethod()> _
-        Public Function Modify(ByVal lstProductLongTextInfo As List(Of ProductLongTextInfo)) As BaseResponse
+        Public Function Modify(ByVal objProductLongTextInfo As ProductLongTextInfo) As BaseResponse
+        Dim objResponse As New BaseResponse
+        Dim trnTransaction As SqlTransaction = Nothing
+        Dim conConnection As SqlConnection = Nothing
+        Dim gotopoint As Integer
+
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            Dim intResult As Integer
+            Dim oReturnParam As SqlParameter
+            conConnection = objDBHelper.GetConnection
+            conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
+
+            Dim cmdCommand As New SqlCommand("usp_productlongtext_modify", conConnection)
+            cmdCommand.Transaction = trnTransaction
+            cmdCommand.Parameters.AddWithValue("@SupplierID", objProductLongTextInfo.SupplierID)
+            cmdCommand.Parameters.AddWithValue("@ProductID", objProductLongTextInfo.ProductID)
+            cmdCommand.Parameters.AddWithValue("@TabID", objProductLongTextInfo.TabID)
+            cmdCommand.Parameters.AddWithValue("@LongText", objProductLongTextInfo.LongText)
+            oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
+            oReturnParam.Direction = ParameterDirection.ReturnValue
+            objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+            intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
+
+            trnTransaction.Commit()
+            objResponse.Status = True
+
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Error at " & gotopoint, ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        Finally
+            If Not conConnection Is Nothing AndAlso Not conConnection.State = ConnectionState.Open Then
+                conConnection.Close()
+            End If
+        End Try
+        Return objResponse
+    End Function
+    <WebMethod()> _
+     Public Function ModifyAll(ByVal lstProductLongTextInfo As List(Of ProductLongTextInfo)) As BaseResponse
         Dim objResponse As New BaseResponse
         Dim trnTransaction As SqlTransaction = Nothing
         Dim conConnection As SqlConnection = Nothing
@@ -186,7 +232,7 @@ Public Class ProductLongText
         lst.Add(longtextinfo)
 
         Dim rslt As New List(Of Object)
-        Dim br As BaseResponse = Modify(lst)
+        Dim br As BaseResponse = ModifyAll(lst)
         rslt.Add(br)
         Dim br2 As ProductLongTextReadSingleResponse = ReadSingle(strSupplierId, strProductId, intTabID)
         rslt.Add(br2)
