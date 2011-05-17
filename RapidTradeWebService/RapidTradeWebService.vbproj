@@ -139,6 +139,7 @@
       <DependentUpon>Activities2.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Entity\DisplayActivityInfo2.vb" />
     <Compile Include="Orders3.asmx.vb">
       <DependentUpon>Orders3.asmx</DependentUpon>
       <SubType>Component</SubType>
