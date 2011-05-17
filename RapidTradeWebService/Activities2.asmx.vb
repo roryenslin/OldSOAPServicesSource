@@ -35,7 +35,7 @@ Public Class Activities2
         End Try
         Try
             ConvertDate = DateTime.ParseExact(str, SHORT_DATEFORMAT, Globalization.CultureInfo.InvariantCulture)
-            Return ConvertDate
+            Return (ConvertDate)
         Catch ex As Exception
 
         End Try
@@ -260,6 +260,56 @@ Public Class Activities2
             End While
         End Try
         Return objResponse2
+    End Function
+
+    <WebMethod()> _
+    Public Function ReadDayv2(ByVal supplierId As String, ByVal userId As String, ByVal accountId As String, ByVal [date] As String, ByVal timeFormat As String) As List(Of DisplayActivityInfo2)
+        Dim result As New List(Of DisplayActivityInfo2)
+        Dim reader As SqlDataReader = Nothing
+        Dim aDate As DateTime = Nothing
+        Dim displayActivity As DisplayActivityInfo2 = Nothing
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info(supplierId & "," & userId & "," & accountId & "," & [date] & "," & ConvertDate([date]))
+
+            Dim cmdCommand As New SqlCommand("usp_event_readday")
+            cmdCommand.Parameters.AddWithValue("@SupplierID", supplierId)
+            cmdCommand.Parameters.AddWithValue("@UserId", userId)
+            cmdCommand.Parameters.AddWithValue("@AccountID", accountId)
+            cmdCommand.Parameters.AddWithValue("@DueDate", ConvertDate([date]))
+            reader = objDBHelper.ExecuteReader(cmdCommand)
+            If reader IsNot Nothing AndAlso reader.HasRows Then
+                While (reader.Read())
+                    displayActivity = New DisplayActivityInfo2
+                    displayActivity.AccountName = CheckString(reader("AccountName"))
+                    displayActivity.Data = CheckString(reader("Data"))
+                    displayActivity.Label = CheckString(reader("Label"))
+                    displayActivity.ActivityTypeID = CheckString(reader("EventTypeID"))
+                    displayActivity.Longitude = CheckString(reader("Longitude"))
+                    displayActivity.Latitude = CheckString(reader("Latitude"))
+                    displayActivity.EventID = CheckString(reader("EventID"))
+                    displayActivity.ContactID = CheckString(reader("ContactID"))
+                    displayActivity.ContactName = CheckString(reader("Name"))
+                    displayActivity.Notes = CheckString(reader("Notes"))
+                    displayActivity.ActivityID = CheckString(reader("Notes"))
+
+                    If Not reader("DueDate") Is Nothing AndAlso Not IsDBNull(reader("DueDate")) Then
+                        aDate = CType(reader("DueDate"), DateTime)
+                        displayActivity.Time = aDate.ToString(timeFormat)
+                    End If
+                    If Not reader("EndDate") Is Nothing AndAlso Not IsDBNull(reader("EndDate")) Then
+                        aDate = CType(reader("EndDate"), DateTime)
+                        displayActivity.EndTime = aDate.ToString(timeFormat)
+                    End If
+                    result.Add(displayActivity)
+                End While
+            End If
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & supplierId & userId, ex)
+        Finally
+            If reader IsNot Nothing Then reader.Close()
+        End Try
+        Return result
     End Function
 
     <WebMethod()> _
