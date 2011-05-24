@@ -28,34 +28,34 @@
                   <td style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:black;vertical-align:top;">
                     <b>Ordered By:</b>
                     <br>
-                      Account:<xsl:value-of select="OrderInfo3/AccountID"/>
+                      Account:<xsl:value-of select="OrderInfo/AccountID"/>
                     </br>
                     
                   <br></br>
-                  <br>Name: <xsl:value-of select="OrderInfo3/DeliveryName"/>                </br>
-                  <br>Address: </br><br><xsl:value-of select="OrderInfo3/DeliveryAddress1"/></br>
-                  <br><xsl:value-of select="OrderInfo3/DeliveryAddress2"/></br>
+                  <br>Name: <xsl:value-of select="OrderInfo/DeliveryName"/>                </br>
+                  <br>Address: </br><br><xsl:value-of select="OrderInfo/DeliveryAddress1"/></br>
+                  <br><xsl:value-of select="OrderInfo/DeliveryAddress2"/></br>
                     <br>
-                     Email:   <xsl:value-of select="OrderInfo3/DeliveryAddress3"/>
+                     Email:   <xsl:value-of select="OrderInfo/DeliveryAddress3"/>
                     </br>
                     <br>
-                      Telephone: <xsl:value-of select="OrderInfo3/DeliveryPostCode"/>
+                      Telephone: <xsl:value-of select="OrderInfo/DeliveryPostCode"/>
                     </br>
                   <br></br>
                   </td>
                   <td>
                     <p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:8pt;margin:0 0 20px 0;">
-                      Order Number: <xsl:value-of select="OrderInfo3/OrderID"/>
+                      Order Number: <xsl:value-of select="OrderInfo/OrderID"/>
                       <br>
-                        Order Date: <xsl:value-of select="OrderInfo3/CreateDate"/>
+                        Order Date: <xsl:value-of select="OrderInfo/CreateDate"/>
                       </br>
                       <br>
-                        Reference: <xsl:value-of select="OrderInfo3/Reference"/>
+                        Reference: <xsl:value-of select="OrderInfo/Reference"/>
                       </br>
                     </p>
                     <p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;">
                       <b>Required Date: </b>
-                      <xsl:value-of select="OrderInfo3/RequiredByDate"/>
+                      <xsl:value-of select="OrderInfo/RequiredByDate"/>
                     </p>
                   </td>
                 </tr>
@@ -64,7 +64,7 @@
                     <p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;margin:20px 0 20px 0;">
                       <b>Comment:</b>
                       <br>
-                        <xsl:value-of select="OrderInfo3/Comments"/>
+                        <xsl:value-of select="OrderInfo/Comments"/>
                       </br>
                     </p>
                   </td>
@@ -80,7 +80,7 @@
                         <td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;">Price</td>
                         <td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;">Sub Total</td>
                       </tr>
-                      <xsl:for-each select="OrderInfo3/OrderItems/OrderItemInfo">
+                      <xsl:for-each select="OrderInfo/OrderItems/OrderItemInfo">
                         <tr>
                           <td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;">
                             <xsl:value-of select="ItemID"/>
