@@ -60,12 +60,64 @@ Public Class Stock
     End Function
 
     <WebMethod()> _
+        Public Function ModifyAll(ByVal list As List(Of StockInfo)) As BaseResponse
+        Dim objResponse As New BaseResponse
+        Dim conConnection As SqlConnection = Nothing
+        Dim trnTransaction As SqlTransaction = Nothing
+        If _Log.IsInfoEnabled Then _Log.Info("ModifyAll Entered to update ----------->")
+        If list Is Nothing Then Return objResponse
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Update count " & list.Count)
+
+
+            Dim intResult As Integer
+            Dim oReturnParam As SqlParameter
+            conConnection = objDBHelper.GetConnection
+            If conConnection.State <> ConnectionState.Open Then conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
+            For Each objStockInfo In list
+                Dim cmdCommand As New SqlCommand("usp_Stock_modify", conConnection)
+                cmdCommand.Transaction = trnTransaction
+
+                cmdCommand.Parameters.AddWithValue("@SupplierID", objStockInfo.SupplierID)
+                cmdCommand.Parameters.AddWithValue("@ProductID", objStockInfo.ProductID)
+                cmdCommand.Parameters.AddWithValue("@Warehouse", objStockInfo.Warehouse)
+                cmdCommand.Parameters.AddWithValue("@Stock", objStockInfo.Stock)
+
+                oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
+                oReturnParam.Direction = ParameterDirection.ReturnValue
+                objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+                intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
+            Next
+            trnTransaction.Commit()
+            objResponse.Status = True
+
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Error in stock modifyall", ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        Finally
+            If Not conConnection Is Nothing And conConnection.State = ConnectionState.Open Then
+                conConnection.Close()
+            End If
+
+        End Try
+        Return objResponse
+    End Function
+    <WebMethod()> _
         Public Function ReadList(ByVal strSupplierId As String, ByVal strProductID As String) As StockReadListResponse
         Dim objResponse As New StockReadListResponse
+        Dim cmdCommand As New SqlCommand("usp_Stock_readlist")
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             Dim objStockInfo As StockInfo()
-            Dim cmdCommand As New SqlCommand("usp_Stock_readlist")
+
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@ProductID", strProductID)
 
@@ -84,6 +136,12 @@ Public Class Stock
                 ex = ex.InnerException
                 intCounter = intCounter + 1
             End While
+        Finally
+            Try
+                cmdCommand.Connection.Close()
+            Catch ex As Exception
+            End Try
+
         End Try
         Return objResponse
     End Function
@@ -118,7 +176,6 @@ Public Class Stock
 
     <WebMethod()> _
     Public Function Test(ByVal strSupplierID As String, ByVal strProductID As String, ByVal strUserId As String, ByVal intVersion As Integer) As StockSync4Response
-        If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
         Dim resultarray As New Generic.List(Of String)
         Dim lstStock As New List(Of StockInfo)
         lstStock.Add(New StockInfo(strSupplierID, strProductID, "A", 10, False))
@@ -133,23 +190,19 @@ Public Class Stock
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
-            objTempResponse = Sync2(strSupplierId, intVersion)
+            'objTempResponse = Sync2(strSupplierId, intVersion)
 
-            If Not lstStock Is Nothing Then
-                For Each stockInfo In lstStock
-                    ProcessResponse(Modify(stockInfo), objTempResponse)
-                Next
-            End If
+            ProcessResponse(ModifyAll(lstStock), objTempResponse)
             If Not objTempResponse.Errors Is Nothing Then objTempResponse.Status = False
             objResponse.Stock = objTempResponse.Stock
             objResponse.Errors = objTempResponse.Errors
             objResponse.Status = objTempResponse.Status
-            Dim objTableVersionResponse As TableVersionResponse = New Tables().GetTableVersion(TableNames.Stock)
-            If objTableVersionResponse.Status Then
-                objResponse.LastVersion = objTableVersionResponse.TableVersion
-            Else
-                ProcessResponse(objTableVersionResponse, objResponse)
-            End If
+            'Dim objTableVersionResponse As TableVersionResponse = New Tables().GetTableVersion(TableNames.Stock)
+            'If objTableVersionResponse.Status Then
+            'objResponse.LastVersion = objTableVersionResponse.TableVersion
+            'Else
+            'ProcessResponse(objTableVersionResponse, objResponse)
+            'End If
         Catch ex As Exception
             If _Log.IsErrorEnabled Then _Log.Error("Exception for " & strSupplierId, ex)
             objResponse.Status = False
@@ -186,6 +239,7 @@ Public Class Stock
             End If
         Finally
             objReader.Close()
+
         End Try
         Return objStock
     End Function

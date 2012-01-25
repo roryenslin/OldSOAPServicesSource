@@ -218,6 +218,7 @@ Public Class Tables
                         Not String.IsNullOrEmpty(listSyncInfo(intCounter).TableName) AndAlso _
                         dConfig.ContainsKey(listSyncInfo(intCounter).TableName.ToLower()) Then
 
+                        Dim gotopoint = "Start" & Now.ToString
 
                         Try
                             objResponseItem = New TableSyncResponse
@@ -227,12 +228,13 @@ Public Class Tables
                             If Not String.IsNullOrEmpty(listSyncInfo(intCounter).UserId) Then
                                 cmdCommand.Parameters.AddWithValue("@UserId", listSyncInfo(intCounter).UserId)
                             End If
-
+                            gotopoint &= ":Parameters" & Now.ToString
                             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
                             oReturnParam.Direction = ParameterDirection.ReturnValue
+                            gotopoint &= ":Execute" & Now.ToString
                             objDBHelper.ExecuteNonQuery(cmdCommand)
                             intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-
+                            gotopoint &= ":Build response" & Now.ToString
                             objResponseItem.TableSync.MustUpdate = intResult > 0
                             objResponseItem.TableSync.SupplierId = listSyncInfo(intCounter).SupplierId
                             objResponseItem.TableSync.UserId = listSyncInfo(intCounter).UserId
@@ -241,6 +243,7 @@ Public Class Tables
                             objResponseItem.Status = True
 
                         Catch ex As Exception
+                            gotopoint &= ":exception" & Now.ToString
                             objResponseItem.Status = False
                             Dim intCount As Integer = 0
                             While Not ex Is Nothing
@@ -249,6 +252,7 @@ Public Class Tables
                                 ex = ex.InnerException
                                 intCount += 1
                             End While
+                            If _Log.IsErrorEnabled Then _Log.Error(listSyncInfo(intCounter).UserId & ":" & listSyncInfo(intCounter).TableName & ":" & listSyncInfo(intCounter).LastVersion & gotopoint, ex)
                         End Try
                     Else
                         objResponseItem = New TableSyncResponse

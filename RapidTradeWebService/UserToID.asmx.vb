@@ -24,9 +24,11 @@ Public Class UserToID
 
     <WebMethod()> _
     Public Function Modify(ByVal objUserToIDInfo As UserToIDInfo) As BaseResponse
+        If _Log.IsInfoEnabled Then _Log.Info("UserToID Modify bypassed----------->")
         Dim objResponse As New BaseResponse
+        Return objResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserToID Modify Entered----------->")
             If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objUserToIDInfo))
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
@@ -206,19 +208,20 @@ Public Class UserToID
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             objTempResponse = Sync2(strSupplierId, intVersion)
-            If Not lstUserToIDs Is Nothing Then
-                If _Log.IsDebugEnabled Then _Log.Debug("Input Elements : " + lstUserToIDs.Count.ToString())
+            '*** no longer sent from desktop so no need to update
+            'If Not lstUserToIDs Is Nothing Then
+            '    If _Log.IsDebugEnabled Then _Log.Debug("Input Elements : " + lstUserToIDs.Count.ToString())
 
-                '*** now update all records
-                For Each objUserToID As UserToIDInfo In lstUserToIDs
-                    Dim obase As New BaseResponse
-                    If Not objUserToID Is Nothing Then
-                        If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Request : []User ID: {0} [Supplier ID]: {1} [ID]: {2} [TypeID] : {3}", objUserToID.UserID, objUserToID.SupplierID, objUserToID.ID, objUserToID.TypeID))
-                        obase = Modify(objUserToID)
-                        ProcessResponse(obase, objTempResponse)
-                    End If
-                Next
-            End If
+            '    '*** now update all records
+            '    For Each objUserToID As UserToIDInfo In lstUserToIDs
+            '        Dim obase As New BaseResponse
+            '        If Not objUserToID Is Nothing Then
+            '            If _Log.IsDebugEnabled Then _Log.Debug(String.Format("Request : []User ID: {0} [Supplier ID]: {1} [ID]: {2} [TypeID] : {3}", objUserToID.UserID, objUserToID.SupplierID, objUserToID.ID, objUserToID.TypeID))
+            '            obase = Modify(objUserToID)
+            '            ProcessResponse(obase, objTempResponse)
+            '        End If
+            '    Next
+            'End If
 
             objResponse.UserToIDs = objTempResponse.UserToIDs
             objResponse.Errors = objTempResponse.Errors
