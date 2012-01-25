@@ -29,7 +29,8 @@ Public Class Prices
         Dim conConnection As SqlConnection = Nothing
         Dim trnTransaction As SqlTransaction = Nothing
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Price Entered----------->")
+            If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(lstPriceInfo))
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
             conConnection = objDBHelper.GetConnection
@@ -39,7 +40,6 @@ Public Class Prices
             For Each objPriceInfo As PriceInfo In lstPriceInfo
                 Dim cmdCommand As New SqlCommand("usp_price_modify", conConnection)
                 cmdCommand.Transaction = trnTransaction
-
                 cmdCommand.Parameters.AddWithValue("@SupplierID", objPriceInfo.SupplierID)
                 cmdCommand.Parameters.AddWithValue("@ProductID", objPriceInfo.ProductID)
                 cmdCommand.Parameters.AddWithValue("@Pricelist", objPriceInfo.PriceList)
@@ -52,7 +52,6 @@ Public Class Prices
                 oReturnParam.Direction = ParameterDirection.ReturnValue
                 objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
                 intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-
             Next
 
             trnTransaction.Commit()
@@ -69,7 +68,7 @@ Public Class Prices
                 intCounter = intCounter + 1
             End While
         Finally
-            If Not conConnection Is Nothing AndAlso Not conConnection.State = ConnectionState.Open Then
+            If Not conConnection Is Nothing And conConnection.State = ConnectionState.Open Then
                 conConnection.Close()
             End If
         End Try
@@ -105,6 +104,17 @@ Public Class Prices
     <WebMethod()> _
     Public Function Test(ByVal strSupplierID As String, ByVal strUserId As String, ByVal intVersion As Integer, ByVal straccountID As String, ByVal strBranch As String, ByVal offset As Integer, ByVal numrows As Integer) As String()
         'If Context.Request.ServerVariables("remote_addr") <> "127.0.0.1" Then Throw New Exception("Tesling only allowed from via http://localhost")
+        Dim pr As New PriceInfo
+        pr.SupplierID = "TEST"
+        pr.ProductID = "AAA"
+        pr.Nett = 21.22
+        pr.PriceList = "aA"
+        pr.Discount = 0
+
+        Dim lst As New List(Of PriceInfo)
+        lst.add(pr)
+        Modify(lst)
+
         Dim resultarray As New Generic.List(Of String)
         Dim br As PriceSync3Response = Sync5(strSupplierID, "", intVersion, Nothing, offset, numrows)
         If br.Status Then
@@ -122,14 +132,60 @@ Public Class Prices
 
     <WebMethod()> _
     Public Function GetPrice(ByVal supplierID As String, ByVal accountID As String, ByVal productID As String, ByVal quantity As Integer, ByVal gross As Double, ByVal nett As Double) As PriceResponse
+        If _Log.IsInfoEnabled Then _Log.Info("GetPrice Entered----------->" & supplierID & "/" & accountID & "/" & productID & "/" & quantity)
+        Dim discount As Double
+        Dim netprice As Double
+        Dim conConnection As SqlConnection = Nothing
+        Try
+            conConnection = objDBHelper.GetConnection
+            'conConnection.Open()
+            Dim cmdCommand As New SqlCommand("usp_discount_readsingle", conConnection)
+
+            cmdCommand.Parameters.AddWithValue("@SupplierID", supplierID)
+            cmdCommand.Parameters.AddWithValue("@AccountID", accountID)
+            cmdCommand.Parameters.AddWithValue("@ProductID", productID)
+            cmdCommand.Parameters.AddWithValue("@Debug", _Log.IsDebugEnabled)
+            cmdCommand.Parameters.AddWithValue("@qty", quantity)
+            Dim objreader As SqlDataReader = objDBHelper.ExecuteReader(cmdCommand)
+            If Not objreader Is Nothing AndAlso objreader.HasRows Then
+                While (objreader.Read())
+                    If CheckString(objreader("SupplierID")) = "DEBUG" Then
+                        If _Log.IsDebugEnabled Then _Log.Debug(CheckString(objreader("DebugSQL")))
+                    Else
+                        If CheckDecimal(objreader("Discount")) > 0 Then
+                            discount = CheckDecimal(objreader("Discount"))
+                        ElseIf CheckDecimal(objreader("Price")) > 0 Then
+                            netprice = CheckDecimal(objreader("Price"))
+                        End If
+                    End If
+                End While
+            End If
+        Catch ex As Exception
+        Finally
+            conConnection.Close()
+        End Try
+
         Dim resp = New PriceResponse
         resp.Discount = 0
         resp.Gross = gross
         resp.Nett = nett
-        resp.Status = False
-        Dim messages(0) As String
-        messages(0) = "Not implemented yet"
-        resp.Errors = messages
+
+        If discount > 0 Then
+            resp.Discount = Integer.Parse(discount.ToString)
+            resp.Nett = resp.Gross - (resp.Gross * (discount / 100))
+            resp.Status = True
+        ElseIf netprice > 0 Then
+            resp.Discount = 0
+            resp.Gross = netprice
+            resp.Status = True
+        Else
+            resp.Status = False
+            Dim messages(0) As String
+            messages(0) = "No discount found"
+            resp.Errors = messages
+        End If
+
+        If _Log.IsInfoEnabled Then _Log.Info("GetPrice ----------->" & accountID & "/disc=" & resp.Discount & "/nett=" & resp.Nett & "/status=" & resp.Status)
         Return resp
     End Function
 

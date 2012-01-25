@@ -85,7 +85,7 @@ Public Class ProductLongText
                 intCounter = intCounter + 1
             End While
         Finally
-            If Not conConnection Is Nothing AndAlso Not conConnection.State = ConnectionState.Open Then
+            If Not conConnection Is Nothing And conConnection.State = ConnectionState.Open Then
                 conConnection.Close()
             End If
         End Try
@@ -133,7 +133,7 @@ Public Class ProductLongText
                 intCounter = intCounter + 1
             End While
         Finally
-            If Not conConnection Is Nothing AndAlso Not conConnection.State = ConnectionState.Open Then
+            If Not conConnection Is Nothing And conConnection.State = ConnectionState.Open Then
                 conConnection.Close()
             End If
         End Try

@@ -56,16 +56,24 @@ Public Class Orders4
 
     <WebMethod()> _
     Public Function Modify(ByVal objOrderInfo4 As OrderInfo4) As BaseResponse
+
         Dim objResponse As New BaseResponse
+        Dim conConnection As SqlConnection = Nothing
+        Dim trnTransaction As SqlTransaction = Nothing
+
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered 4----------->")
             '*** always log an order
             If _Log.IsWarnEnabled Then _Log.Warn(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo4))
 
+            conConnection = objDBHelper.GetConnection
+            conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
+
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_orders_modify")
-
+            Dim cmdCommand As New SqlCommand("usp_orders_modify", conConnection)
+            cmdCommand.Transaction = trnTransaction
             '***this is temp
             'objOrderInfo4.RequiredByDate = Now
             'objOrderInfo4.CreateDate = Now
@@ -105,11 +113,12 @@ Public Class Orders4
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand)
+            objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
             intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
-
+            If _Log.IsInfoEnabled Then _Log.Info("Items 4----------->")
             If (Not objOrderInfo4.OrderItems Is Nothing AndAlso objOrderInfo4.OrderItems.Count > 0) Then
-                Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify")
+                Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify", conConnection)
+                cmdCommand1.Transaction = trnTransaction
                 For Each objOrderItem As OrderItemInfo4 In objOrderInfo4.OrderItems
                     '*** get description if needed
                     If String.IsNullOrEmpty(objOrderItem.Description) Then
@@ -151,10 +160,10 @@ Public Class Orders4
 
 
 
-                    objDBHelper.ExecuteNonQuery(cmdCommand1)
+                    objDBHelper.ExecuteNonQuery(cmdCommand1, conConnection)
                 Next
             End If
-
+            trnTransaction.Commit()
             objResponse.Status = intResult = 0
             If Not objResponse.Status Then
                 ReDim Preserve objResponse.Errors(0)
@@ -163,11 +172,13 @@ Public Class Orders4
                 '*** now email the admin user in another thread
                 If mustEmail(objOrderInfo4.SupplierID, objOrderInfo4.UserID) Then
                     orderToEmail = objOrderInfo4
+                    If _Log.IsInfoEnabled Then _Log.Info("Email 4----------->")
                     createEmailOrder()
                 End If
             End If
 
         Catch ex As Exception
+            trnTransaction.Rollback()
             If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo4), ex)
             objResponse.Status = False
             Dim intCounter As Integer = 0
@@ -177,7 +188,13 @@ Public Class Orders4
                 ex = ex.InnerException
                 intCounter = intCounter + 1
             End While
+        Finally
+            Try
+                conConnection.Close()
+            Catch ex As Exception
+            End Try
         End Try
+        If _Log.IsInfoEnabled Then _Log.Info("Order End 4----------->")
         Return objResponse
     End Function
 
@@ -311,7 +328,7 @@ Public Class Orders4
     Public Function ReadUnPosted(ByVal strSupplierId As String) As OrderReadListResponse4
         Dim objResponse As New OrderReadListResponse4
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered 4----------->" & strSupplierId)
             Dim objOrderInfo4 As OrderInfo4()
             Dim cmdCommand As New SqlCommand("usp_order_readunposted")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)

@@ -56,7 +56,7 @@ Public Class Orders
     Public Function Modify(ByVal objOrderInfo As OrderInfo) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered1----------->")
             '*** always log an order
             If _Log.IsWarnEnabled Then _Log.Warn(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo))
 

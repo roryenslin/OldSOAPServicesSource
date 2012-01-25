@@ -55,14 +55,20 @@ Public Class Orders3
     <WebMethod()> _
     Public Function Modify(ByVal objOrderInfo3 As OrderInfo3) As BaseResponse
         Dim objResponse As New BaseResponse
+        Dim conConnection As SqlConnection = Nothing
+        Dim trnTransaction As SqlTransaction = Nothing
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered3----------->")
             '*** always log an order
             If _Log.IsWarnEnabled Then _Log.Warn(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo3))
 
+            conConnection = objDBHelper.GetConnection
+            conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
+
             Dim intResult As Integer
             Dim oReturnParam As SqlParameter
-            Dim cmdCommand As New SqlCommand("usp_orders_modify")
+            Dim cmdCommand As New SqlCommand("usp_orders_modify", conConnection)
 
             '***this is temp
             'objOrderInfo3.RequiredByDate = Now
@@ -103,11 +109,13 @@ Public Class Orders3
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
+
             objDBHelper.ExecuteNonQuery(cmdCommand)
+
             intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
 
             If (Not objOrderInfo3.OrderItems Is Nothing AndAlso objOrderInfo3.OrderItems.Count > 0) Then
-                Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify")
+                Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify", conConnection)
                 For Each objOrderItem As OrderItemInfo3 In objOrderInfo3.OrderItems
                     '*** get description if needed
                     If String.IsNullOrEmpty(objOrderItem.Description) Then
@@ -147,7 +155,7 @@ Public Class Orders3
                     objDBHelper.ExecuteNonQuery(cmdCommand1)
                 Next
             End If
-
+            trnTransaction.Commit()
             objResponse.Status = intResult = 0
             If Not objResponse.Status Then
                 ReDim Preserve objResponse.Errors(0)
@@ -162,6 +170,7 @@ Public Class Orders3
 
         Catch ex As Exception
             If _Log.IsErrorEnabled Then _Log.Error(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo3), ex)
+            trnTransaction.Rollback()
             objResponse.Status = False
             Dim intCounter As Integer = 0
             While Not ex Is Nothing
@@ -170,6 +179,11 @@ Public Class Orders3
                 ex = ex.InnerException
                 intCounter = intCounter + 1
             End While
+        Finally
+            Try
+                conConnection.Close()
+            Catch ex As Exception
+            End Try
         End Try
         Return objResponse
     End Function
@@ -252,7 +266,7 @@ Public Class Orders3
 
         '*** apply stylesheet
         Dim htmlfilename As String = folder & "Order_" & Now.ToString("yyMMddhhmmss") & ".html"
-        Dim xsltfilename As String = folder & "XSL\CreateOrder.xslt"
+        Dim xsltfilename As String = folder & "XSL\CreateOrder3.xslt"
         If Not System.IO.File.Exists(xsltfilename) Then Throw New Exception("XSL file not found:" & xsltfilename)
         Dim xsl As New System.Xml.Xsl.XslCompiledTransform
         xsl.Load(xsltfilename)
@@ -304,7 +318,7 @@ Public Class Orders3
     Public Function ReadUnPosted(ByVal strSupplierId As String) As OrderReadListResponse3
         Dim objResponse As New OrderReadListResponse3
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered 3----------->" & strSupplierId)
             Dim objOrderInfo3 As OrderInfo3()
             Dim cmdCommand As New SqlCommand("usp_order_readunposted")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)

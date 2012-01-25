@@ -56,7 +56,7 @@ Public Class Orders2
     Public Function Modify(ByVal objOrderInfo2 As OrderInfo2) As BaseResponse
         Dim objResponse As New BaseResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered2----------->")
             '*** always log an order
             If _Log.IsWarnEnabled Then _Log.Warn(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo2))
 
@@ -302,7 +302,7 @@ Public Class Orders2
     Public Function ReadUnPosted(ByVal strSupplierId As String) As OrderReadListResponse2
         Dim objResponse As New OrderReadListResponse2
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Entered 2----------->" & strSupplierId)
             Dim objOrderInfo2 As OrderInfo2()
             Dim cmdCommand As New SqlCommand("usp_order_readunposted")
             cmdCommand.Parameters.AddWithValue("@SupplierID", strSupplierId)

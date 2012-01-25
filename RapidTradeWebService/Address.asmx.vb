@@ -84,6 +84,61 @@ Public Class Address
     End Function
 
     <WebMethod()> _
+    Public Function ModifyAll(ByVal list As List(Of AddressInfo)) As BaseResponse
+        Dim objResponse As New BaseResponse
+        Dim conConnection As SqlConnection = Nothing
+        Dim trnTransaction As SqlTransaction = Nothing
+        If _Log.IsInfoEnabled Then _Log.Info("ModifyAll Entered to update ----------->")
+        If List Is Nothing Then Return objResponse
+
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Update count " & list.Count)
+            Dim intResult As Integer
+            Dim oReturnParam As SqlParameter
+            conConnection = objDBHelper.GetConnection
+            If conConnection.State <> ConnectionState.Open Then conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
+            For Each objAddressInfo In list
+
+                Dim cmdCommand As New SqlCommand("usp_Address_modify", conConnection)
+                cmdCommand.Parameters.AddWithValue("@SupplierID", objAddressInfo.SupplierID)
+                cmdCommand.Parameters.AddWithValue("@AccountID", objAddressInfo.AccountID)
+                cmdCommand.Parameters.AddWithValue("@AddressID", objAddressInfo.AddressID)
+                cmdCommand.Parameters.AddWithValue("@Unit", objAddressInfo.unit)
+                cmdCommand.Parameters.AddWithValue("@Street", objAddressInfo.Street)
+                cmdCommand.Parameters.AddWithValue("@PostalCode", objAddressInfo.PostalCode)
+                cmdCommand.Parameters.AddWithValue("@City", objAddressInfo.City)
+                cmdCommand.Parameters.AddWithValue("@Region", objAddressInfo.Region)
+                cmdCommand.Parameters.AddWithValue("@Country", objAddressInfo.Country)
+                cmdCommand.Parameters.AddWithValue("@Telephone", objAddressInfo.Telephone)
+                cmdCommand.Parameters.AddWithValue("@Cell", objAddressInfo.Cell)
+                cmdCommand.Parameters.AddWithValue("@Fax", objAddressInfo.Fax)
+                cmdCommand.Parameters.AddWithValue("@WebSite", objAddressInfo.WebSite)
+                cmdCommand.Parameters.AddWithValue("@Email", objAddressInfo.Email)
+                cmdCommand.Parameters.AddWithValue("@Deleted", objAddressInfo.Deleted)
+
+                oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
+                oReturnParam.Direction = ParameterDirection.ReturnValue
+                objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+            Next
+            trnTransaction.Commit()
+            objResponse.Status = True
+
+        Catch ex As Exception
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        If _Log.IsInfoEnabled Then _Log.Info("exited")
+        If _Log.IsDebugEnabled Then _Log.Debug(RapidTradeWebService.Common.SerializationManager.Serialize(objResponse))
+        Return objResponse
+    End Function
+    <WebMethod()> _
     Public Function ReadList(ByVal strSupplierId As String, ByVal strAccountID As String) As AddressReadListResponse
         Dim objResponse As New AddressReadListResponse
         Try
@@ -135,11 +190,7 @@ Public Class Address
 
 
             If Not lstAddresss Is Nothing Then
-                For Each objAddress As AddressInfo In lstAddresss
-                    If Not objAddress Is Nothing Then
-                        ProcessResponse(Modify(objAddress), objTempResponse)
-                    End If
-                Next
+                Me.ModifyAll(lstAddresss)
             End If
 
             objResponse.Addresss = objTempResponse.Addresss
