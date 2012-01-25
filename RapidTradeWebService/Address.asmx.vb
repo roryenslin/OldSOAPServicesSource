@@ -100,7 +100,7 @@ Public Class Address
             trnTransaction = conConnection.BeginTransaction
             For Each objAddressInfo In list
 
-                Dim cmdCommand As New SqlCommand("usp_Address_modify", conConnection)
+                Dim cmdCommand As New SqlCommand("usp_Address_modify", conConnection, trnTransaction)
                 cmdCommand.Parameters.AddWithValue("@SupplierID", objAddressInfo.SupplierID)
                 cmdCommand.Parameters.AddWithValue("@AccountID", objAddressInfo.AccountID)
                 cmdCommand.Parameters.AddWithValue("@AddressID", objAddressInfo.AddressID)
