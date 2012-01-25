@@ -173,6 +173,60 @@ Public Class Accounts
     End Function
 
     <WebMethod()> _
+    Public Function ModifyAll(ByVal list As List(Of AccountInfo)) As BaseResponse
+        If _Log.IsDebugEnabled Then _Log.Debug("entered...")
+        Dim objResponse As New BaseResponse
+        Dim conConnection As SqlConnection = Nothing
+        Dim trnTransaction As SqlTransaction = Nothing
+        If _Log.IsInfoEnabled Then _Log.Info("ModifyAll Entered to update ----------->")
+
+        Try
+            conConnection = objDBHelper.GetConnection
+            If conConnection.State <> ConnectionState.Open Then conConnection.Open()
+            trnTransaction = conConnection.BeginTransaction
+
+            For Each objAccountInfo In list
+                Dim intResult As Integer
+                Dim oReturnParam As SqlParameter
+                Dim cmdCommand As New SqlCommand("usp_account_modify", conConnection)
+                cmdCommand.Transaction = trnTransaction
+
+                cmdCommand.Parameters.AddWithValue("@SupplierID", objAccountInfo.SupplierID)
+                cmdCommand.Parameters.AddWithValue("@AccountID", objAccountInfo.AccountID)
+                cmdCommand.Parameters.AddWithValue("@BranchID", objAccountInfo.Branch)
+                cmdCommand.Parameters.AddWithValue("@Name", objAccountInfo.Name)
+                cmdCommand.Parameters.AddWithValue("@VAT", objAccountInfo.VAT)
+                cmdCommand.Parameters.AddWithValue("@Pricelist", objAccountInfo.PriceList)
+                cmdCommand.Parameters.AddWithValue("@AccountGroup", objAccountInfo.AccountGroup)
+                cmdCommand.Parameters.AddWithValue("@AccountType", objAccountInfo.AccountType)
+                If Not objAccountInfo.UserFields Is Nothing AndAlso objAccountInfo.UserFields.Length > 0 Then
+                    Dim intCounter As Integer
+                    For intCounter = 0 To objAccountInfo.UserFields.GetUpperBound(0)
+                        cmdCommand.Parameters.AddWithValue("@Userfield" + (intCounter + 1).ToString().PadLeft(2, "0"c), objAccountInfo.UserFields(intCounter))
+                    Next
+                End If
+                oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
+                oReturnParam.Direction = ParameterDirection.ReturnValue
+                objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+            Next
+            trnTransaction.Commit()
+            objResponse.Status = True
+
+        Catch ex As Exception
+            If _Log.IsErrorEnabled Then _Log.Error("Exception for accounts", ex)
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        If _Log.IsDebugEnabled Then _Log.Debug("exited")
+        Return objResponse
+    End Function
+    <WebMethod()> _
     Public Function Delete(ByVal objAccountInfo As AccountInfo) As BaseResponse
         If _Log.IsDebugEnabled Then _Log.Debug("entered...")
         Dim objResponse As New BaseResponse
@@ -313,14 +367,8 @@ Public Class Accounts
 
             objTempResponse = Sync2(strUserId, intVersion)
 
-            If Not lstAccounts Is Nothing Then
-                For Each objAccount As AccountInfo In lstAccounts
-                    If Not objAccount Is Nothing Then
-                        ProcessResponse(Modify(objAccount), objTempResponse)
-                    End If
-                Next
-            End If
-
+            ProcessResponse(ModifyAll(lstAccounts), objTempResponse)
+ 
             objResponse.Accounts = objTempResponse.Accounts
             objResponse.Errors = objTempResponse.Errors
             objResponse.Status = objTempResponse.Status
@@ -347,6 +395,16 @@ Public Class Accounts
         Return objResponse
     End Function
 
+    <WebMethod()> _
+    Public Function Test(ByVal supplierID As String, ByVal accountid As String, ByVal strUserId As String, ByVal intVersion As Integer) As AccountSync3Response
+        Dim resultarray As New Generic.List(Of String)
+        Dim lstStock As New List(Of AccountInfo)
+        Dim accountinfo = New AccountInfo(supplierID, accountid, "", "TEST", 14, "", "", Nothing, "", False)
+        lstStock.Add(accountinfo)
+        Dim br As AccountSync3Response = Sync3(supplierID, intVersion, lstStock)
+        Return br
+    End Function
+
     Private Function ReadAccounts(ByVal objReader As SqlDataReader) As AccountInfo()
         Dim objAccounts As AccountInfo() = Nothing
         Dim intCounter As Integer = 0
@@ -365,19 +423,19 @@ Public Class Accounts
                         .Branch = CheckString(objReader("BranchID"))
                         .Name = CheckString(objReader("Name"))
                         .PriceList = CheckString(objReader("Pricelist"))
-                        .AccountGroup = CheckString(objReader("AccountGroup"))
-                        ReDim .UserFields(9)
+                        .AccountGroup = CheckString2(objReader("AccountGroup"))
+                        ReDim .UserFields(4)
                         .UserFields(0) = CheckString(objReader("Userfield01"))
                         .UserFields(1) = CheckString(objReader("Userfield02"))
                         .UserFields(2) = CheckString(objReader("Userfield03"))
                         .UserFields(3) = CheckString(objReader("Userfield04"))
                         .UserFields(4) = CheckString(objReader("Userfield05"))
-                        .UserFields(5) = CheckString(objReader("Userfield06"))
-                        .UserFields(6) = CheckString(objReader("Userfield07"))
-                        .UserFields(7) = CheckString(objReader("Userfield08"))
-                        .UserFields(8) = CheckString(objReader("Userfield09"))
-                        .UserFields(9) = CheckString(objReader("Userfield10"))
-                        .AccountType = CheckString(objReader("AccountType"))
+                        '.UserFields(5) = CheckString(objReader("Userfield06"))
+                        '.UserFields(6) = CheckString2(objReader("Userfield07"))
+                        '.UserFields(7) = CheckString2(objReader("Userfield08"))
+                        '.UserFields(8) = CheckString2(objReader("Userfield09"))
+                        '.UserFields(9) = CheckString2(objReader("Userfield10"))
+                        .AccountType = CheckString2(objReader("AccountType"))
 
                         .Deleted = CheckDeletedField(objReader)
 
