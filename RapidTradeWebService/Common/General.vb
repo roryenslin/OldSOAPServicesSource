@@ -28,7 +28,19 @@ Module General
         End If
 
     End Function
+    Public Function CheckString2(ByVal obj As Object, Optional ByVal defaultValue As String = Nothing) As String
+        Dim strResult As String = String.Empty
+        If Not obj Is Nothing Then
+            strResult = obj.ToString()
+        End If
+        If String.IsNullOrEmpty(strResult) Then
+            '*** returning "" as nulls causes issues on blackberry
+            Return CStr(IIf(defaultValue = Nothing, Nothing, defaultValue))
+        Else
+            Return strResult
+        End If
 
+    End Function
     Public Function CheckBoolean(ByVal obj As Object) As Boolean
         Dim bResult As Boolean
         Try

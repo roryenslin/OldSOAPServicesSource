@@ -79,7 +79,7 @@ Namespace DataAccess
 
         Public Function ExecuteReader(ByVal cmdCommand As SqlCommand, Optional ByVal isSP As Boolean = True) As SqlDataReader
             cmdCommand.Connection = conConnection
-            cmdCommand.CommandTimeout = 0
+            cmdCommand.CommandTimeout = 60000
             If isSP Then
                 cmdCommand.CommandType = CommandType.StoredProcedure
             Else
@@ -88,6 +88,7 @@ Namespace DataAccess
 
             conConnection.Open()
             Dim r As SqlDataReader = cmdCommand.ExecuteReader(CommandBehavior.CloseConnection)
+
             Return r
         End Function
 
