@@ -97,6 +97,7 @@
     <Content Include="KpiTypes2.asmx" />
     <Content Include="Options.asmx" />
     <Content Include="Orders.asmx" />
+    <Content Include="Orders4.asmx" />
     <Content Include="PriceLists.asmx" />
     <Content Include="Prices.asmx" />
     <Content Include="ProductCategories.asmx" />
@@ -149,8 +150,15 @@
       <DependentUpon>Activities2.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Entity\DisplayActivityInfo2.vb" />
+    <Compile Include="Entity\OrderInfo4.vb" />
+    <Compile Include="Entity\OrderItemInfo4.vb" />
     <Compile Include="Orders3.asmx.vb">
       <DependentUpon>Orders3.asmx</DependentUpon>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Orders4.asmx.vb">
+      <DependentUpon>Orders4.asmx</DependentUpon>
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="PriceLists3.asmx.vb">
@@ -172,6 +180,7 @@
     <Compile Include="Entity\StockInfo.vb" />
     <Compile Include="Response\ActivityResponse2.vb" />
     <Compile Include="Response\OrderResponse3.vb" />
+    <Compile Include="Response\OrderResponse4.vb" />
     <Compile Include="Response\PriceListResponse3.vb" />
     <Compile Include="Response\OrderResponse2.vb" />
     <Compile Include="Response\StockResponse.vb" />
