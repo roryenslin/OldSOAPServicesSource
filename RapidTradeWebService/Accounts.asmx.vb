@@ -188,7 +188,7 @@ Public Class Accounts
             For Each objAccountInfo In list
                 Dim intResult As Integer
                 Dim oReturnParam As SqlParameter
-                Dim cmdCommand As New SqlCommand("usp_account_modify", conConnection)
+                Dim cmdCommand As New SqlCommand("usp_account_modify", conConnection, trnTransaction)
                 cmdCommand.Transaction = trnTransaction
 
                 cmdCommand.Parameters.AddWithValue("@SupplierID", objAccountInfo.SupplierID)
