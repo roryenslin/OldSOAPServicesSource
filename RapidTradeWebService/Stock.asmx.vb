@@ -76,7 +76,7 @@ Public Class Stock
             If conConnection.State <> ConnectionState.Open Then conConnection.Open()
             trnTransaction = conConnection.BeginTransaction
             For Each objStockInfo In list
-                Dim cmdCommand As New SqlCommand("usp_Stock_modify", conConnection)
+                Dim cmdCommand As New SqlCommand("usp_Stock_modify", conConnection, trnTransaction)
                 cmdCommand.Transaction = trnTransaction
 
                 cmdCommand.Parameters.AddWithValue("@SupplierID", objStockInfo.SupplierID)

@@ -108,7 +108,7 @@ Public Class ProductLongText
 
             For Each objProductLongTextInfo In lstProductLongTextInfo
                 gotopoint += 1
-                Dim cmdCommand As New SqlCommand("usp_productlongtext_modify", conConnection)
+                Dim cmdCommand As New SqlCommand("usp_productlongtext_modify", conConnection, trnTransaction)
                 cmdCommand.Transaction = trnTransaction
                 cmdCommand.Parameters.AddWithValue("@SupplierID", objProductLongTextInfo.SupplierID)
                 cmdCommand.Parameters.AddWithValue("@ProductID", objProductLongTextInfo.ProductID)
