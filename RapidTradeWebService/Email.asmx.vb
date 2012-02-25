@@ -94,7 +94,30 @@ Public Class Email
                 End If
 
                 client.Host = strMailServer
-                client.Send(message)
+                Try
+                    client.Send(message)
+                Catch exc1 As exception
+                    client.Credentials = New System.Net.NetworkCredential("orders103@rapidtrade.biz", "fertig", strDomain)
+                    Try
+                        client.Send(message)
+                    Catch exc1 As exception
+                        client.Credentials = New System.Net.NetworkCredential("orders36@rapidtrade.biz", "fertig", strDomain)
+                        Try
+                            client.Send(message)
+                        Catch exc1 As exception
+                            client.Credentials = New System.Net.NetworkCredential("ordersrapidsync@rapidtrade.biz", "pass@word1", strDomain)
+                            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & SerializationManager.Serialize(objMail), ex)
+                            objResponse.Status = False
+                            Dim intCounter As Integer = 0
+                            While Not ex Is Nothing
+                                ReDim Preserve objResponse.Errors(intCounter)
+                                objResponse.Errors(intCounter) = ex.Message
+                                ex = ex.InnerException
+                                intCounter = intCounter + 1
+                            End While
+                        End Try
+                    End Try
+                End Try
 
                 objResponse.Status = True
 
