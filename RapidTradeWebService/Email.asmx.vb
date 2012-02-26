@@ -100,19 +100,19 @@ Public Class Email
                     client.Credentials = New System.Net.NetworkCredential("orders103@rapidtrade.biz", "fertig", strDomain)
                     Try
                         client.Send(message)
-                    Catch exc1 As exception
+                    Catch exc2 As Exception
                         client.Credentials = New System.Net.NetworkCredential("orders36@rapidtrade.biz", "fertig", strDomain)
                         Try
                             client.Send(message)
-                        Catch exc1 As exception
+                        Catch exc3 As Exception
                             client.Credentials = New System.Net.NetworkCredential("ordersrapidsync@rapidtrade.biz", "pass@word1", strDomain)
-                            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & SerializationManager.Serialize(objMail), ex)
+                            If _Log.IsErrorEnabled Then _Log.Error("Exception for " & SerializationManager.Serialize(objMail), exc3)
                             objResponse.Status = False
                             Dim intCounter As Integer = 0
-                            While Not ex Is Nothing
+                            While Not exc3 Is Nothing
                                 ReDim Preserve objResponse.Errors(intCounter)
-                                objResponse.Errors(intCounter) = ex.Message
-                                ex = ex.InnerException
+                                objResponse.Errors(intCounter) = exc3.Message
+                                exc3 = exc3.InnerException
                                 intCounter = intCounter + 1
                             End While
                         End Try
