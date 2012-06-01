@@ -16,7 +16,7 @@ Public Class Prices
     Inherits System.Web.Services.WebService
 
     Dim objDBHelper As DBHelper
-    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(UserAccounts))
+    Private Shared ReadOnly _Log As log4net.ILog = log4net.LogManager.GetLogger(GetType(Prices))
 
     Public Sub New()
         objDBHelper = New DBHelper
@@ -75,18 +75,24 @@ Public Class Prices
         Return objResponse
     End Function
 
-    Public Function Sync2(ByVal strSupplierId As String, ByVal intVersion As Integer) As PriceReadListResponse
+    Public Function Sync2(ByVal strSupplierId As String, ByVal userID As String, ByVal intVersion As Integer) As PriceReadListResponse
         Dim objResponse As New PriceReadListResponse
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
+
             Dim objPriceInfo As PriceInfo()
             Dim cmdCommand As New SqlCommand("usp_price_sync2")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
+            cmdCommand.Parameters.AddWithValue("@UserID", userID)
             cmdCommand.Parameters.AddWithValue("@Version", intVersion)
             objPriceInfo = ReadPrices(objDBHelper.ExecuteReader(cmdCommand))
             objResponse.Status = True
             If Not objPriceInfo Is Nothing AndAlso objPriceInfo.GetUpperBound(0) >= 0 Then
                 objResponse.Prices = objPriceInfo
+            Else
+                If _Log.IsWarnEnabled Then _Log.Warn("No price records found")
+
             End If
         Catch ex As Exception
             objResponse.Status = False
@@ -134,8 +140,10 @@ Public Class Prices
     Public Function GetPrice(ByVal supplierID As String, ByVal accountID As String, ByVal productID As String, ByVal quantity As Integer, ByVal gross As Double, ByVal nett As Double) As PriceResponse
         If _Log.IsInfoEnabled Then _Log.Info("GetPrice Entered----------->" & supplierID & "/" & accountID & "/" & productID & "/" & quantity)
         Dim discount As Double
+        Dim grossprice As Double = gross
         Dim netprice As Double
         Dim conConnection As SqlConnection = Nothing
+        Dim bfound As Boolean = False
         Try
             conConnection = objDBHelper.GetConnection
             'conConnection.Open()
@@ -147,6 +155,7 @@ Public Class Prices
             cmdCommand.Parameters.AddWithValue("@Debug", _Log.IsDebugEnabled)
             cmdCommand.Parameters.AddWithValue("@qty", quantity)
             Dim objreader As SqlDataReader = objDBHelper.ExecuteReader(cmdCommand)
+
             If Not objreader Is Nothing AndAlso objreader.HasRows Then
                 While (objreader.Read())
                     If CheckString(objreader("SupplierID")) = "DEBUG" Then
@@ -154,10 +163,23 @@ Public Class Prices
                     Else
                         If CheckDecimal(objreader("Discount")) > 0 Then
                             discount = CheckDecimal(objreader("Discount"))
+                            netprice = grossprice - (grossprice * (discount / 100))
+                            If _Log.IsDebugEnabled Then _Log.Debug("Discount found " & discount)
+                            bfound = True
                         ElseIf CheckDecimal(objreader("Price")) > 0 Then
                             netprice = CheckDecimal(objreader("Price"))
+                            If CheckBoolean(objreader("ApplyToGross")) Then
+                                grossprice = netprice
+                            End If
+                            If _Log.IsDebugEnabled Then _Log.Debug("Price found " & netprice)
+                            bfound = True
+                        End If
+                        If CheckBoolean(objreader("SkipRest")) And bfound Then
+                            If _Log.IsDebugEnabled Then _Log.Debug("Skip rest discount")
+                            Exit While
                         End If
                     End If
+                    
                 End While
             End If
         Catch ex As Exception
@@ -166,24 +188,36 @@ Public Class Prices
         End Try
 
         Dim resp = New PriceResponse
-        resp.Discount = 0
-        resp.Gross = gross
-        resp.Nett = nett
-
-        If discount > 0 Then
-            resp.Discount = Integer.Parse(discount.ToString)
-            resp.Nett = resp.Gross - (resp.Gross * (discount / 100))
-            resp.Status = True
-        ElseIf netprice > 0 Then
+        If bfound = False Then
             resp.Discount = 0
-            resp.Gross = netprice
-            resp.Status = True
-        Else
+            resp.Gross = gross
+            resp.Nett = nett
             resp.Status = False
             Dim messages(0) As String
             messages(0) = "No discount found"
             resp.Errors = messages
+        Else
+            resp.Status = True
+            resp.Discount = Integer.Parse(discount.ToString)
+            resp.Gross = grossprice
+            resp.Nett = netprice
         End If
+ 
+        'If discount > 0 Then
+        '    resp.Discount = Integer.Parse(discount.ToString)
+        '    resp.Nett = resp.Gross - (resp.Gross * (discount / 100))
+        '    resp.Status = True
+        'ElseIf netprice > 0 Then
+        '    resp.Discount = 0
+        '    resp.Nett = netprice
+        '    'resp.Gross = netprice
+        '    resp.Status = True
+        'Else
+        '    resp.Status = False
+        '    Dim messages(0) As String
+        '    messages(0) = "No discount found"
+        '    resp.Errors = messages
+        'End If
 
         If _Log.IsInfoEnabled Then _Log.Info("GetPrice ----------->" & accountID & "/disc=" & resp.Discount & "/nett=" & resp.Nett & "/status=" & resp.Status)
         Return resp
@@ -196,7 +230,7 @@ Public Class Prices
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
             If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
-            objTempResponse = Sync2(strSupplierId, intVersion)
+            objTempResponse = Sync2(strSupplierId, "", intVersion)
 
             If Not lstPrices Is Nothing Then
                 ProcessResponse(Modify(lstPrices), objTempResponse)
@@ -232,18 +266,18 @@ Public Class Prices
         Dim objResponse As New PriceSync3Response
         Dim objTempResponse As New PriceReadListResponse
         Try
-            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
-            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
-            objTempResponse = Sync2(strSupplierId, intVersion)
-            Dim size As Integer = 0
-            If offset + numrows < objTempResponse.Prices.Length Then
-                size = numrows - 1
-            Else
-                size = objTempResponse.Prices.Length - offset - 1
-            End If
-            Dim tmp(size) As PriceInfo
-            System.Array.Copy(objTempResponse.Prices, offset, tmp, 0, size + 1)
-            objTempResponse.Prices = tmp
+            If _Log.IsInfoEnabled Then _Log.Info("Sync 5 Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("Supplierid: " & strSupplierId & "UserID: " & userID & " // Version: " & intVersion)
+            objTempResponse = Sync2b(strSupplierId, userID, intVersion, offset, numrows)
+            'Dim size As Integer = 0
+            'If offset + numrows < objTempResponse.Prices.Length Then
+            '    size = numrows - 1
+            'Else
+            '    size = objTempResponse.Prices.Length - offset - 1
+            'End If
+            'Dim tmp(size) As PriceInfo
+            'System.Array.Copy(objTempResponse.Prices, offset, tmp, 0, size + 1)
+            'objTempResponse.Prices = tmp
 
             If Not lstPrices Is Nothing Then
                 ProcessResponse(Modify(lstPrices), objTempResponse)
@@ -270,9 +304,39 @@ Public Class Prices
                 intCounter = intCounter + 1
             End While
         End Try
-        If _Log.IsDebugEnabled Then _Log.Debug("exited")
+        If _Log.IsDebugEnabled Then _Log.Debug("Sync 5 exited")
 
         Return objResponse
+    End Function
+    Private Function ReadPrices2(ByVal objReader As SqlDataReader, ByVal offset As Integer, ByVal numrows As Integer) As PriceInfo()
+        Dim objPrices As PriceInfo() = Nothing
+        Dim intCounter As Integer = 0
+        Dim rowCounter As Integer = 0
+
+        Try
+            If Not objReader Is Nothing AndAlso objReader.HasRows Then
+                While (objReader.Read())
+                    If rowCounter >= offset And rowCounter < numrows + offset Then
+                        ReDim Preserve objPrices(intCounter)
+                        objPrices(intCounter) = New PriceInfo
+                        With objPrices(intCounter)
+                            .SupplierID = CheckString(objReader("SupplierID"))
+                            .ProductID = CheckString(objReader("ProductID"))
+                            .PriceList = CheckString(objReader("PriceList"))
+                            .Nett = CheckDouble(objReader("Nett"))
+                            .Gross = CheckDouble(objReader("Gross"))
+                            .Discount = CheckDouble(objReader("Discount"))
+                            .Cost = CheckDecimal(objReader("Cost"))
+                        End With
+                        intCounter = intCounter + 1
+                    End If
+                    rowCounter = rowCounter + 1
+                End While
+            End If
+        Finally
+            objReader.Close()
+        End Try
+        Return objPrices
     End Function
     Private Function ReadPrices(ByVal objReader As SqlDataReader) As PriceInfo()
         Dim objPrices As PriceInfo() = Nothing
@@ -300,5 +364,37 @@ Public Class Prices
         End Try
         Return objPrices
     End Function
+    Public Function Sync2b(ByVal strSupplierId As String, ByVal userID As String, ByVal intVersion As Integer, ByVal offset As Integer, ByVal numrows As Integer) As PriceReadListResponse
+        Dim objResponse As New PriceReadListResponse
+        Try
+            If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
+            If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
+
+            Dim objPriceInfo As PriceInfo()
+            Dim cmdCommand As New SqlCommand("usp_price_sync2")
+            cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
+            cmdCommand.Parameters.AddWithValue("@UserID", userID)
+            cmdCommand.Parameters.AddWithValue("@Version", intVersion)
+            objPriceInfo = ReadPrices2(objDBHelper.ExecuteReader(cmdCommand), offset, numrows)
+            objResponse.Status = True
+            If Not objPriceInfo Is Nothing AndAlso objPriceInfo.GetUpperBound(0) >= 0 Then
+                objResponse.Prices = objPriceInfo
+            Else
+                If _Log.IsWarnEnabled Then _Log.Warn("No price records found")
+
+            End If
+        Catch ex As Exception
+            objResponse.Status = False
+            Dim intCounter As Integer = 0
+            While Not ex Is Nothing
+                ReDim Preserve objResponse.Errors(intCounter)
+                objResponse.Errors(intCounter) = ex.Message
+                ex = ex.InnerException
+                intCounter = intCounter + 1
+            End While
+        End Try
+        Return objResponse
+    End Function
+
 
 End Class
