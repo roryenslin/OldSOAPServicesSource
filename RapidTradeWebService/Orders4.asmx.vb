@@ -110,6 +110,7 @@ Public Class Orders4
             cmdCommand.Parameters.AddWithValue("@PostedToERP", objOrderInfo4.PostedToERP)
             cmdCommand.Parameters.AddWithValue("@ERPOrderNumber", objOrderInfo4.ERPOrderNumber)
             cmdCommand.Parameters.AddWithValue("@ERPStatus", objOrderInfo4.ERPStatus)
+            objOrderInfo4.UserField06 = "http://23.21.227.179/images/SILICONE/" & objOrderInfo4.SupplierID.ToLower & ".png"
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
@@ -169,12 +170,17 @@ Public Class Orders4
                 ReDim Preserve objResponse.Errors(0)
                 objResponse.Errors(0) = "Error creating order. Error returned" + intResult.ToString()
             Else
-                '*** now email the admin user in another thread
-                If mustEmail(objOrderInfo4.SupplierID, objOrderInfo4.UserID) Then
-                    orderToEmail = objOrderInfo4
-                    If _Log.IsInfoEnabled Then _Log.Info("Email 4----------->")
-                    createEmailOrder()
+                If objOrderInfo4.PostedToERP = True Then
+                    If _Log.IsInfoEnabled Then _Log.Info("Not emailing as postedtoerp=true")
+                Else
+                    '*** now email the admin user in another thread
+                    If mustEmail(objOrderInfo4.SupplierID, objOrderInfo4.UserID, objOrderInfo4.UserField05) Then
+                        orderToEmail = objOrderInfo4
+                        If _Log.IsInfoEnabled Then _Log.Info("Email 4----------->")
+                        createEmailOrder()
+                    End If
                 End If
+                
             End If
 
         Catch ex As Exception
@@ -198,36 +204,60 @@ Public Class Orders4
         Return objResponse
     End Function
 
-    Private Function mustEmail(ByVal supplierID As String, ByVal userID As String) As Boolean
+    Private Function mustEmail(ByVal supplierID As String, ByVal userID As String, ByVal userfield05 As String) As Boolean
+        Dim comma As String
+        Dim hasemails As Boolean
+        hasemails = False
+        comma = ""
         Try
             Dim options As New Options
             Dim opt As OptionInfo = options.ReadSingle(supplierID, "OrderNotificationEmail", "security").OptionData
             notificationEmail = opt.Value
+            hasemails = True
+            comma = ","
         Catch ex As Exception
-
+            If _Log.IsInfoEnabled Then _Log.Info("mustEmail could not find ordernotificationemail")
         End Try
-        If String.IsNullOrEmpty(notificationEmail) Then
+
+        Try
             Dim users As New Users
             Dim resp As UserReadSingleResponse = users.ReadSingle(userID)
             If resp.Status = True Then
-                If String.IsNullOrEmpty(resp.User.Email) Then
-                    Return False
-                ElseIf resp.User.Email.Contains("@") Then
-                    notificationEmail = resp.User.Email
-                    Return True
-                Else
-                    Return False
+                If resp.User.Email.Contains("@") Then
+                    notificationEmail = notificationEmail & comma & resp.User.Email
+                    comma = ","
+                    hasemails = True
                 End If
-            Else
-                Return False
             End If
-        Else
-            Return True
-        End If
+        Catch ex As Exception
+            If _Log.IsInfoEnabled Then _Log.Info("mustEmail could not find user email")
+        End Try
+
+        Try
+            If userfield05.Contains("@") Then
+                notificationEmail = notificationEmail & comma & userfield05
+                hasemails = True
+            End If
+        Catch ex As Exception
+            If _Log.IsInfoEnabled Then _Log.Info("mustEmail could not find userfield05 email")
+        End Try
+        If _Log.IsInfoEnabled Then _Log.Info("Email: " & notificationEmail)
+        Return hasemails
     End Function
 
 
     Private Sub createEmailOrder()
+        Try
+            Dim accnt As New Accounts
+            Dim resp As AccountReadSingleResponse = accnt.ReadSingle(orderToEmail.SupplierID, orderToEmail.AccountID)
+            If resp.Status Then
+                If String.IsNullOrEmpty(orderToEmail.DeliveryName) Then orderToEmail.DeliveryName = resp.Account.Name
+            Else
+                If _Log.IsErrorEnabled Then _Log.Info("No account found")
+            End If
+        Catch ex As Exception
+            If _Log.IsInfoEnabled Then _Log.Info("Exception getting account name: " & ex.Message)
+        End Try
         Try
             '*** create email
             If _Log.IsDebugEnabled Then _Log.Debug("Creating email")
