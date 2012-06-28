@@ -198,7 +198,12 @@ Public Class Prices
             resp.Errors = messages
         Else
             resp.Status = True
-            resp.Discount = Integer.Parse(discount.ToString)
+            Try
+                resp.Discount = Integer.Parse(discount.ToString)
+            Catch ex As Exception
+                resp.Discount = 0
+            End Try
+
             resp.Gross = grossprice
             resp.Nett = netprice
         End If

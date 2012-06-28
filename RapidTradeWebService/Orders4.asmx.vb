@@ -92,7 +92,24 @@ Public Class Orders4
             cmdCommand.Parameters.AddWithValue("@DeliveryMethod", objOrderInfo4.DeliveryMethod)
             cmdCommand.Parameters.AddWithValue("@Comments", objOrderInfo4.Comments)
             cmdCommand.Parameters.AddWithValue("@Type", objOrderInfo4.Type)
-            cmdCommand.Parameters.AddWithValue("@DeliveryName", objOrderInfo4.DeliveryName)
+
+            Try
+                If String.IsNullOrEmpty(objOrderInfo4.DeliveryName) Then objOrderInfo4.DeliveryName = ""
+                If String.IsNullOrEmpty(objOrderInfo4.DeliveryName) Or objOrderInfo4.DeliveryName.ToLower.Contains("no name") Then
+                    Dim ob As AccountReadSingleResponse = New Accounts().ReadSingle(objOrderInfo4.SupplierID, objOrderInfo4.AccountID)
+                    If ob.Status Then
+                        cmdCommand.Parameters.AddWithValue("@DeliveryName", ob.Account.Name)
+                    Else
+                        cmdCommand.Parameters.AddWithValue("@DeliveryName", objOrderInfo4.DeliveryName)
+                    End If
+                Else
+                    cmdCommand.Parameters.AddWithValue("@DeliveryName", objOrderInfo4.DeliveryName)
+                End If
+            Catch ex As Exception
+                cmdCommand.Parameters.AddWithValue("@DeliveryName", objOrderInfo4.DeliveryName)
+                If _Log.IsInfoEnabled Then _Log.Info("Warning: Problem reading account name:" & ex.Message)
+            End Try
+
             cmdCommand.Parameters.AddWithValue("@UserField01", objOrderInfo4.UserField01)
             cmdCommand.Parameters.AddWithValue("@UserField02", objOrderInfo4.UserField02)
             cmdCommand.Parameters.AddWithValue("@UserField03", objOrderInfo4.UserField03)
