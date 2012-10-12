@@ -270,7 +270,7 @@ Public Class Companies
                         .Name = CheckString(objReader("Name"))
                         .PriceList = CheckString(objReader("Pricelist"))
                         .CompanyGroup = CheckString(objReader("AccountGroup"))
-                        ReDim .UserFields(9)
+                        ReDim .UserFields(8)
                         .UserFields(0) = CheckString(objReader("Userfield01"))
                         .UserFields(1) = CheckString(objReader("Userfield02"))
                         .UserFields(2) = CheckString(objReader("Userfield03"))
@@ -280,7 +280,7 @@ Public Class Companies
                         .UserFields(6) = CheckString(objReader("Userfield07"))
                         .UserFields(7) = CheckString(objReader("Userfield08"))
                         .UserFields(8) = CheckString(objReader("Userfield09"))
-                        .UserFields(9) = CheckString(objReader("Userfield10"))
+                        '.UserFields(9) = CheckString(objReader("Userfield10"))
                         .CompanyType = CheckString(objReader("AccountType"))
 
                         .SharedCompany = CheckBoolean(objReader("SharedCompany"))
