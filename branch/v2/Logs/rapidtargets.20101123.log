@@ -1,0 +1,27 @@
+08:47:27,348 INFO  Global_asax            Application_Start  - Application started...
+08:47:48,020 INFO  Users                  ReadList           - Entered----------->
+08:47:49,129 ERROR Users                  ReadList           - Exception for TEST
+System.IndexOutOfRangeException: Manager
+   at System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   at System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   at System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   at RapidTradeWebService.Users.ReadUsers(SqlDataReader objReader) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Users.asmx.vb:line 820
+   at RapidTradeWebService.Users.ReadList(String strSupplierId) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Users.asmx.vb:line 495
+08:49:38,082 INFO  Users                  ReadList           - Entered----------->
+08:49:51,223 ERROR Users                  ReadList           - Exception for TEST
+System.IndexOutOfRangeException: Manager
+   at System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   at System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   at System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   at RapidTradeWebService.Users.ReadUsers(SqlDataReader objReader) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Users.asmx.vb:line 820
+   at RapidTradeWebService.Users.ReadList(String strSupplierId) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Users.asmx.vb:line 495
+08:50:03,395 INFO  Users                  ReadList           - Entered----------->
+08:50:56,004 ERROR Users                  ReadList           - Exception for TEST
+System.IndexOutOfRangeException: Manager
+   at System.Data.ProviderBase.FieldNameLookup.GetOrdinal(String fieldName)
+   at System.Data.SqlClient.SqlDataReader.GetOrdinal(String name)
+   at System.Data.SqlClient.SqlDataReader.get_Item(String name)
+   at RapidTradeWebService.Users.ReadUsers(SqlDataReader objReader) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Users.asmx.vb:line 820
+   at RapidTradeWebService.Users.ReadList(String strSupplierId) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Users.asmx.vb:line 495
+08:51:41,723 INFO  Global_asax            Application_Start  - Application started...
+08:51:51,770 INFO  Users                  ReadList           - Entered----------->
