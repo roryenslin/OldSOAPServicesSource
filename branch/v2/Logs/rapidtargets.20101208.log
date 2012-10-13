@@ -1,0 +1,138 @@
+08:03:11,950 INFO  Global_asax            Application_Start  - Application started...
+08:04:02,560 INFO  Orders                 ReadUnPosted       - Entered----------->
+08:04:04,279 INFO  Orders                 ReadOrders         - Entered----------->
+08:04:04,450 ERROR Orders                 ReadUnPosted       - Exception for TEST
+System.ArgumentException: Item has already been added. Key in dictionary: '20100101333333'  Key being added: '20100101333333'
+   at System.Collections.Hashtable.Insert(Object key, Object nvalue, Boolean add)
+   at System.Collections.Hashtable.Add(Object key, Object value)
+   at RapidTradeWebService.Orders.ReadOrders(SqlDataReader objReader) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Orders.asmx.vb:line 359
+   at RapidTradeWebService.Orders.ReadUnPosted(String strSupplierId) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Orders.asmx.vb:line 289
+08:04:55,872 INFO  Orders                 ReadUnPosted       - Entered----------->
+08:04:59,669 INFO  Orders                 ReadOrders         - Entered----------->
+08:05:30,216 INFO  Orders                 ReadOrders         - Entered----------->
+08:06:30,638 ERROR Orders                 ReadUnPosted       - Exception for TEST
+System.ArgumentException: Item has already been added. Key in dictionary: '20100101333333'  Key being added: '20100101333333'
+   at System.Collections.Hashtable.Insert(Object key, Object nvalue, Boolean add)
+   at System.Collections.Hashtable.Add(Object key, Object value)
+   at RapidTradeWebService.Orders.ReadOrders(SqlDataReader objReader) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Orders.asmx.vb:line 359
+   at RapidTradeWebService.Orders.ReadUnPosted(String strSupplierId) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Orders.asmx.vb:line 289
+08:10:02,513 INFO  Orders                 Modify             - Entered----------->
+08:10:03,341 WARN  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST2</SupplierID>
+  <OrderID>5555555</OrderID>
+  <UserID>TEST2</UserID>
+  <AccountID>TEST2</AccountID>
+  <CreateDate>2010-12-08T08:10:02.513375+02:00</CreateDate>
+  <RequiredByDate>2010-12-08T08:10:02.513375+02:00</RequiredByDate>
+  <Reference>My reference20101208081002</Reference>
+  <Comments>TEST2</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST2</SupplierID>
+      <OrderID>5555555</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Description>AAA product</Description>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+  <ERPOrderNumber>123</ERPOrderNumber>
+  <ERPStatus>Sent</ERPStatus>
+</OrderInfo>
+08:10:03,872 INFO  Options                ReadSingle         - Entered----------->
+08:10:22,575 INFO  Orders                 ReadUnPosted       - Entered----------->
+08:10:24,763 INFO  Orders                 ReadOrders         - Entered----------->
+14:22:58,013 INFO  Global_asax            Application_Start  - Application started...
+14:24:12,935 INFO  Orders                 Modify             - Entered----------->
+14:24:13,778 WARN  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST3</SupplierID>
+  <OrderID>TEST3hhhhh</OrderID>
+  <UserID>TEST3</UserID>
+  <AccountID>TEST3</AccountID>
+  <CreateDate>2010-12-08T14:24:12.90375+02:00</CreateDate>
+  <RequiredByDate>2010-12-08T14:24:12.90375+02:00</RequiredByDate>
+  <Reference>My reference20101208022412</Reference>
+  <Comments>dddd</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST3</SupplierID>
+      <OrderID>TEST3hhhhh</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+14:24:15,481 INFO  Options                ReadSingle         - Entered----------->
+14:24:37,778 INFO  Orders                 ReadList           - Entered----------->
+14:24:37,825 INFO  Orders                 ReadOrders         - Entered----------->
+14:25:41,106 INFO  Orders                 Modify             - Entered----------->
+14:25:41,638 WARN  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST4</SupplierID>
+  <OrderID>TEST4asasassa</OrderID>
+  <UserID>TEST4</UserID>
+  <AccountID>TEST4</AccountID>
+  <CreateDate>2010-12-08T14:25:41.106875+02:00</CreateDate>
+  <RequiredByDate>2010-12-08T14:25:41.106875+02:00</RequiredByDate>
+  <Reference>My reference20101208022541</Reference>
+  <Comments>asasas</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST4</SupplierID>
+      <OrderID>TEST4asasassa</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Description>AAA product</Description>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+  <ERPOrderNumber>123</ERPOrderNumber>
+  <ERPStatus>Sent</ERPStatus>
+</OrderInfo2>
+14:25:41,653 INFO  Options                ReadSingle         - Entered----------->
+14:25:56,263 INFO  Orders                 ReadList           - Entered----------->
+14:25:56,310 INFO  Orders                 ReadOrders         - Entered----------->
+14:26:16,794 INFO  Orders                 ReadUnPosted       - Entered----------->
+14:26:16,856 INFO  Orders                 ReadOrders         - Entered----------->
+14:46:28,216 INFO  Global_asax            Application_Start  - Application started...
+14:46:50,497 INFO  Products               Sync2              - Entered----------->
+14:46:51,310 ERROR Products               Sync2              - Exception for TEST
+System.Data.SqlClient.SqlException: Change tracking is not enabled on table 'Product'.
+   at System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection)
+   at System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.Run(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.SqlDataReader.ConsumeMetaData()
+   at System.Data.SqlClient.SqlDataReader.get_MetaData()
+   at System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   at System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior)
+   at RapidTradeWebService.DataAccess.DBHelper.ExecuteReader(SqlCommand cmdCommand, Boolean isSP) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\DataAccess\DBHelper.vb:line 89
+   at RapidTradeWebService.Products.Sync2(String strSupplierId, Int32 intVersion) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Products.asmx.vb:line 143
+15:17:45,263 INFO  Stock                  ReadList           - Entered----------->
+15:18:39,138 INFO  Stock                  ReadList           - Entered----------->
+15:23:14,138 INFO  Stock                  ReadList           - Entered----------->

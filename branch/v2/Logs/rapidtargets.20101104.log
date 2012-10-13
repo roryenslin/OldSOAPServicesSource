@@ -1,0 +1,488 @@
+15:12:57,826 INFO  Global_asax            Application_Start  - Application started...
+15:13:30,701 INFO  Orders                 Modify             - Entered----------->
+15:13:31,154 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>TESTasaasasasas</OrderID>
+  <UserID>TESt</UserID>
+  <AccountID>TESt</AccountID>
+  <CreateDate>2010-11-04T15:13:30.701+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:13:30.701+02:00</RequiredByDate>
+  <Reference>My reference20101104031330</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>TESTasaasasasas</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:13:31,185 INFO  Options                ReadSingle         - Entered----------->
+15:14:02,794 INFO  Global_asax            Application_Start  - Application started...
+15:14:22,310 INFO  Orders                 Modify             - Entered----------->
+15:14:22,716 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>as872187238723</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TESt</AccountID>
+  <CreateDate>2010-11-04T15:14:22.310375+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:14:22.310375+02:00</RequiredByDate>
+  <Reference>My reference20101104031422</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>as872187238723</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:14:22,904 INFO  Options                ReadSingle         - Entered----------->
+15:15:32,341 INFO  Global_asax            Application_Start  - Application started...
+15:15:57,747 INFO  Orders                 Modify             - Entered----------->
+15:15:58,154 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>128923982389</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-11-04T15:15:57.747875+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:15:57.747875+02:00</RequiredByDate>
+  <Reference>My reference20101104031557</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>128923982389</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:15:58,169 INFO  Options                ReadSingle         - Entered----------->
+15:15:58,622 INFO  Email                  SendMail           - <?xml version="1.0"?>
+<EmailInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MailFrom>no-reply@rapidtrade.biz</MailFrom>
+  <MailContent>&lt;html&gt;
+  &lt;head&gt;
+    &lt;META http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+    &lt;title&gt;Rapidtrade Order&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor="#EEE" style="background:#EEE;"&gt;
+    &lt;table width="100%" cellpadding="10" cellspacing="0" bgcolor="#EEE" style="background:#EEE;"&gt;
+      &lt;tr&gt;
+        &lt;td valign="top" align="center"&gt;
+          &lt;table border="0" cellpadding="0" cellspacing="0" width="800" bgcolor="#FFF" style="padding:10px;background:#FFF;"&gt;
+            &lt;tr&gt;
+              &lt;td width="360" valign="bottom"&gt;&lt;img src="http://www.rapidtrade.biz/Portals/0/rapidtrade.png" border="0" style="margin:30px 0 10px 0;"&gt;&lt;/td&gt;
+              &lt;td width="440" valign="bottom"&gt;
+                &lt;p style="text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:20pt;color:#AAA;margin:0;"&gt;Incoming Order&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan="2"&gt;
+                &lt;p style="border-top:solid 2px #AAA;"&gt;&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:black;vertical-align:top;"&gt;&lt;b&gt;Ordered By:&lt;/b&gt;&lt;br&gt;
+                      Account:TEST&lt;/td&gt;
+              &lt;td&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:8pt;margin:0 0 20px 0;"&gt;
+                      Order Number: 128923982389&lt;br&gt;
+                        Order Date: 2010-11-04T15:15:57.747875+02:00&lt;br&gt;
+                        Reference: My reference20101104031557&lt;/p&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;"&gt;&lt;b&gt;Required Date: &lt;/b&gt;2010-11-04T15:15:57.747875+02:00&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;margin:20px 0 20px 0;"&gt;&lt;b&gt;Comment:&lt;/b&gt;&lt;br&gt;TEST&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan="2"&gt;
+                &lt;table border="0" cellpadding="0" cellspacing="0" width="100%"&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Item&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Product&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Description&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Qty Ordered&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Price&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Sub Total&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;1&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;AAA&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;
+                    &lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;1&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;0&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;0&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Order Total Excl:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:2px 5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;GST:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:2px 5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:2px 5px;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Order Total Incl:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:2px 5px;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                &lt;/table&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</MailContent>
+  <MailTo>shaun@rapidtrade.biz</MailTo>
+  <Subject>Incoming Order for TEST</Subject>
+  <IsHTML>true</IsHTML>
+</EmailInfo>
+15:24:34,279 INFO  Global_asax            Application_Start  - Application started...
+15:24:53,638 INFO  Orders                 Modify             - Entered----------->
+15:24:54,138 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TESt</SupplierID>
+  <OrderID>TEST1212123232</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-11-04T15:24:53.6385+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:24:53.6385+02:00</RequiredByDate>
+  <Reference>My reference20101104032453</Reference>
+  <Comments>TESTasasas</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TESt</SupplierID>
+      <OrderID>TEST1212123232</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:24:54,263 INFO  Options                ReadSingle         - Entered----------->
+15:25:48,638 INFO  Global_asax            Application_Start  - Application started...
+15:26:08,122 INFO  Orders                 Modify             - Entered----------->
+15:26:08,513 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>2332323278787</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-11-04T15:26:08.122875+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:26:08.122875+02:00</RequiredByDate>
+  <Reference>My reference20101104032608</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>2332323278787</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:26:08,544 INFO  Options                ReadSingle         - Entered----------->
+15:27:08,747 INFO  Global_asax            Application_Start  - Application started...
+15:27:24,716 INFO  Orders                 Modify             - Entered----------->
+15:27:25,185 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>2139834783478</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-11-04T15:27:24.716625+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:27:24.716625+02:00</RequiredByDate>
+  <Reference>My reference20101104032724</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>2139834783478</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:27:25,247 INFO  Options                ReadSingle         - Entered----------->
+15:28:23,919 INFO  Global_asax            Application_Start  - Application started...
+15:28:41,638 INFO  Orders                 Modify             - Entered----------->
+15:28:42,076 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>TEStasaasasas</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-11-04T15:28:41.622875+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:28:41.622875+02:00</RequiredByDate>
+  <Reference>My reference20101104032841</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>TEStasaasasas</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:28:42,107 INFO  Options                ReadSingle         - Entered----------->
+15:28:42,482 INFO  Email                  SendMail           - <?xml version="1.0"?>
+<EmailInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MailFrom>no-reply@rapidtrade.biz</MailFrom>
+  <MailContent>&lt;html&gt;
+  &lt;head&gt;
+    &lt;META http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+    &lt;title&gt;Rapidtrade Order&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor="#EEE" style="background:#EEE;"&gt;
+    &lt;table width="100%" cellpadding="10" cellspacing="0" bgcolor="#EEE" style="background:#EEE;"&gt;
+      &lt;tr&gt;
+        &lt;td valign="top" align="center"&gt;
+          &lt;table border="0" cellpadding="0" cellspacing="0" width="800" bgcolor="#FFF" style="padding:10px;background:#FFF;"&gt;
+            &lt;tr&gt;
+              &lt;td width="360" valign="bottom"&gt;&lt;img src="http://www.rapidtrade.biz/Portals/0/rapidtrade.png" border="0" style="margin:30px 0 10px 0;"&gt;&lt;/td&gt;
+              &lt;td width="440" valign="bottom"&gt;
+                &lt;p style="text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:20pt;color:#AAA;margin:0;"&gt;Incoming Order&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan="2"&gt;
+                &lt;p style="border-top:solid 2px #AAA;"&gt;&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:black;vertical-align:top;"&gt;&lt;b&gt;Ordered By:&lt;/b&gt;&lt;br&gt;
+                      Account:TEST&lt;/td&gt;
+              &lt;td&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:8pt;margin:0 0 20px 0;"&gt;
+                      Order Number: TEStasaasasas&lt;br&gt;
+                        Order Date: 2010-11-04T15:28:41.622875+02:00&lt;br&gt;
+                        Reference: My reference20101104032841&lt;/p&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;"&gt;&lt;b&gt;Required Date: &lt;/b&gt;2010-11-04T15:28:41.622875+02:00&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;margin:20px 0 20px 0;"&gt;&lt;b&gt;Comment:&lt;/b&gt;&lt;br&gt;TEST&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan="2"&gt;
+                &lt;table border="0" cellpadding="0" cellspacing="0" width="100%"&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Item&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Product&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Description&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Qty Ordered&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Price&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Sub Total&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;1&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;AAA&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;
+                    &lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;1&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;0&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;0&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Order Total Excl:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:2px 5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;GST:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:2px 5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:2px 5px;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Order Total Incl:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:2px 5px;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                &lt;/table&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</MailContent>
+  <MailTo>shaun@rapidtrade.biz</MailTo>
+  <Subject>Incoming Order for TEST</Subject>
+  <IsHTML>true</IsHTML>
+</EmailInfo>
+15:29:10,388 INFO  Global_asax            Application_Start  - Application started...
+15:29:57,419 INFO  Global_asax            Application_Start  - Application started...
+15:30:11,779 INFO  Orders                 Modify             - Entered----------->
+15:30:12,216 INFO  Orders                 Modify             - <?xml version="1.0"?>
+<OrderInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SupplierID>TEST</SupplierID>
+  <OrderID>2398239823</OrderID>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <CreateDate>2010-11-04T15:30:11.7635+02:00</CreateDate>
+  <RequiredByDate>2010-11-04T15:30:11.7635+02:00</RequiredByDate>
+  <Reference>My reference20101104033011</Reference>
+  <Comments>TEST</Comments>
+  <OrderItems>
+    <OrderItemInfo>
+      <SupplierID>TEST</SupplierID>
+      <OrderID>2398239823</OrderID>
+      <ItemID>1</ItemID>
+      <ProductID>AAA</ProductID>
+      <Quantity>1</Quantity>
+      <Nett>0</Nett>
+      <Gross>0</Gross>
+      <Discount>0</Discount>
+      <ValueUnit>0</ValueUnit>
+      <Value>0</Value>
+    </OrderItemInfo>
+  </OrderItems>
+  <PostedToERP>false</PostedToERP>
+</OrderInfo>
+15:30:12,232 INFO  Options                ReadSingle         - Entered----------->
+15:30:12,607 INFO  Email                  SendMail           - <?xml version="1.0"?>
+<EmailInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <MailFrom>no-reply@rapidtrade.biz</MailFrom>
+  <MailContent>&lt;html&gt;
+  &lt;head&gt;
+    &lt;META http-equiv="Content-Type" content="text/html; charset=utf-8"&gt;
+    &lt;title&gt;Rapidtrade Order&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body leftmargin="0" marginwidth="0" topmargin="0" marginheight="0" offset="0" bgcolor="#EEE" style="background:#EEE;"&gt;
+    &lt;table width="100%" cellpadding="10" cellspacing="0" bgcolor="#EEE" style="background:#EEE;"&gt;
+      &lt;tr&gt;
+        &lt;td valign="top" align="center"&gt;
+          &lt;table border="0" cellpadding="0" cellspacing="0" width="800" bgcolor="#FFF" style="padding:10px;background:#FFF;"&gt;
+            &lt;tr&gt;
+              &lt;td width="360" valign="bottom"&gt;&lt;img src="http://www.rapidtrade.biz/Portals/0/rapidtrade.png" border="0" style="margin:30px 0 10px 0;"&gt;&lt;/td&gt;
+              &lt;td width="440" valign="bottom"&gt;
+                &lt;p style="text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:20pt;color:#AAA;margin:0;"&gt;Incoming Order&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan="2"&gt;
+                &lt;p style="border-top:solid 2px #AAA;"&gt;&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:black;vertical-align:top;"&gt;&lt;b&gt;Ordered By:&lt;/b&gt;&lt;br&gt;
+                      Account:TEST&lt;/td&gt;
+              &lt;td&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:8pt;margin:0 0 20px 0;"&gt;
+                      Order Number: 2398239823&lt;br&gt;
+                        Order Date: 2010-11-04T15:30:11.7635+02:00&lt;br&gt;
+                        Reference: My reference20101104033011&lt;/p&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;"&gt;&lt;b&gt;Required Date: &lt;/b&gt;2010-11-04T15:30:11.7635+02:00&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td&gt;
+                &lt;p style="text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;color:black;vertical-align:top;font-size:10pt;margin:20px 0 20px 0;"&gt;&lt;b&gt;Comment:&lt;/b&gt;&lt;br&gt;TEST&lt;/p&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+            &lt;tr&gt;
+              &lt;td colspan="2"&gt;
+                &lt;table border="0" cellpadding="0" cellspacing="0" width="100%"&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Item&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Product&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Description&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Qty Ordered&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Price&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Sub Total&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;1&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;AAA&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:left;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;
+                    &lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;1&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;0&lt;/td&gt;
+                    &lt;td style="padding:5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;0&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Order Total Excl:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:10px 5px 5px 5px;border-top:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:2px 5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;GST:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:2px 5px;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                  &lt;tr valign="bottom"&gt;
+                    &lt;td colspan="5" style="font-weight:bold;padding:2px 5px;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;Order Total Incl:&lt;/td&gt;
+                    &lt;td style="font-weight:bold;padding:2px 5px;border-bottom:solid 1px #AAA;text-align:right;font-family:Geneva,Verdana,Arial,Helvetica,sans-serif;font-size:10pt;color:#000;"&gt;&lt;/td&gt;
+                  &lt;/tr&gt;
+                &lt;/table&gt;
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</MailContent>
+  <MailTo>shaun@rapidtrade.biz</MailTo>
+  <Subject>Incoming Order for TEST</Subject>
+  <IsHTML>true</IsHTML>
+</EmailInfo>

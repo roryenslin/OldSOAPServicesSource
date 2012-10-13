@@ -1,0 +1,101 @@
+12:21:56,424 INFO  Global_asax            Application_Start  - Application started...
+12:21:58,736 FATAL Global_asax            Application_Error  - Unhandled exception!
+System.Web.HttpParseException: Could not create type 'RapidTradeWebService.Activities2'.
+   at System.Web.UI.SimpleWebHandlerParser.GetType(String typeName)
+   at System.Web.UI.SimpleWebHandlerParser.GetTypeToCache(Assembly builtAssembly)
+   at System.Web.Compilation.SimpleHandlerBuildProvider.GetGeneratedType(CompilerResults results)
+   at System.Web.Compilation.BuildProvider.CreateBuildResult(CompilerResults results)
+   at System.Web.Compilation.BuildProvider.GetBuildResult(CompilerResults results)
+   at System.Web.Compilation.BuildManager.CompileWebFile(VirtualPath virtualPath)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultInternal(VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResultWithNoAssert(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResult(HttpContext context, VirtualPath virtualPath, Boolean noBuild, Boolean allowCrossApp, Boolean allowBuildInPrecompile)
+   at System.Web.Compilation.BuildManager.GetVPathBuildResult(HttpContext context, VirtualPath virtualPath)
+   at System.Web.UI.WebServiceParser.GetCompiledType(String inputFile, HttpContext context)
+   at System.Web.Services.Protocols.WebServiceHandlerFactory.GetHandler(HttpContext context, String verb, String url, String filePath)
+   at System.Web.HttpApplication.MapHttpHandler(HttpContext context, String requestType, VirtualPath path, String pathTranslated, Boolean useAppConfig)
+   at System.Web.HttpApplication.MapHandlerExecutionStep.System.Web.HttpApplication.IExecutionStep.Execute()
+   at System.Web.HttpApplication.ExecuteStep(IExecutionStep step, Boolean& completedSynchronously)
+12:33:07,611 INFO  Global_asax            Application_Start  - Application started...
+12:33:54,705 INFO  Activities             ReadList           - Entered----------->
+12:33:56,940 INFO  Activities             ReadActivitys      - Entered----------->
+12:34:19,190 INFO  Activities             ReadList           - Entered----------->
+12:34:19,221 INFO  Activities             ReadActivitys      - Entered----------->
+12:46:35,330 INFO  Global_asax            Application_Start  - Application started...
+12:46:56,361 INFO  Activities             ReadActivitys      - Entered----------->
+20:00:17,142 INFO  Global_asax            Application_Start  - Application started...
+20:01:31,205 INFO  Activities             Sync3              - Entered----------->
+20:02:07,017 INFO  Activities             ReadActivitys      - Entered----------->
+20:03:05,470 INFO  Activities             ReadActivitys      - Entered----------->
+20:06:10,501 INFO  Activities             Modify             - Entered----------->
+20:06:10,673 ERROR Activities             Modify             - <?xml version="1.0"?>
+<ActivityInfo2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Latitude />
+  <Longitude />
+  <Notes>Note</Notes>
+  <ActivityID />
+  <SupplierID>TEST</SupplierID>
+  <ActivityTypeID>01</ActivityTypeID>
+  <FollowOnActivity />
+  <Data>DATA</Data>
+  <EndDate>2010/11/15 08:01:25 A11</EndDate>
+  <DueDate>2010/11/15 08:01:25 A11</DueDate>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <Status />
+  <ContactID />
+  <Deleted>false</Deleted>
+</ActivityInfo2>
+System.Data.SqlTypes.SqlTypeException: SqlDateTime overflow. Must be between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
+   at System.Data.SqlTypes.SqlDateTime.FromTimeSpan(TimeSpan value)
+   at System.Data.SqlTypes.SqlDateTime.FromDateTime(DateTime value)
+   at System.Data.SqlClient.MetaType.FromDateTime(DateTime dateTime, Byte cb)
+   at System.Data.SqlClient.TdsParser.WriteValue(Object value, MetaType type, Byte scale, Int32 actualLength, Int32 encodingByteSize, Int32 offset, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.TdsExecuteRPC(_SqlRPC[] rpcArray, Int32 timeout, Boolean inSchema, SqlNotificationRequest notificationRequest, TdsParserStateObject stateObj, Boolean isCommandProc)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at RapidTradeWebService.DataAccess.DBHelper.ExecuteNonQuery(SqlCommand cmdCommand) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\DataAccess\DBHelper.vb:line 45
+   at RapidTradeWebService.Activities2.Modify(ActivityInfo2 objActivityInfo2) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Activities2.asmx.vb:line 80
+20:06:11,251 INFO  Tables                 GetTableVersion    - Entered----------->
+20:08:56,220 INFO  Global_asax            Application_Start  - Application started...
+20:09:52,876 INFO  Activities             Sync3              - Entered----------->
+20:11:26,033 INFO  Activities             ReadActivitys      - Entered----------->
+20:11:42,970 INFO  Activities             Modify             - Entered----------->
+20:15:45,814 ERROR Activities             Modify             - <?xml version="1.0"?>
+<ActivityInfo2 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <Latitude />
+  <Longitude />
+  <Notes>Note</Notes>
+  <ActivityID />
+  <SupplierID>TEST</SupplierID>
+  <ActivityTypeID>01</ActivityTypeID>
+  <FollowOnActivity />
+  <Data>DATA</Data>
+  <EndDate>2010/11/15 08:09:48 A11</EndDate>
+  <DueDate>2010/11/15 08:09:48 A11</DueDate>
+  <UserID>TEST</UserID>
+  <AccountID>TEST</AccountID>
+  <Status />
+  <ContactID />
+  <Deleted>false</Deleted>
+</ActivityInfo2>
+System.Data.SqlTypes.SqlTypeException: SqlDateTime overflow. Must be between 1/1/1753 12:00:00 AM and 12/31/9999 11:59:59 PM.
+   at System.Data.SqlTypes.SqlDateTime.FromTimeSpan(TimeSpan value)
+   at System.Data.SqlTypes.SqlDateTime.FromDateTime(DateTime value)
+   at System.Data.SqlClient.MetaType.FromDateTime(DateTime dateTime, Byte cb)
+   at System.Data.SqlClient.TdsParser.WriteValue(Object value, MetaType type, Byte scale, Int32 actualLength, Int32 encodingByteSize, Int32 offset, TdsParserStateObject stateObj)
+   at System.Data.SqlClient.TdsParser.TdsExecuteRPC(_SqlRPC[] rpcArray, Int32 timeout, Boolean inSchema, SqlNotificationRequest notificationRequest, TdsParserStateObject stateObj, Boolean isCommandProc)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async)
+   at System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, DbAsyncResult result)
+   at System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(DbAsyncResult result, String methodName, Boolean sendToPipe)
+   at System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   at RapidTradeWebService.DataAccess.DBHelper.ExecuteNonQuery(SqlCommand cmdCommand) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\DataAccess\DBHelper.vb:line 45
+   at RapidTradeWebService.Activities2.Modify(ActivityInfo2 objActivityInfo2) in C:\rapidKPISourceCode\WebServicesV7\RapidTradeWebService\Activities2.asmx.vb:line 80
+20:15:46,314 INFO  Tables                 GetTableVersion    - Entered----------->
+20:16:36,767 INFO  Global_asax            Application_Start  - Application started...
+20:17:09,642 INFO  Activities             Sync3              - Entered----------->
+20:17:16,033 INFO  Activities             ReadActivitys      - Entered----------->
+20:17:23,173 INFO  Activities             Modify             - Entered----------->
+20:18:58,126 INFO  Tables                 GetTableVersion    - Entered----------->
