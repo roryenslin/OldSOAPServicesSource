@@ -132,6 +132,8 @@ Public Class Orders4
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
             objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+
+            Dim price As New Prices
             intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
             If _Log.IsInfoEnabled Then _Log.Info("Items 4----------->")
             If (Not objOrderInfo4.OrderItems Is Nothing AndAlso objOrderInfo4.OrderItems.Count > 0) Then
@@ -156,6 +158,21 @@ Public Class Orders4
                             If _Log.IsErrorEnabled Then _Log.Error("Error finding description" & ex.Message)
                         End Try
                     End If
+
+                    '*** re-check price
+                    Try
+                        If objOrderItem.RepChangedPrice = False And objOrderItem.SupplierID.ToUpper = "BRUNEL" Then
+                            Dim priceresp As PriceResponse = price.GetPrice(objOrderInfo4.SupplierID, objOrderInfo4.AccountID, objOrderItem.ProductID, Integer.Parse(objOrderItem.Quantity.ToString), objOrderItem.Gross, objOrderItem.Nett)
+                            If objOrderItem.Nett <> priceresp.Nett Then
+                                objOrderItem.Nett = priceresp.Nett
+                                objOrderItem.Gross = priceresp.Gross
+                                objOrderItem.Discount = priceresp.Discount
+                                _Log.Debug("New price for " & objOrderItem.ProductID & " = " & objOrderItem.Discount & "% R" & objOrderItem.Nett)
+                            End If
+                        End If
+                    Catch ex As Exception
+                        If _Log.IsErrorEnabled Then _Log.Error("Error re-checking price" & ex.Message)
+                    End Try
 
                     cmdCommand1.Parameters.Clear()
                     cmdCommand1.Parameters.AddWithValue("@OrderID", objOrderInfo4.OrderID)

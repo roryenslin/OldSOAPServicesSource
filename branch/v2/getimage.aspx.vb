@@ -30,6 +30,8 @@ Public Class getimage
             subfolder = "matus"
         End If
 
+        If imagename.Contains("/") Then imagename = imagename.Replace("/", "_")
+
         If String.IsNullOrEmpty(imagename) Then
             Throw New Exception("imagename is not supplied")
         End If
