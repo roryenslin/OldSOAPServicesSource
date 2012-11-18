@@ -66,7 +66,7 @@ Public Class Tables
         Dim objReader As SqlDataReader = Nothing
         Dim intVersions() As Integer
         If _Log.IsInfoEnabled Then _Log.Info("Entered----------->")
-        If _Log.IsDebugEnabled Then _Log.Debug("Tables: " & strTableNames.ToString)
+        If _Log.IsInfoEnabled Then _Log.Info("Tables: " & strTableNames.ToString)
 
         Try
             Dim intCounter As Integer = 0

@@ -376,11 +376,13 @@ Public Class Prices
             If _Log.IsInfoEnabled Then _Log.Info("UserID: " & strSupplierId & " // Version: " & intVersion)
 
             Dim objPriceInfo As PriceInfo()
-            Dim cmdCommand As New SqlCommand("usp_price_sync2")
+            Dim cmdCommand As New SqlCommand("usp_price_sync5")
             cmdCommand.Parameters.AddWithValue("@SupplierId", strSupplierId)
             cmdCommand.Parameters.AddWithValue("@UserID", userID)
             cmdCommand.Parameters.AddWithValue("@Version", intVersion)
-            objPriceInfo = ReadPrices2(objDBHelper.ExecuteReader(cmdCommand), offset, numrows)
+            cmdCommand.Parameters.AddWithValue("@offset", offset)
+            cmdCommand.Parameters.AddWithValue("@numrows", numrows)
+            objPriceInfo = ReadPrices(objDBHelper.ExecuteReader(cmdCommand)) ', offset, numrows)
             objResponse.Status = True
             If Not objPriceInfo Is Nothing AndAlso objPriceInfo.GetUpperBound(0) >= 0 Then
                 objResponse.Prices = objPriceInfo
