@@ -127,11 +127,13 @@ Public Class Orders4
             cmdCommand.Parameters.AddWithValue("@PostedToERP", objOrderInfo4.PostedToERP)
             cmdCommand.Parameters.AddWithValue("@ERPOrderNumber", objOrderInfo4.ERPOrderNumber)
             cmdCommand.Parameters.AddWithValue("@ERPStatus", objOrderInfo4.ERPStatus)
-            objOrderInfo4.UserField06 = "http://23.21.227.179/images/SILICONE/" & objOrderInfo4.SupplierID.ToLower & ".png"
+            '** Was the word SILICONE hard coded here  - replaced that with the supplier id
+            objOrderInfo4.UserField06 = "http://23.21.227.179/images/" & objOrderInfo4.SupplierID.ToUpper & "/" & objOrderInfo4.SupplierID.ToLower & ".png"
+            '** Rory 12 March 2013
 
             oReturnParam = cmdCommand.Parameters.Add("@ReturnValue", SqlDbType.Int)
             oReturnParam.Direction = ParameterDirection.ReturnValue
-            objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
+            'objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
 
             Dim price As New Prices
             intResult = CType(cmdCommand.Parameters("@ReturnValue").Value, Integer)
@@ -139,8 +141,11 @@ Public Class Orders4
             If (Not objOrderInfo4.OrderItems Is Nothing AndAlso objOrderInfo4.OrderItems.Count > 0) Then
                 Dim cmdCommand1 As New SqlCommand("usp_orderitems_modify", conConnection)
                 cmdCommand1.Transaction = trnTransaction
+                Dim itemID As Integer = 1
+
                 For Each objOrderItem As OrderItemInfo4 In objOrderInfo4.OrderItems
                     '*** get description if needed
+
                     If String.IsNullOrEmpty(objOrderItem.Description) Then
                         Try
                             Dim cmdCommand3 As New SqlCommand("usp_product_readsingle")
@@ -161,7 +166,7 @@ Public Class Orders4
 
                     '*** re-check price
                     Try
-                        If objOrderItem.RepChangedPrice = False And objOrderItem.SupplierID.ToUpper = "BRUNEL" Then
+                        If objOrderItem.RepChangedPrice = False And objOrderInfo4.SupplierID.ToUpper = "BRUNEL" Then
                             Dim priceresp As PriceResponse = price.GetPrice(objOrderInfo4.SupplierID, objOrderInfo4.AccountID, objOrderItem.ProductID, Integer.Parse(objOrderItem.Quantity.ToString), objOrderItem.Gross, objOrderItem.Nett)
                             If objOrderItem.Nett <> priceresp.Nett Then
                                 objOrderItem.Nett = priceresp.Nett
@@ -179,7 +184,12 @@ Public Class Orders4
                     cmdCommand1.Parameters.AddWithValue("@AccountID", objOrderInfo4.AccountID)
                     cmdCommand1.Parameters.AddWithValue("@SupplierID", objOrderInfo4.SupplierID)
 
+                    'cmdCommand1.Parameters.AddWithValue("@ItemID", itemID)
+                    '** To avoid the guplicate issue - use the item number that comes in from
+                    '** order itself.
                     cmdCommand1.Parameters.AddWithValue("@ItemID", objOrderItem.ItemID)
+                    '** Rory 13 Marcg 2013
+                    itemID = itemID + 1
                     cmdCommand1.Parameters.AddWithValue("@ProductID", objOrderItem.ProductID)
                     cmdCommand1.Parameters.AddWithValue("@Warehouse", objOrderItem.Warehouse)
                     cmdCommand1.Parameters.AddWithValue("@Description", objOrderItem.Description)
@@ -199,6 +209,7 @@ Public Class Orders4
                     objDBHelper.ExecuteNonQuery(cmdCommand1, conConnection)
                 Next
             End If
+            objDBHelper.ExecuteNonQuery(cmdCommand, conConnection)
             trnTransaction.Commit()
             objResponse.Status = intResult = 0
             If Not objResponse.Status Then
