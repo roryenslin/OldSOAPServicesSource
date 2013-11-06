@@ -60,9 +60,30 @@ Public Class Orders4
         Dim objResponse As New BaseResponse
         Dim conConnection As SqlConnection = Nothing
         Dim trnTransaction As SqlTransaction = Nothing
-
+        Dim bDoNotEmail As Boolean
         Try
             If _Log.IsInfoEnabled Then _Log.Info("Entered 4----------->")
+
+            '*** ZORANs CODE
+            Dim Zcon As System.Data.SqlClient.SqlConnection = New System.Data.SqlClient.SqlConnection
+            Zcon = objDBHelper.GetConnection
+            Zcon.Open()
+
+            Dim SelectString As String = "select OrderId from Orders where OrderID='" + objOrderInfo4.OrderID + "'"
+
+
+            Dim cmd As System.Data.SqlClient.SqlCommand = New System.Data.SqlClient.SqlCommand(SelectString, Zcon)
+            cmd.CommandTimeout = 90000
+            Dim Reader As System.Data.SqlClient.SqlDataReader = cmd.ExecuteReader()
+
+            If Reader.HasRows Then
+                bDoNotEmail = True
+            Else
+                bDoNotEmail = False
+            End If
+
+            '**** END ZORANs CODE
+
             '*** always log an order
             If _Log.IsWarnEnabled Then _Log.Warn(RapidTradeWebService.Common.SerializationManager.Serialize(objOrderInfo4))
 
@@ -190,14 +211,16 @@ Public Class Orders4
                 If objOrderInfo4.PostedToERP = True Then
                     If _Log.IsInfoEnabled Then _Log.Info("Not emailing as postedtoerp=true")
                 Else
-                    '*** now email the admin user in another thread
-                    If mustEmail(objOrderInfo4.SupplierID, objOrderInfo4.UserID, objOrderInfo4.UserField05) Then
-                        orderToEmail = objOrderInfo4
-                        If _Log.IsInfoEnabled Then _Log.Info("Email 4----------->")
-                        createEmailOrder()
+                    If Not bDoNotEmail Then '*************** ZORANs CODE 1.If line 2.End If line
+                        '*** now email the admin user in another thread
+                        If mustEmail(objOrderInfo4.SupplierID, objOrderInfo4.UserID, objOrderInfo4.UserField05) Then
+                            orderToEmail = objOrderInfo4
+                            If _Log.IsInfoEnabled Then _Log.Info("Email 4----------->")
+                            createEmailOrder()
+                        End If
                     End If
                 End If
-                
+
             End If
 
         Catch ex As Exception
